@@ -1,1 +1,140 @@
-<p>user profile</p>
+<div class="container profile">
+    <div class="formContainer col-lg-7 col-md-9 col-sm-12 mx-auto">
+        <div class="imgContainer">
+            <img class="w-4" id="output" src="/img/neuron.jpg" />
+        </div>
+        <h3 class="text-center mb-3">Youssef Benadda</h3>
+        <p class="text-center">⭐⭐⭐⭐⭐</p>
+        <!-- visite and like modals -->
+        <h5 class="text-muted my-3">Who liked and looked my profile?</h5>
+        <!-- Trigger looked -->
+        <button type="button" class="btn btn-light btn-pill" data-toggle="modal" data-target="#looked">👀</button>
+        <!-- Modal looked -->
+        <div class="modal fade" id="looked" tabindex="-1" role="dialog" aria-labelledby="lookedLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="lookedLabel">👀 Who looked at your profile</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <ul class="list-group">
+                  <li class="list-group-item">Mike Powell</li>
+                  <li class="list-group-item">Martin Banks</li>
+                  <li class="list-group-item">Pauline Matthews</li>
+                  <li class="list-group-item">Leslie Peters</li>
+                  <li class="list-group-item">Carole James</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Trigger liked -->
+        <button type="button" class="btn btn-light btn-pill" data-toggle="modal" data-target="#liked">💖</button>
+
+        <!-- Modal liked-->
+        <div class="modal fade" id="liked" tabindex="-1" role="dialog" aria-labelledby="likedLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="likedLabel">💖 Who liked your profile</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <ul class="list-group">
+                  <li class="list-group-item">Mike Powell</li>
+                  <li class="list-group-item">Martin Banks</li>
+                  <li class="list-group-item">Pauline Matthews</li>
+                  <li class="list-group-item">Leslie Peters</li>
+                  <li class="list-group-item">Carole James</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <h5 class="text-muted my-3">Change Your Personal info</h5>
+        <div class="custom-file mx-auto w-100"><input accept="image/*" onchange="loadFile(event)" type="file" class="custom-file-input"
+                id="output"><label class="custom-file-label" for="customFile">Change your profile picture</label></div>
+        <!-- Username -->
+        <div class="input-group my-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="material-icons">account_circle</i></span>
+            </div>
+            <input type="text" class="form-control" placeholder="Username" aria-label="Username"
+                aria-describedby="basic-addon1">
+        </div>
+        <!-- firstName -->
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="material-icons">account_circle</i></span>
+            </div>
+            <input type="text" class="form-control" placeholder="First name" aria-label="firstName"
+                aria-describedby="basic-addon1">
+        </div>
+        <!-- Username -->
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="material-icons">account_circle</i></span>
+            </div>
+            <input type="text" class="form-control" placeholder="Last name" aria-label="lastName"
+                aria-describedby="basic-addon1">
+        </div>
+        <!-- email -->
+        <div class="input-group mb-3 ">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="material-icons">email</i></span>
+            </div>
+            <input type="email" class="form-control" placeholder="Email" aria-label="email" aria-describedby="basic-addon1">
+        </div>
+        <!-- password -->
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="material-icons">lock</i></span>
+            </div>
+            <input type="password" class="form-control" placeholder="Password" aria-label="Password"
+                aria-describedby="basic-addon1">
+        </div>
+        <!-- Gender -->
+        <select class="custom-select w-100" required="">
+            <option value="none">Select Your Gender</option>
+            <option value="1">Male</option>
+            <option value="3">Femail</option>
+        </select>
+        <!-- Sexual Preferences -->
+        <h6 class="text-muted my-3">Sexual Preferences</h6>
+        <div class="custom-control custom-checkbox d-block my-2">
+            <input type="checkbox" class="custom-control-input" name="male" id="male"><label class="custom-control-label" for="male">Male</label>
+        </div>
+        <div class="custom-control custom-checkbox d-block my-2">
+            <input type="checkbox" class="custom-control-input" name="female" id="female"><label class="custom-control-label" for="female">Female</label>
+        </div>
+        <!-- Your age -->
+         <h6 class="text-muted my-3">Date of Birth</h6>
+        <input type="text" class="form-control w-50" placeholder="MM/DD/YY" id="ageInput">
+        <!-- Biography -->
+        <h6 class="text-muted my-3">Biography</h6>
+        <div class="mb-3">
+            <textarea class="form-control" id="validationTextarea" placeholder="Tell us about yourself." required></textarea>
+        </div>
+        <!-- list of interests -->
+        <h6 class="text-muted my-3">What are you interested in?</h6>
+        <div class="u-tagsinput">
+          <input type="text" value="tech, music, sports" data-role="tagsinput">
+        </div>
+
+
+        <!-- Submit button -->
+        <button class="btn mt-3 float-right btn-success btn-pill">
+            <i class="material-icons">save</i>
+            Save
+        </button>
+        <div style="clear:both;"></div>
+    </div>
+
+</div>
