@@ -15,13 +15,24 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-light bg-light justify-content-between">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
         <div class="container">
             <a class="navbar-brand">Matcha</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav ml-auto">
+                  <li class="ml-2 nav-item"><a href="/auth/signup">Signup</a></li>
+                  <li class="ml-2 nav-item"><a href="/auth/login">Login</a></li>
+                  <li class="ml-2 nav-item"><a href="/user/profile">User Profile</a></li>
+                </ul>
+            </div>
         </div>
+
     </nav>
     <%- body %>
-    <div class="footer-fix text-center py-3 mt-4">Matcha: ybenadda@1337 </div>
+    <div class="footer-fix bg-light text-center py-3 mt-5">Matcha: ybenadda@1337 </div>
     <!-- Optional JavaScript -->
     <!-- JavaScript Dependencies: jQuery, Popper.js, Bootstrap JS, Shards JS -->
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
