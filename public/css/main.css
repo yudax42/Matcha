@@ -20,7 +20,10 @@
 
 .badge-info {
     color: #fff;
-    background-color: #5f696b;
+    background-color: #007aff;
     font-family: inherit;
-    /* padding: 12px; */
+}
+
+.users .card img {
+    height: 250px
 }
