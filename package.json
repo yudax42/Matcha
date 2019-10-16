@@ -8,6 +8,9 @@
     "ejs": "^2.7.1",
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.5.0",
+    "express-mysql-session": "^2.1.0",
+    "express-session": "^1.17.0",
+    "mysql2": "^1.7.0",
     "ngrok": "^3.2.5"
   },
   "devDependencies": {},
