@@ -1,7 +1,5 @@
 exports.getProfile = (req,res) => {
-    res.render('user/profile');
-};
-
-exports.getHome = (req,res) => {
-    res.render('user/home');
+    res.render('user/profile',{
+    	errorMsg: req.flash('error')
+    });
 };
