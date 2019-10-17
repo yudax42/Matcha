@@ -1,7 +1,7 @@
 <div class="container fix">
     <h1 class="text-center m-4">Signup</h1>
     <div class=" main-form form-group col-12 col-sm-12 col-md-9 col-lg-6 m-auto">
-        <form action="/auth/login" method="POST">
+        <form action="/auth/signup" method="POST">
 
             <div class="alert alert-success" role="alert" hidden>
                 This is a success alert—check it out!
@@ -11,23 +11,22 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1"><i class="material-icons">account_circle</i></span>
                 </div>
-                <input type="text" class="form-control" placeholder="Username" aria-label="Username"
-                    aria-describedby="basic-addon1">
+                <input type="text" name="username" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
             </div>
             <!-- firstName -->
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1"><i class="material-icons">account_circle</i></span>
                 </div>
-                <input type="text" class="form-control" placeholder="First name" aria-label="firstName"
+                <input type="text" name="firstName" class="form-control" placeholder="First name" aria-label="firstName"
                     aria-describedby="basic-addon1">
             </div>
-            <!-- Username -->
+            <!-- LastName -->
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1"><i class="material-icons">account_circle</i></span>
                 </div>
-                <input type="text" class="form-control" placeholder="Last name" aria-label="lastName"
+                <input type="text" name="lastName" class="form-control" placeholder="Last name" aria-label="lastName"
                     aria-describedby="basic-addon1">
             </div>
             <!-- email -->
@@ -35,16 +34,17 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1"><i class="material-icons">email</i></span>
                 </div>
-                <input type="email" class="form-control" placeholder="Email" aria-label="email" aria-describedby="basic-addon1">
+                <input type="email" name="email" class="form-control" placeholder="Email" aria-label="email" aria-describedby="basic-addon1">
             </div>
             <!-- password -->
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1"><i class="material-icons">lock</i></span>
                 </div>
-                <input type="password" class="form-control" placeholder="Password" aria-label="Password"
+                <input type="password"  name="password" class="form-control" placeholder="Password" aria-label="Password"
                     aria-describedby="basic-addon1">
             </div>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button type="submit" class="btn btn-primary w-100">Signup</button>
         </form>
         <a href="/auth/login" class="d-block mt-2"> login</a>

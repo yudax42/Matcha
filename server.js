@@ -6,16 +6,11 @@ const errorController = require('./controllers/error');
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const app = express();
-const mysql = require('mysql2');
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
-const pool = mysql.createPool(
-{
-	host: 'localhost',
-	user: 'root',
-	database: 'matcha',
-	waitForConnections: true
-});
+const csrf = require('csurf');
+const csrfProtection = csrf();
+
 var options = {
     host: 'localhost',
     user: 'root',
@@ -30,16 +25,21 @@ app.use(session({
     saveUninitialized: false
 }));
 
-// pool.query("select * from users", (err,rows) => {
-// 	if(err)
-// 		console.log(err);
-// 	console.log(rows[0].name);
-// });
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(csrfProtection);
+
+
+app.use((req,res,next) => {
+	res.locals.isAuthenticated = req.session.isLoggedIn;
+	res.locals.csrfToken = req.csrfToken();
+	next();
+});
 
 app.use(express.static(path.join(__dirname,'public')));
 app.set('view engine', 'ejs');
 app.set('views', 'views');
-app.use(bodyParser.urlencoded({extended:false}));
+
+
 
 app.use(expressLayouts);
 app.use('/auth',authRouter);

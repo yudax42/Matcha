@@ -11,16 +11,17 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1"><i class="material-icons">account_circle</i></span>
                 </div>
-                <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                <input type="text" name="username" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
             </div>
             <!-- password -->
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1"><i class="material-icons">lock</i></span>
                 </div>
-                <input type="password" class="form-control" placeholder="Password" aria-label="Password"
+                <input type="password" name="password" class="form-control" placeholder="Password" aria-label="Password"
                     aria-describedby="basic-addon1">
             </div>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button type="submit" class="btn btn-primary w-100">login</button>
         </form>
         <a href="/auth/signup" class="d-block mt-2"> signup</a>
