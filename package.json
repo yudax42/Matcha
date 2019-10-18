@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "@sendgrid/mail": "^6.4.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "connect-flash": "^0.1.1",
@@ -15,7 +16,9 @@
     "express-mysql-session": "^2.1.0",
     "express-session": "^1.17.0",
     "mysql2": "^1.7.0",
-    "ngrok": "^3.2.5"
+    "ngrok": "^3.2.5",
+    "nodemailer": "^6.3.1",
+    "nodemailer-sendgrid-transport": "^0.2.0"
   },
   "devDependencies": {},
   "scripts": {
