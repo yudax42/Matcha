@@ -2,12 +2,8 @@
     <h1 class="text-center m-4">login</h1>
     <div class=" main-form form-group col-12 col-sm-12 col-md-9 col-lg-6 m-auto">
         <form action="/auth/login" method="POST">
-
-            <% if (errorMsg) { %>
-            <div class="alert alert-danger" role="alert">
-                <%= errorMsg %>
-            </div>
-            <% } %>
+            <% include ../includes/formErrors.ejs %>
+            <% include ../includes/formSuccess.ejs %>
             <!-- Username -->
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
