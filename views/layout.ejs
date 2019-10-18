@@ -23,10 +23,12 @@
             </button>
             <div class="collapse navbar-collapse" id="mainNavbar">
                 <ul class="navbar-nav ml-auto">
+                    <%if (!isAuthenticated) { %>
                     <li class="ml-2 nav-item"><a href="/auth/signup">Signup</a></li>
                     <li class="ml-2 nav-item"><a href="/auth/login">Login</a></li>
+                    <% } %>
                     <%if (isAuthenticated) { %>
-                        <li class="ml-2 nav-item"><a href="/user">Home</a></li>
+                        <li class="ml-2 nav-item"><a href="/user/home">Home</a></li>
                         <li class="ml-2 nav-item"><a href="/user/profile">User Profile</a></li>
                         <li class="ml-2 nav-item"><a href="/auth/logout">Logout</a></li>
                     <% } %>

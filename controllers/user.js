@@ -3,3 +3,8 @@ exports.getProfile = (req,res) => {
     	errorMsg: req.flash('error')
     });
 };
+exports.getMatch = (req,res) => {
+    res.render('user/home',{
+    	errorMsg: req.flash('error')
+    });
+};
