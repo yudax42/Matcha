@@ -1,3 +1,5 @@
+const user = require('../models/User');
+
 exports.getProfile = (req,res) => {
     res.render('user/profile',{
     	errorMsg: req.flash('error')
@@ -8,3 +10,13 @@ exports.getMatch = (req,res) => {
     	errorMsg: req.flash('error')
     });
 };
+
+exports.getProfileData = (req,res) => {
+	const userName = req.session.userName;
+	user.fetchUserData(userName)
+	.then(([data]) => {
+		// console.log(data[0]);	
+		res.json(data[0])
+	}) 
+	.catch(err => console.log(err));
+}

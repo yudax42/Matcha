@@ -19,4 +19,8 @@ module.exports = class User{
 	{
 		return db.execute('SELECT * FROM users WHERE userName = ?',[userName]);
 	}
+	static fetchUserData(userName)
+	{
+		return db.execute('SELECT userName,firstName,lastName,email FROM users WHERE userName = ?',[userName]);
+	}
 }

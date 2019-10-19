@@ -3,7 +3,7 @@
         <div class="imgContainer">
             <img class="w-4" id="output" src="/img/neuron.jpg" />
         </div>
-        <h3 class="text-center mb-3">Youssef Benadda</h3>
+        <h3 class="text-center mb-3" id="profileName"></h3>
         <p class="text-center">⭐⭐⭐⭐⭐</p>
         <!-- visite and like modals -->
         <h5 class="text-muted my-3">Who liked and looked my profile?</h5>
@@ -67,7 +67,7 @@
                 <span class="input-group-text" id="basic-addon1"><i class="material-icons">account_circle</i></span>
             </div>
             <input type="text" class="form-control" placeholder="Username" aria-label="Username"
-                aria-describedby="basic-addon1">
+                aria-describedby="basic-addon1" id="username">
         </div>
         <!-- firstName -->
         <div class="input-group mb-3">
@@ -75,22 +75,22 @@
                 <span class="input-group-text" id="basic-addon1"><i class="material-icons">account_circle</i></span>
             </div>
             <input type="text" class="form-control" placeholder="First name" aria-label="firstName"
-                aria-describedby="basic-addon1">
+                aria-describedby="basic-addon1" id="firstName">
         </div>
-        <!-- Username -->
+        <!-- lastName -->
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text" id="basic-addon1"><i class="material-icons">account_circle</i></span>
             </div>
             <input type="text" class="form-control" placeholder="Last name" aria-label="lastName"
-                aria-describedby="basic-addon1">
+                aria-describedby="basic-addon1" id="lastName">
         </div>
         <!-- email -->
         <div class="input-group mb-3 ">
             <div class="input-group-prepend">
                 <span class="input-group-text" id="basic-addon1"><i class="material-icons">email</i></span>
             </div>
-            <input type="email" class="form-control" placeholder="Email" aria-label="email" aria-describedby="basic-addon1">
+            <input type="email" class="form-control" placeholder="Email" aria-label="email" aria-describedby="basic-addon1" id="email">
         </div>
         <!-- password -->
         <div class="input-group mb-3">
@@ -138,3 +138,5 @@
     </div>
 
 </div>
+
+<script type="text/javascript" src="/js/profileData.js"></script>

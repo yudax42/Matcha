@@ -5,6 +5,7 @@ const isAuth = require('../middleware/is-auth');
 
 router.get('/home',isAuth,userController.getMatch);
 router.get('/profile',isAuth,userController.getProfile);
+router.get('/profileData',isAuth,userController.getProfileData);
 
 
 module.exports = router;
