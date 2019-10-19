@@ -1,4 +1,6 @@
 
+axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('[name="_csrf"]').value;
+
 // to Fetch user data and add the data inside the input forms
 
 var userName = $('#username').val();
@@ -13,10 +15,8 @@ $.each($("input[name='secPref']:checked"), function(){
 });
 var dateOfBirth = $("#ageInput").val();
 var bio = $.trim($("#bio").val());
-console.log(userName);
-// console.log(userName,firstName,lastName,email,password,gender,secPredTotal,dateOfBirth,bio);
 
-
+// Get user Data
 axios.get('/user/profileData')
   .then(function (response) {
     var data = response.data;
@@ -30,12 +30,12 @@ axios.get('/user/profileData')
     console.log("there was and error please try again later");
 });
 
-// axios.post('/user/profileData',{
+axios.post('/user/profileData',{
 
-// })
-// .then((response) => {
+})
+.then((response) => {
 
-// })
-// .catch((error) => {
+})
+.catch((error) => {
 
-// })
+})
