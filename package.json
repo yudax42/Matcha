@@ -10,6 +10,7 @@
     "connect-flash": "^0.1.1",
     "csrf": "^3.1.0",
     "csurf": "^1.10.0",
+    "dotenv": "^8.2.0",
     "ejs": "^2.7.1",
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.5.0",

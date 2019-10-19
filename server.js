@@ -15,6 +15,7 @@ const authRouter        = require('./routes/auth');
 const userRouter        = require('./routes/user');
 
 // initialize
+const dotenv 			= require('dotenv').config()
 const app               = express();
 const csrfProtection    = csrf();
 const sessionStore      = new MySQLStore({host:'172.17.0.2',user:'root',password:'1234',database:'matcha'});

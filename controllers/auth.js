@@ -1,16 +1,7 @@
 const User = require('../models/User');
 const form = require('../models/Form');
 const bcrypt = require('bcryptjs');
-// const nodemailer = require('nodemailer');
-// const sendGridTransport = require('nodemailer-sendgrid-transport');
-const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey("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");
 
-// const transporter = nodemailer.createTransport(sendGridTransport({
-// 	auth: {
-// 		api_key: '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'
-// 	}
-// })); 
 
 
 // render signup page
@@ -75,16 +66,13 @@ exports.postSignup = (req,res) => {
 		bcrypt.hash(password,12,(err,hash) => {
 			const newUser = new User(username,firstName,lastName,email,hash);
 			newUser.add().then(() => {
-				sgMail.send({
-					to: email,
-					from: "dev@matcha.io",
-					subject: "your account created successfully",
-					html: "<h1>You can login now</h1>"
-				}).then(()=>{
+				form.sendEmail(email,'Matcha Account',"Your Account Created successfuly")
+				.then(() =>{
 					req.flash('successMsg','You can Login now !');
-					res.redirect('/auth/login');}
-				);
-
+					return res.redirect('/auth/login');
+				})
+				.catch((err)=> console.log(err));
+				
 			}).catch(err => console.log(err));
 		});
 	}
