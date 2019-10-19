@@ -12,8 +12,8 @@ module.exports = class User{
 	}
 	add()
 	{
-		return db.execute("insert into users(userName,firstName,lastName,email,password) values(?,?,?,?,?)",[
-		this.userName,this.firstName,this.lastName,this.email,this.password]);
+		return db.execute("insert into users(userName,firstName,lastName,email,password,accStat) values(?,?,?,?,?,?)",[
+		this.userName,this.firstName,this.lastName,this.email,this.password,"not active"]);
 	};
 	static findUser(userName)
 	{

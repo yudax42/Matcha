@@ -15,8 +15,12 @@ exports.getProfileData = (req,res) => {
 	const userName = req.session.userName;
 	user.fetchUserData(userName)
 	.then(([data]) => {
-		// console.log(data[0]);	
 		res.json(data[0])
 	}) 
 	.catch(err => console.log(err));
+}
+
+exports.postProfileData = (req,res) => {
+	
+	
 }

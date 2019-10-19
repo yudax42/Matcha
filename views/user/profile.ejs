@@ -98,10 +98,10 @@
                 <span class="input-group-text" id="basic-addon1"><i class="material-icons">lock</i></span>
             </div>
             <input type="password" class="form-control" placeholder="Password" aria-label="Password"
-                aria-describedby="basic-addon1">
+                aria-describedby="basic-addon1" id="password">
         </div>
         <!-- Gender -->
-        <select class="custom-select w-100" required="">
+        <select class="custom-select w-100" required="" id="gender"> 
             <option value="none">Select Your Gender</option>
             <option value="1">Male</option>
             <option value="3">Female</option>
@@ -109,10 +109,10 @@
         <!-- Sexual Preferences -->
         <h6 class="text-muted my-3">Sexual Preferences</h6>
         <div class="custom-control custom-checkbox d-block my-2">
-            <input type="checkbox" class="custom-control-input" name="male" id="male"><label class="custom-control-label" for="male">Male</label>
+            <input type="checkbox" class="custom-control-input" name="secPref" id="male"><label class="custom-control-label" for="male">Male</label>
         </div>
         <div class="custom-control custom-checkbox d-block my-2">
-            <input type="checkbox" class="custom-control-input" name="female" id="female"><label class="custom-control-label" for="female">Female</label>
+            <input type="checkbox" class="custom-control-input" name="secPref" id="female"><label class="custom-control-label" for="female">Female</label>
         </div>
         <!-- Your age -->
          <h6 class="text-muted my-3">Date of Birth</h6>
@@ -120,14 +120,15 @@
         <!-- Biography -->
         <h6 class="text-muted my-3">Biography</h6>
         <div class="mb-3">
-            <textarea class="form-control" id="validationTextarea" placeholder="Tell us about yourself." required></textarea>
+            <textarea id="bio" class="form-control" id="validationTextarea" placeholder="Tell us about yourself." required></textarea>
         </div>
         <!-- list of interests -->
         <h6 class="text-muted my-3">What are you interested in?</h6>
         <div class="u-tagsinput">
           <input type="text" value="tech, music, sports" data-role="tagsinput">
         </div>
-
+        <!-- csrf Token -->
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
         <!-- Submit button -->
         <button class="btn mt-3 float-right btn-success btn-pill">
