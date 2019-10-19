@@ -103,8 +103,8 @@
         <!-- Gender -->
         <select class="custom-select w-100" required="" id="gender"> 
             <option value="none">Select Your Gender</option>
-            <option value="1">Male</option>
-            <option value="3">Female</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
         </select>
         <!-- Sexual Preferences -->
         <h6 class="text-muted my-3">Sexual Preferences</h6>
@@ -128,10 +128,10 @@
           <input type="text" value="tech, music, sports" data-role="tagsinput">
         </div>
         <!-- csrf Token -->
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" name="_csrf" id="csrf" value="<%= csrfToken %>">
 
         <!-- Submit button -->
-        <button class="btn mt-3 float-right btn-success btn-pill">
+        <button class="btn mt-3 float-right btn-success btn-pill" onclick="send()">
             <i class="material-icons">save</i>
             Save
         </button>
