@@ -22,7 +22,7 @@ window.onload = function fetchData() {
   });
 };
 
-
+// Send data 
 const send = () => {
   var userName = $('#username').val();
   var firstName = $('#firstName').val();
