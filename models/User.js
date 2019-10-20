@@ -21,8 +21,11 @@ module.exports = class User{
 	}
 	static fetchUserData(userName)
 	{
-	// {
 		return db.execute('SELECT userName,firstName,lastName,email,gender,sexPref,birthDate,age,bio FROM users WHERE userName = ?',[userName]);
+	}
+	static addInterest(userId,topic)
+	{
+		return db.execute('INSERT INTO interest(user_id,topic) VALUES(?,?)',[userId,topic]);
 	}
 	static updateProfileData(userName,firstName,lastName,email,password,gender,secPredTotal,dateOfBirth,age,bio,sessionUser)
 	{

@@ -26,7 +26,8 @@ exports.getProfileData = (req,res) => {
 exports.postProfileData = (req,res) => {
 	// session variable
 	const sessionUser = req.session.userName;
-	const {userName,firstName,lastName,email,password,gender,secPredTotal,dateOfBirth,bio} = req.query;
+	const userId = req.session.userId;
+	const {userName,firstName,lastName,email,password,gender,secPredTotal,dateOfBirth,bio,interest} = req.query;
 	const errors = [];
 	// Check if the userName is already in database
 	user.findUser(userName).
@@ -80,11 +81,21 @@ exports.postProfileData = (req,res) => {
 			if(secPredTotal.length == 2)
 				secPredTotal[0] = "both";
 			// Update
+			var i = 0;
 			bcrypt.hash(password,12,(err,hash) => {
 				user.updateProfileData(userName,firstName,lastName,email,hash,gender,secPredTotal[0],dateOfBirth,age,bio,sessionUser)
 				.then(() => {
 					req.session.userName = userName;
-					console.log("it's updated");
+					while(i < interest.length)
+					{
+						console.log("i'm here");
+						user.addInterest(userId,interest[i])
+						.then(()=> {
+							console.log("done");
+						})
+						.catch((err) => console.log(err));
+						i++;
+					}
 					res.json([{msg: "done"}]);
 				})
 				.catch(err => console.log(err));
@@ -92,7 +103,5 @@ exports.postProfileData = (req,res) => {
 		}	
 	})
 	.catch((err) => console.log(err));
-
-
 	
 }

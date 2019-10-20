@@ -14,3 +14,11 @@ CREATE TABLE IF NOT EXISTS users(
 	bio		varchar(200),
 	accStat 	ENUM('active', 'not active')
 );
+
+
+CREATE TABLE interest(
+	id			INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,
+	user_id		INT,
+	topic		varchar(15),
+	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+)

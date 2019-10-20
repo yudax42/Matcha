@@ -48,6 +48,14 @@ const send = () => {
   });
   var dateOfBirth = $("#ageInput").val();
   var bio = $.trim($("#bio").val());
+  // interest
+  var interest = [];
+  var i = 0;
+  while(i < $(".badge").length)
+  {
+    interest.push($(".badge")[i].innerText);
+    i++;
+  }
 
 
   axios({
@@ -62,7 +70,8 @@ const send = () => {
       gender: gender,
       secPredTotal: secPredTotal,
       dateOfBirth:dateOfBirth,
-      bio:bio
+      bio:bio,
+      interest:interest
     }
   })
   .then((response) => {

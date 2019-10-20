@@ -122,6 +122,7 @@ exports.postLogin = (req,res) => {
 					{
 						req.session.isLoggedIn = true; 
 						req.session.userName = user[0].userName;
+						req.session.userId	= user[0].id;
 						return req.session.save(err => {
 							return res.redirect('/user/profile');
 						});
