@@ -72,6 +72,8 @@ exports.postProfileData = (req,res) => {
 	}
 	else
 	{
+		if(secPredTotal.length == 2)
+			secPredTotal[0] = "both";
 		// Update
 		bcrypt.hash(password,12,(err,hash) => {
 			user.updateProfileData(userName,firstName,lastName,email,hash,gender,secPredTotal[0],dateOfBirth,age,bio,sessionUser)

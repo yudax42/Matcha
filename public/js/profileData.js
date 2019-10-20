@@ -15,7 +15,13 @@ window.onload = function fetchData() {
       $('#lastName').val(data.lastName);
       $('#email').val(data.email);
       $("#gender").val(data.gender);
-      $('#'+data.sexPref).prop('checked', true);
+      if(data.sexPref == "both")
+      {
+        $('#male').prop('checked', true);
+        $('#female').prop('checked', true);
+      }
+      else
+        $('#'+data.sexPref).prop('checked', true);
       //Change formate of date
       var oldFormate = data.birthDate.split('T')[0];
       var newArrFormat = oldFormate.split("-");
@@ -62,7 +68,6 @@ const send = () => {
   .then((response) => {
     // console.log(response.data);
     var data = response.data;
-    console.log(data[0]);
     // if response is done will show green box with sucess msg
     if(data[0].msg == "done")
     {
