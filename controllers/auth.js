@@ -24,58 +24,65 @@ exports.getLogin = (req,res) => {
 // validate signup form and add the user 
 exports.postSignup = (req,res) => {
 	const {username,firstName,lastName,email,password} = req.body;
+
 	let errors = [];
 	let notValidUserName = (name) => {
 		if(name.length < 4 || name.length > 15 || /^\w+$/.test(name))
 			return(0);
 	};
+	User.findUser(username).
+	then(([response]) => {
+		if(response.length > 0)
+			errors.push({msg : "this userName already exists ."});
+		if(!username || !firstName || !lastName || !email || !password)
+				errors.push({msg: 'please fill in all fields'});
+		else
+		{	
+			// Check username
+			if(!form.valideName(username))
+				errors.push({msg: "username not valid"});
+			// Check firstName
+			if(!form.valideName(firstName))
+				errors.push({msg: "firstName not valid"});
+			//Check lastName
+			if(!form.valideName(lastName))
+				errors.push({msg: "lastName not valid"});
+			//Check email
+			if(!form.valideEmail(email))
+				errors.push({msg: "email not valid"});
+			//Check password
+			if(!form.validePassword(password))
+				errors.push({msg: "passoword not valid"});
+		}
+		// Check required fields
+		
+		if(errors.length > 0)
+		{
+			res.render('auth/signup',{
+				errors:errors,
+				username : username,
+				firstName: firstName,
+				lastName:lastName,
+				email:email
+			})
+		}
+		else
+		{
+			bcrypt.hash(password,12,(err,hash) => {
+				const newUser = new User(username,firstName,lastName,email,hash);
+				newUser.add().then(() => {
+					form.sendEmail(email,'Matcha Account',"Your Account Created successfuly")
+					.then(() =>{
+						req.flash('successMsg','You can Login now !');
+						return res.redirect('/auth/login');
+					})
+					.catch((err)=> console.log(err));
+					
+				}).catch(err => console.log(err));
+			});
+		}
+	});
 
-	// Check required fields
-	if(!username || !firstName || !lastName || !email || !password)
-		errors.push({msg: 'please fill in all fields'});
-	else
-	{
-		// Check username
-		if(!form.valideName(username))
-			errors.push({msg: "username not valid"});
-		// Check firstName
-		if(!form.valideName(firstName))
-			errors.push({msg: "firstName not valid"});
-		//Check lastName
-		if(!form.valideName(lastName))
-			errors.push({msg: "lastName not valid"});
-		//Check email
-		if(!form.valideEmail(email))
-			errors.push({msg: "email not valid"});
-		//Check password
-		if(!form.validePassword(password))
-			errors.push({msg: "passoword not valid"});
-	}
-	if(errors.length > 0)
-	{
-		res.render('auth/signup',{
-			errors:errors,
-			username : username,
-			firstName: firstName,
-			lastName:lastName,
-			email:email
-		})
-	}
-	else
-	{
-		bcrypt.hash(password,12,(err,hash) => {
-			const newUser = new User(username,firstName,lastName,email,hash);
-			newUser.add().then(() => {
-				form.sendEmail(email,'Matcha Account',"Your Account Created successfuly")
-				.then(() =>{
-					req.flash('successMsg','You can Login now !');
-					return res.redirect('/auth/login');
-				})
-				.catch((err)=> console.log(err));
-				
-			}).catch(err => console.log(err));
-		});
-	}
 
 
 }

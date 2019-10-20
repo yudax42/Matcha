@@ -87,7 +87,6 @@ const send = () => {
         
       }) 
     }
-
     fetchData();
   })
   .catch((error) => {
