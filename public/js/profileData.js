@@ -16,6 +16,8 @@ window.onload = function fetchData() {
       $('#email').val(data.email);
       $("#gender").val(data.gender);
       $('#'+data.sexPref).prop('checked', true);
+      $("#ageInput").val(data.age);
+      $("#bio").val(data.bio);
     })
     .catch(function (error) {
       console.log("there was and error please try again later");
@@ -54,6 +56,29 @@ const send = () => {
     }
   })
   .then((response) => {
+    // console.log(response.data);
+    var data = response.data;
+    console.log(data[0]);
+    if(data[0].msg == "done")
+    {
+      $('#errors').append("<div id='err' class='alert alert-success fade show' role='alert'>Data updated succefully</div>");
+      setTimeout(function(){
+       $('#err').remove();
+      }, 3000);
+    }
+    else
+    {
+     response.data.forEach(error => {
+      $('#errors').append("<div id='err' class='alert alert-danger fade show' role='alert'>"+error.msg+"</div>");
+        // delete error div after 3 sec
+        setTimeout(function(){
+         $('#err').remove();
+        }, 3000);
+        
+      }) 
+    }
+
+
     fetchData();
   })
   .catch((error) => {

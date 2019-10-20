@@ -1,6 +1,7 @@
 const user = require('../models/User');
 const form = require('../models/Form');
 const moment = require('moment');
+const bcrypt = require('bcryptjs');
 
 exports.getProfile = (req,res) => {
     res.render('user/profile',{
@@ -53,6 +54,7 @@ exports.postProfileData = (req,res) => {
 	if(dateCheck == true)
 	{
 		var age = moment().diff(dateOfBirth, 'years');
+		// console.log(age);
 		if(age < 17 || age > 100)
 			errors.push({msg : "Restricted Age!"});
 	}
@@ -63,13 +65,21 @@ exports.postProfileData = (req,res) => {
 	if(bio.length > 255)
 		errors.push({msg : "Your Bio is too long"});
 
-	console.log(userName,firstName,lastName,email,password,gender,secPredTotal[0]);
 
-
-	// Update
-	user.updateProfileData(userName,firstName,lastName,email,password,gender,secPredTotal[0],age,bio,sessionUser)
-	.then((t) => {
-		req.session.userName = userName;
-		res.send("hell ya");
-	});
+	if(errors.length > 0)
+	{
+		res.json(errors);
+	}
+	else
+	{
+		// Update
+		bcrypt.hash(password,12,(err,hash) => {
+			user.updateProfileData(userName,firstName,lastName,email,hash,gender,secPredTotal[0],age,bio,sessionUser)
+			.then((t) => {
+				req.session.userName = userName;
+				console.log("it's updated");
+				res.json([{msg: "done"}]);
+			});
+		});
+	}	
 }
