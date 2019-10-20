@@ -16,7 +16,11 @@ window.onload = function fetchData() {
       $('#email').val(data.email);
       $("#gender").val(data.gender);
       $('#'+data.sexPref).prop('checked', true);
-      $("#ageInput").val(data.birthDate.split("T")[0]);
+      //Change formate of date
+      var oldFormate = data.birthDate.split('T')[0];
+      var newArrFormat = oldFormate.split("-");
+
+      $("#ageInput").val(newArrFormat[1]+ "/" +newArrFormat[2]+ "/" +newArrFormat[0]);
       $("#bio").val(data.bio);
     })
     .catch(function (error) {

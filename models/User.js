@@ -21,6 +21,7 @@ module.exports = class User{
 	}
 	static fetchUserData(userName)
 	{
+	// {
 		return db.execute('SELECT userName,firstName,lastName,email,gender,sexPref,birthDate,age,bio FROM users WHERE userName = ?',[userName]);
 	}
 	static updateProfileData(userName,firstName,lastName,email,password,gender,secPredTotal,dateOfBirth,age,bio,sessionUser)
