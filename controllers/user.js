@@ -29,6 +29,7 @@ exports.postProfileData = (req,res) => {
 	const userId = req.session.userId;
 	const {userName,firstName,lastName,email,password,gender,secPredTotal,dateOfBirth,bio,interest} = req.query;
 	const errors = [];
+	const interests = ["science","tech","food","swimming","football","anime","e-games","makeUp","series","movies","cinema","art","music","self improvement","reading"];
 	// Check if the userName is already in database
 	user.findUser(userName).
 	then(([response]) => {
@@ -71,6 +72,23 @@ exports.postProfileData = (req,res) => {
 		if(bio.length > 255)
 			errors.push({msg : "Your Bio is too long"});
 
+		// Check interest 
+		if(interest.length < 6)
+		{
+			var i = 0;
+			while(i < interest.length)
+			{
+				if(interests.includes(interest[i].toLowerCase()))
+					i++;
+				else
+				{
+					errors.push({msg : "Please select interset from the list above"});
+					break;
+				}
+			}
+		}
+		else
+			errors.push({msg : "You have 6 interest choices"});
 
 		if(errors.length > 0)
 		{
