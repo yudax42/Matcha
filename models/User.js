@@ -21,12 +21,12 @@ module.exports = class User{
 	}
 	static fetchUserData(userName)
 	{
-		return db.execute('SELECT userName,firstName,lastName,email,gender,sexPref,age,bio FROM users WHERE userName = ?',[userName]);
+		return db.execute('SELECT userName,firstName,lastName,email,gender,sexPref,birthDate,age,bio FROM users WHERE userName = ?',[userName]);
 	}
-	static updateProfileData(userName,firstName,lastName,email,password,gender,secPredTotal,age,bio,sessionUser)
+	static updateProfileData(userName,firstName,lastName,email,password,gender,secPredTotal,dateOfBirth,age,bio,sessionUser)
 	{
-		console.log(userName,firstName,lastName,email,password,gender,secPredTotal,age,sessionUser);
-		return db.execute('UPDATE users SET userName = ?, firstName = ?, lastName = ?, email = ?, password = ?, gender = ?, sexPref = ?,age = ?,bio = ? WHERE userName = ?;',
-			[userName,firstName,lastName,email,password,gender,secPredTotal,age,bio,sessionUser]);
+		console.log(dateOfBirth);
+		return db.execute('UPDATE users SET userName = ?, firstName = ?, lastName = ?, email = ?, password = ?, gender = ?, sexPref = ?,birthDate = STR_TO_DATE(REPLACE(?,"/","-"), "%m-%d-%Y"),age = ?,bio = ? WHERE userName = ?;',
+			[userName,firstName,lastName,email,password,gender,secPredTotal,dateOfBirth,age,bio,sessionUser]);
 	}
 }

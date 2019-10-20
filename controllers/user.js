@@ -74,12 +74,13 @@ exports.postProfileData = (req,res) => {
 	{
 		// Update
 		bcrypt.hash(password,12,(err,hash) => {
-			user.updateProfileData(userName,firstName,lastName,email,hash,gender,secPredTotal[0],age,bio,sessionUser)
+			user.updateProfileData(userName,firstName,lastName,email,hash,gender,secPredTotal[0],dateOfBirth,age,bio,sessionUser)
 			.then((t) => {
 				req.session.userName = userName;
 				console.log("it's updated");
 				res.json([{msg: "done"}]);
-			});
+			})
+			.catch(err => console.log(err));
 		});
 	}	
 }
