@@ -8,8 +8,9 @@ CREATE TABLE IF NOT EXISTS users(
 	email 		varchar(30) NOT NULL,
 	password 	varchar(222) NOT NULL,
 	gender 		ENUM('male', 'female'),
-	sexPref 	SET('male', 'female'),
-	birthDate	DATE NOT NULL,
-	bio			TEXT NOT NULL,
+	sexPref 	SET('male', 'female','both'),
+	birthDate	DATE,
+	age		INT,
+	bio		varchar(200),
 	accStat 	ENUM('active', 'not active')
 );
