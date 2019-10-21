@@ -89,18 +89,7 @@ exports.postProfileData = (req,res) => {
 					break;
 				}
 			}
-			user.fetchInterest(userId)
-			.then(([data]) => {
-				var i = 0;
-				var dbInterestArr = [];
-				while(i < data.length)
-				{
-					dbInterestArr.push(data[i].topic);
-					i++;	
-				}
-				console.log(dbInterestArr);
-				console.log(interest);
-			});
+			pushDbArray = _.uniq(interest);
 		}
 		else
 			errors.push({msg : "You have 6 interest choices"});
@@ -121,9 +110,9 @@ exports.postProfileData = (req,res) => {
 					user.updateProfileData(userName,firstName,lastName,email,hash,gender,secPredTotal[0],dateOfBirth,age,bio,sessionUser)
 					.then(() => {
 						req.session.userName = userName;
-						while(i < interest.length)
+						while(i < pushDbArray.length)
 						{
-							user.addInterest(userId,interest[i])
+							user.addInterest(userId,pushDbArray[i])
 							.then(()=> {
 								console.log("done");
 							})
