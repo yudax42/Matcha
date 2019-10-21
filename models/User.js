@@ -19,6 +19,14 @@ module.exports = class User{
 	{
 		return db.execute('SELECT * FROM users WHERE userName = ?',[userName]);
 	}
+	static fetchInterest(userId)
+	{
+		return db.execute('SELECT topic FROM interest WHERE user_id = ?',[userId]);
+	}
+	static deleteAllInterest(userId)
+	{
+		return db.execute('DELETE FROM interest WHERE user_id = ?',[userId]);
+	}
 	static fetchUserData(userName)
 	{
 		return db.execute('SELECT userName,firstName,lastName,email,gender,sexPref,birthDate,age,bio FROM users WHERE userName = ?',[userName]);

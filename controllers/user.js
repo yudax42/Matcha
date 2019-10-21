@@ -2,6 +2,7 @@ const user = require('../models/User');
 const form = require('../models/Form');
 const moment = require('moment');
 const bcrypt = require('bcryptjs');
+var _ = require('lodash');
 
 exports.getProfile = (req,res) => {
     res.render('user/profile',{
@@ -73,7 +74,9 @@ exports.postProfileData = (req,res) => {
 			errors.push({msg : "Your Bio is too long"});
 
 		// Check interest 
-		if(interest.length < 6)
+		if(!interest)
+			errors.push({msg: "Please choose at least one interest"})
+		else if(interest.length < 6)
 		{
 			var i = 0;
 			while(i < interest.length)
@@ -86,6 +89,18 @@ exports.postProfileData = (req,res) => {
 					break;
 				}
 			}
+			user.fetchInterest(userId)
+			.then(([data]) => {
+				var i = 0;
+				var dbInterestArr = [];
+				while(i < data.length)
+				{
+					dbInterestArr.push(data[i].topic);
+					i++;	
+				}
+				console.log(dbInterestArr);
+				console.log(interest);
+			});
 		}
 		else
 			errors.push({msg : "You have 6 interest choices"});
@@ -100,24 +115,27 @@ exports.postProfileData = (req,res) => {
 				secPredTotal[0] = "both";
 			// Update
 			var i = 0;
-			bcrypt.hash(password,12,(err,hash) => {
-				user.updateProfileData(userName,firstName,lastName,email,hash,gender,secPredTotal[0],dateOfBirth,age,bio,sessionUser)
-				.then(() => {
-					req.session.userName = userName;
-					while(i < interest.length)
-					{
-						console.log("i'm here");
-						user.addInterest(userId,interest[i])
-						.then(()=> {
-							console.log("done");
-						})
-						.catch((err) => console.log(err));
-						i++;
-					}
-					res.json([{msg: "done"}]);
-				})
-				.catch(err => console.log(err));
+			user.deleteAllInterest(userId)
+			.then(() => {
+				bcrypt.hash(password,12,(err,hash) => {
+					user.updateProfileData(userName,firstName,lastName,email,hash,gender,secPredTotal[0],dateOfBirth,age,bio,sessionUser)
+					.then(() => {
+						req.session.userName = userName;
+						while(i < interest.length)
+						{
+							user.addInterest(userId,interest[i])
+							.then(()=> {
+								console.log("done");
+							})
+							.catch((err) => console.log(err));
+							i++;
+						}
+						res.json([{msg: "done"}]);
+					})
+					.catch(err => console.log(err));
+				});
 			});
+			
 		}	
 	})
 	.catch((err) => console.log(err));
