@@ -7,13 +7,20 @@ window.onload = function fetchData() {
   // Get user Data
   axios.get('/user/profileData')
     .then(function (response) {
-      var data = response.data;
-      console.log(data);
+      var data = response.data.formData;
+      var listInterest = response.data.listInterest;
+      console.log(data,listInterest);
+      //Profile Name
       $('#profileName').html(data.firstName + " " + data.lastName);
+      // username
       $('#username').val(data.userName);
+      // firstName
       $('#firstName').val(data.firstName);
+      // lastName
       $('#lastName').val(data.lastName);
+      // email
       $('#email').val(data.email);
+      // gender
       $("#gender").val(data.gender);
       if(data.sexPref == "both")
       {
@@ -28,6 +35,12 @@ window.onload = function fetchData() {
 
       $("#ageInput").val(newArrFormat[1]+ "/" +newArrFormat[2]+ "/" +newArrFormat[0]);
       $("#bio").val(data.bio);
+      // Interest
+      listInterest.forEach((interest) => {
+        console.log(interest);
+        $("#listInterest").tagsinput("add",interest);
+      });
+
     })
     .catch(function (error) {
       console.log("there was and error please try again later");

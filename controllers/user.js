@@ -17,9 +17,21 @@ exports.getMatch = (req,res) => {
 
 exports.getProfileData = (req,res) => {
 	const userName = req.session.userName;
+	const userId = req.session.userId;
 	user.fetchUserData(userName)
-	.then(([data]) => {
-		res.json(data[0])
+	.then(([data1]) => {
+		user.fetchInterest(userId)
+		.then(([data]) => {
+			var i = 0;
+			var dbInterestArr = [];
+			while(i < data.length)
+			{
+				dbInterestArr.push(data[i].topic);
+				i++;	
+			}
+			res.json({formData:data1[0],listInterest:dbInterestArr});
+		});
+
 	}) 
 	.catch(err => console.log(err));
 }
@@ -89,6 +101,7 @@ exports.postProfileData = (req,res) => {
 					break;
 				}
 			}
+			// Remove duplicated items
 			pushDbArray = _.uniq(interest);
 		}
 		else
