@@ -1,7 +1,17 @@
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <div class="container profile">
     <div class="formContainer col-lg-7 col-md-9 col-sm-12 mx-auto">
-        <div class="imgContainer">
-            <img class="w-4" id="output" src="/img/neuron.jpg" />
+
+
+        <div class="avatar-upload">
+            <div class="avatar-edit">
+                <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
+                <label for="imageUpload"><i class="material-icons">create</i></label>
+            </div>
+            <div class="avatar-preview">
+                <div id="imagePreview" style="background-image: url('/img/neuron.jpg')">
+                </div>
+            </div>
         </div>
         <h3 class="text-center mb-3" id="profileName"></h3>
         <p class="text-center">⭐⭐⭐⭐⭐</p>
@@ -62,8 +72,6 @@
 
 
         <h5 class="text-muted my-3">Change Your Personal info</h5>
-        <div class="custom-file mx-auto w-100"><input accept="image/*" onchange="loadFile(event)" type="file" class="custom-file-input"
-                id="output"><label class="custom-file-label" for="customFile">Change your profile picture</label></div>
         <!-- Username -->
         <div class="input-group my-3">
             <div class="input-group-prepend">
@@ -144,4 +152,5 @@
 
 </div>
 
-<script type="text/javascript" src="/js/profileData.js"></script>
+<script type="text/javascript" src="/js/profile/profileData.js"></script>
+<script type="text/javascript" src="/js/profile/profileStyle.js"></script>

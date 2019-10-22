@@ -127,7 +127,6 @@ exports.postProfileData = (req,res) => {
 						{
 							user.addInterest(userId,pushDbArray[i])
 							.then(()=> {
-								console.log("done");
 							})
 							.catch((err) => console.log(err));
 							i++;

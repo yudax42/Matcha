@@ -9,7 +9,6 @@ window.onload = function fetchData() {
     .then(function (response) {
       var data = response.data.formData;
       var listInterest = response.data.listInterest;
-      console.log(data,listInterest);
       //Profile Name
       $('#profileName').html(data.firstName + " " + data.lastName);
       // username
@@ -37,7 +36,6 @@ window.onload = function fetchData() {
       $("#bio").val(data.bio);
       // Interest
       listInterest.forEach((interest) => {
-        console.log(interest);
         $("#listInterest").tagsinput("add",interest);
       });
 
