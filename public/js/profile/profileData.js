@@ -60,12 +60,12 @@ const send = () => {
     interest.push($(".badge")[i].innerText);
     i++;
   }
-
+  console.log(userName);
   axios({
     method:'post',
     url:'/user/profileData',
     params:{
-      username     : userName,
+      userName     : userName,
       firstName    : firstName,
       lastName     : lastName,
       email        : email,

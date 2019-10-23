@@ -41,6 +41,7 @@ exports.postProfileData = (req,res) => {
 	const sessionUser = req.session.userName;
 	const userId = req.session.userId;
 	const {userName,firstName,lastName,email,password,gender,secPredTotal,dateOfBirth,bio,interest} = req.query;
+	console.log(userName,firstName,lastName,email,password,gender,secPredTotal,dateOfBirth,bio,interest);
 	const errors = [];
 	const interests = ["science","tech","food","swimming","football","anime","e-games","makeUp","series","movies","cinema","art","music","self improvement","reading"];
 	// Check if the userName is already in database
@@ -113,6 +114,7 @@ exports.postProfileData = (req,res) => {
 		}
 		else
 		{
+			console.log("fuckyou");
 			if(secPredTotal.length == 2)
 				secPredTotal[0] = "both";
 			// Update
