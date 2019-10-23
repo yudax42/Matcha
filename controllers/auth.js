@@ -1,6 +1,6 @@
-const User = require('../models/User');
-const form = require('../models/Form');
-const bcrypt = require('bcryptjs');
+const User 		= require('../models/User');
+const form 		= require('../models/Form');
+const bcrypt 	= require('bcryptjs');
 
 
 
@@ -24,12 +24,13 @@ exports.getLogin = (req,res) => {
 // validate signup form and add the user 
 exports.postSignup = (req,res) => {
 	const {username,firstName,lastName,email,password} = req.body;
-
 	let errors = [];
+
 	let notValidUserName = (name) => {
 		if(name.length < 4 || name.length > 15 || /^\w+$/.test(name))
 			return(0);
 	};
+
 	User.findUser(username).
 	then(([response]) => {
 		if(response.length > 0)
@@ -38,19 +39,14 @@ exports.postSignup = (req,res) => {
 				errors.push({msg: 'please fill in all fields'});
 		else
 		{	
-			// Check username
 			if(!form.valideName(username))
 				errors.push({msg: "username not valid"});
-			// Check firstName
 			if(!form.valideName(firstName))
 				errors.push({msg: "firstName not valid"});
-			//Check lastName
 			if(!form.valideName(lastName))
 				errors.push({msg: "lastName not valid"});
-			//Check email
 			if(!form.valideEmail(email))
 				errors.push({msg: "email not valid"});
-			//Check password
 			if(!form.validePassword(password))
 				errors.push({msg: "passoword not valid"});
 		}
@@ -89,14 +85,14 @@ exports.postSignup = (req,res) => {
 
 // validate login form and give access to user
 exports.postLogin = (req,res) => {
-	const userName = req.body.username;
-	const password = req.body.password;
-	let errors = [];
+	const userName 	= req.body.username;
+	const password 	= req.body.password;
+	let errors 		= [];
+
 	if(!userName || !password)
 		errors.push({msg:"please fill in all fields!"});
 	else if(!form.valideName(userName) || !form.validePassword(password))
 		errors.push({msg:"Not valid input"});
-	
 	if(errors.length > 0)
 	{
 		res.render('auth/login',{
@@ -120,9 +116,9 @@ exports.postLogin = (req,res) => {
 				.then(doMatch => {
 					if(doMatch)
 					{
-						req.session.isLoggedIn = true; 
-						req.session.userName = user[0].userName;
-						req.session.userId	= user[0].id;
+						req.session.isLoggedIn 	= true; 
+						req.session.userName 	= user[0].userName;
+						req.session.userId		= user[0].id;
 						return req.session.save(err => {
 							return res.redirect('/user/profile');
 						});
