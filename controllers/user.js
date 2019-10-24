@@ -15,6 +15,21 @@ exports.getMatch = (req,res) => {
     });
 };
 
+exports.addProfileImgs = (req,res) => {
+  const image = req.file;
+  const userId = req.session.userId;
+  const imgIndex = req.query.imgIndex;
+  if(!image)
+    res.send('no');
+  else
+  {
+    user.addImage(userId,image.path,imgIndex)
+    .then(() => console.log("done"))
+  }
+
+}
+
+
 exports.getProfileData = (req,res) => {
 	const userName = req.session.userName;
 	const userId = req.session.userId;
@@ -27,12 +42,12 @@ exports.getProfileData = (req,res) => {
 			while(i < data.length)
 			{
 				dbInterestArr.push(data[i].topic);
-				i++;	
+				i++;
 			}
 			res.json({formData:data1[0],listInterest:dbInterestArr});
 		});
 
-	}) 
+	})
 	.catch(err => console.log(err));
 }
 
@@ -41,7 +56,6 @@ exports.postProfileData = (req,res) => {
 	const sessionUser = req.session.userName;
 	const userId = req.session.userId;
 	const {userName,firstName,lastName,email,password,gender,secPredTotal,dateOfBirth,bio,interest} = req.query;
-	console.log(userName,firstName,lastName,email,password,gender,secPredTotal,dateOfBirth,bio,interest);
 	const errors = [];
 	const interests = ["science","tech","food","swimming","football","anime","e-games","makeUp","series","movies","cinema","art","music","self improvement","reading"];
 	// Check if the userName is already in database
@@ -86,7 +100,7 @@ exports.postProfileData = (req,res) => {
 		if(bio.length > 255)
 			errors.push({msg : "Your Bio is too long"});
 
-		// Check interest 
+		// Check interest
 		if(!interest)
 			errors.push({msg: "Please choose at least one interest"})
 		else if(interest.length < 6)
@@ -138,9 +152,9 @@ exports.postProfileData = (req,res) => {
 					.catch(err => console.log(err));
 				});
 			});
-			
-		}	
+
+		}
 	})
 	.catch((err) => console.log(err));
-	
+
 }
