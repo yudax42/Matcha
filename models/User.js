@@ -35,6 +35,10 @@ module.exports = class User{
 	{
 		return db.execute('INSERT INTO interest(user_id,topic) VALUES(?,?)',[userId,topic]);
 	}
+	static addImage(userId,path,imgIndex)
+	{
+		return db.execute('INSERT INTO profilePictures(user_id,imgPath,imgIndex) VALUES(?,?,?)',[userId,path,imgIndex]);
+	}
 	static updateProfileData(userName,firstName,lastName,email,password,gender,secPredTotal,dateOfBirth,age,bio,sessionUser)
 	{
 		console.log(dateOfBirth);

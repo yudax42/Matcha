@@ -22,3 +22,11 @@ CREATE TABLE interest(
 	topic		varchar(15),
 	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 )
+
+CREATE TABLE profilePictures(
+	id			INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,
+	user_id		INT,
+	imgPath		varchar(250),
+	imgIndex	varchar(22),
+	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+)

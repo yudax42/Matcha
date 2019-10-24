@@ -2,7 +2,7 @@
 <div class="container profile">
     <div class="avatar-upload">
         <div class="avatar-edit">
-            <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
+            <input type='file'  onchange="addImg('imageUpload','profile')" id="imageUpload" accept=".png, .jpg, .jpeg" />
             <label for="imageUpload"><i class="material-icons">create</i></label>
         </div>
         <div class="avatar-preview">
@@ -15,7 +15,7 @@
     <div class="row">
         <div class="formContainer col-lg-6 col-md-12 col-sm-12 ">
             <div id="errors">
-                
+
             </div>
             <!-- visite and like modals -->
             <h5 class="text-muted my-3">Who liked and looked my profile?</h5>
@@ -111,7 +111,7 @@
                     aria-describedby="basic-addon1" id="password">
             </div>
             <!-- Gender -->
-            <select class="custom-select w-100" required="" id="gender"> 
+            <select class="custom-select w-100" required="" id="gender">
                 <option value="none">Select Your Gender</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
@@ -151,25 +151,41 @@
         <div class="col-lg-6 col-md-12 col-sm-12">
             <h5 class="text-muted my-3">Your Images</h5>
             <div class="row">
-                <div class="imgContainer col-lg-5 col-md-12 col-sm-12 mx-auto">
-                     <input type="file" id="img1"/>
-                     <span class="edit" onclick="preview('img1','edit1','image1')" id="edit1"><i class="material-icons">add</i></span>
-                     <img id="image1" />
-                </div>
-              <input type="file" id="img2"/>
-                    <div class="imgContainer col-lg-5 col-md-12 col-sm-12 mx-auto">
-                        <span class="edit" onclick="preview('img2','edit2','image2')" id="edit2"><i class="material-icons">add</i></span>
-                        <img id="image2"/>
-                    </div>
-              <input type="file" id="img3"/>
-              <div class="imgContainer col-lg-5 col-md-12 col-sm-12 mx-auto">
-                    <span class="edit" onclick="preview('img3','edit3','image3')" id="edit3"><i class="material-icons">add</i></span>
-                    <img id="image3" />
+              <div class="avatar-upload">
+                  <div class="avatar-edit">
+                      <input type='file'  onchange="addImg('inputImg1','img1')" id="inputImg1" accept=".png, .jpg, .jpeg" />
+                      <label for="inputImg1"><i class="material-icons">create</i></label>
+                  </div>
+                  <div class="avatar-preview">
+                      <div id="img1" style="background-image: url('/img/neuron.jpg')">
+                  </div>
               </div>
-              <div class="imgContainer col-lg-5 col-md-12 col-sm-12 mx-auto">
-                <input type="file" id="img4"/>
-                    <span class="edit" onclick="preview('img4','edit4','image4')" id="edit4"><i class="material-icons">add</i></span>
-                    <img id="image4"/>
+              <div class="avatar-upload">
+                  <div class="avatar-edit">
+                      <input type='file'  onchange="addImg('inputImg2','profile')" id="inputImg2" accept=".png, .jpg, .jpeg" />
+                      <label for="inputImg2"><i class="material-icons">create</i></label>
+                  </div>
+                  <div class="avatar-preview">
+                      <div id="img2" style="background-image: url('/img/neuron.jpg')">
+                  </div>
+              </div>
+              <div class="avatar-upload">
+                  <div class="avatar-edit">
+                      <input type='file'  onchange="addImg('inputImg3','profile')" id="inputImg3" accept=".png, .jpg, .jpeg" />
+                      <label for="inputImg3"><i class="material-icons">create</i></label>
+                  </div>
+                  <div class="avatar-preview">
+                      <div id="img3" style="background-image: url('/img/neuron.jpg')">
+                  </div>
+              </div>
+              <div class="avatar-upload">
+                  <div class="avatar-edit">
+                      <input type='file'  onchange="addImg('inputImg4','profile')" id="inputImg4" accept=".png, .jpg, .jpeg" />
+                      <label for="inputImg4"><i class="material-icons">create</i></label>
+                  </div>
+                  <div class="avatar-preview">
+                      <div id="img4" style="background-image: url('/img/neuron.jpg')">
+                  </div>
               </div>
             </div>
         </div>

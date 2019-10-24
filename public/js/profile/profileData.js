@@ -33,11 +33,11 @@ window.onload = function fetchData() {
       });
     })
     .catch(function (error) {
-      console.log("there was and error please try again later");
+      // console.log("there was and error please try again later");
   });
 };
 
-// Send data 
+// Send data
 const send = () => {
   var userName     = $('#username').val();
   var firstName    = $('#firstName').val();
@@ -60,7 +60,6 @@ const send = () => {
     interest.push($(".badge")[i].innerText);
     i++;
   }
-  console.log(userName);
   axios({
     method:'post',
     url:'/user/profileData',
@@ -95,8 +94,8 @@ const send = () => {
         setTimeout(function(){
          $('#err').remove();
         }, 3000);
-        
-      }) 
+
+      })
     }
     fetchData();
   })
@@ -105,4 +104,20 @@ const send = () => {
   })
 }
 
-
+// Add Profile IMG
+const addImg = (id,imgIndex) => {
+  console.log('hello');
+  var formData = new FormData();
+  formData.append('image',$("#"+id)[0].files[0]);
+  axios({
+    url: '/user/addProfileImg',
+    data: formData,
+    method: 'POST',
+    params:{imgIndex:imgIndex},
+    contentType: false,
+    processData: false,
+  })
+  .then((response) => {
+    console.log(response);
+  });
+}
