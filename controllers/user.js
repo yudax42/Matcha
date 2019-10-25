@@ -50,12 +50,14 @@ exports.addProfileImgs = (req, res) => {
                 .catch((err) => console.log(err))
             });
           } else {
+            // add image
             user.addImage(userId, image.path, imgIndex)
               .then(() => res.send("done"));
           }
 
         });
     } else {
+      //delete image uploaded
       fs.unlink(image.path, (err) => {
         res.json({
           msg: "image must not be > 4mb"
@@ -195,11 +197,11 @@ exports.postProfileData = (req, res) => {
       if (errors.length > 0) {
         res.json(errors);
       } else {
-        // console.log("fuckyou");
         if (secPredTotal.length == 2)
           secPredTotal[0] = "both";
         // Update
         var i = 0;
+          // Delete all old interest to add new ones
         user.deleteAllInterest(userId)
           .then(() => {
             bcrypt.hash(password, 12, (err, hash) => {
