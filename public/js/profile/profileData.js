@@ -113,11 +113,27 @@ const addImg = (id,imgIndex) => {
     url: '/user/addProfileImg',
     data: formData,
     method: 'POST',
-    params:{imgIndex:imgIndex},
+    params:{
+      imgIndex:imgIndex
+    },
     contentType: false,
     processData: false,
   })
   .then((response) => {
-    console.log(response);
+    console.log(response.data);
+    if(response.data == "done")
+    {
+      $('#errors').append("<div id='err' class='alert alert-success fade show' role='alert'>Data updated succefully</div>");
+      setTimeout(function(){
+       $('#err').remove();
+      }, 3000);
+    }
+    else {
+      $('#errors').append("<div id='err' class='alert alert-danger fade show' role='alert'>"+response.data.msg+"</div>");
+        // delete error div after 3 sec
+        setTimeout(function(){
+         $('#err').remove();
+      }, 3000);
+    }
   });
 }

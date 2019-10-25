@@ -39,6 +39,14 @@ module.exports = class User{
 	{
 		return db.execute('INSERT INTO profilePictures(user_id,imgPath,imgIndex) VALUES(?,?,?)',[userId,path,imgIndex]);
 	}
+	static deleteImgIndex(userId,imgIndex)
+	{
+		return db.execute('DELETE FROM profilePictures WHERE imgIndex = ? AND user_id = ? ',[imgIndex,userId]);
+	}
+	static checkImgIndex(userId,imgIndex)
+	{
+		return db.execute('SELECT * FROM profilePictures WHERE imgIndex = ?',[imgIndex]);
+	}
 	static updateProfileData(userName,firstName,lastName,email,password,gender,secPredTotal,dateOfBirth,age,bio,sessionUser)
 	{
 		console.log(dateOfBirth);

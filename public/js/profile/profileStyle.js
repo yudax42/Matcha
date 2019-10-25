@@ -24,17 +24,3 @@ $("#inputImg3").change(function() {
 $("#inputImg4").change(function() {
     readURL(this,"img4");
 });
-//
-// function preview(inputId,spanId,previewId){
-//     document.getElementById(spanId).onclick = function(){
-//       document.getElementById(inputId).click();
-//     }
-//
-//     document.getElementById(inputId).onchange = function () {
-//     var reader = new FileReader();
-//     reader.onload = function (e) {
-//       document.getElementById(previewId).src = e.target.result;
-//     };
-//     reader.readAsDataURL(this.files[0]);
-//     };
-// };

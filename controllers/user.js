@@ -3,6 +3,7 @@ const form = require('../models/Form');
 const moment = require('moment');
 const bcrypt = require('bcryptjs');
 var _ = require('lodash');
+var fs = require('fs');
 
 exports.getProfile = (req,res) => {
     res.render('user/profile',{
@@ -19,16 +20,53 @@ exports.addProfileImgs = (req,res) => {
   const image = req.file;
   const userId = req.session.userId;
   const imgIndex = req.query.imgIndex;
+  var errors = [];
+
   if(!image)
-    res.send('no');
+  {
+    console.log(image);
+    res.json({msg: 'image must be JPG, JPEG, PNG'});
+  }
   else
   {
-    user.addImage(userId,image.path,imgIndex)
-    .then(() => console.log("done"))
+    // file.size <
+    console.log(image);
+    if(image.size < 4194304)
+    {
+      //check if is there an image in imgIndex
+      user.checkImgIndex(userId,imgIndex)
+      .then(([data]) => {
+        // if found delete old image path
+        if(data.length == 1)
+        {
+          // delete file
+          fs.unlink(data[0].imgPath,(err) => {
+              if (err) throw err;
+              console.log('File deleted!');
+              // delete old path in db
+              user.deleteImgIndex(userId,imgIndex)
+              .then(() => {
+                // add new image
+                user.addImage(userId,image.path,imgIndex)
+                .then(() => res.send("done"));
+              })
+              .catch((err) => console.log(err))
+          });
+        }
+        else{
+          user.addImage(userId,image.path,imgIndex)
+          .then(() => res.send("done"));
+        }
+
+      });
+    }
+    else {
+      fs.unlink(image.path,(err) => {
+        res.json({msg: "image must not be > 4mb"});
+      });
+    }
   }
-
 }
-
 
 exports.getProfileData = (req,res) => {
 	const userName = req.session.userName;
@@ -128,7 +166,7 @@ exports.postProfileData = (req,res) => {
 		}
 		else
 		{
-			console.log("fuckyou");
+			// console.log("fuckyou");
 			if(secPredTotal.length == 2)
 				secPredTotal[0] = "both";
 			// Update
