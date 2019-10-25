@@ -201,7 +201,7 @@ exports.postProfileData = (req, res) => {
           secPredTotal[0] = "both";
         // Update
         var i = 0;
-          // Delete all old interest to add new ones
+        // Delete all old interest to add new ones
         user.deleteAllInterest(userId)
           .then(() => {
             bcrypt.hash(password, 12, (err, hash) => {

@@ -67,7 +67,7 @@ exports.postSignup = (req, res) => {
         });
       if (!form.validePassword(password))
         errors.push({
-          msg: "passoword not valid"
+          msg: "password not valid"
         });
     }
     // Check required fields
@@ -86,10 +86,10 @@ exports.postSignup = (req, res) => {
           var token = buffer.toString('hex');
           if (err)
             res.redirect('/auth/signup');
-          const newUser = new User(username, firstName, lastName, email, hash,token);
+          const newUser = new User(username, firstName, lastName, email, hash, token);
           newUser.add().then(() => {
             // send email
-            form.sendEmail(email, 'Matcha Account', "Hello "+username+ "click here to validate your account http://localhost:3000/auth/validate/"+token)
+            form.sendEmail(email, 'Matcha Account', "Hello " + username + "click here to validate your account http://localhost:3000/auth/validate/" + token)
               .then(() => {
                 req.flash('successMsg', 'you account is created, You need to check your email to activate!');
                 return res.redirect('/auth/login');
@@ -105,38 +105,37 @@ exports.postSignup = (req, res) => {
 
 // validate email
 exports.validateEmail = (req, res) => {
-  const token = req.param('token');
+  const token = req.params.token;
   // Check if token exists
-  User.checkToken(token)
-  .then(([data]) => {
-    // if the is token in db do update
-    if(data.length > 0)
-    {
-      if(data[0].emailToken == token && data[0].accStat == "not active")
-      {
-        // activate account
-        User.activateAccount(token)
-        .then(() => {
-          req.flash('successMsg', 'your account is activated You can login now!');
+  User.checkTokenEmail(token)
+    .then(([data]) => {
+      // if the is token in db do update
+      console.log(data);
+      if (data.length > 0) {
+        if (data[0].emailToken == token && data[0].accStat == "not active") {
+          // activate account
+          User.activateAccount(token)
+            .then(() => {
+              req.flash('successMsg', 'your account is activated You can login now!');
+              return res.redirect('/auth/login');
+            })
+        } // redirect if account is already verified
+        else if (data[0].accStat == "active") {
+          req.flash('successMsg', 'your account is already verified');
           return res.redirect('/auth/login');
-        })
-      }// redirect if account is already verified
-      else if(data[0].accStat == "active"){
-        req.flash('successMsg', 'your account is already verified');
-        return res.redirect('/auth/login');
+        } else {
+          return res.redirect('/auth/login');
+        }
+      } else { // redirect because it's not found
+        return res.render('auth/login', {
+          errors: [{
+            msg: "invalid Token"
+          }],
+          successMsg: null
+        });
       }
-      else {
-        return res.redirect('/auth/login');
-      }
-    }
-    else { // redirect because it's not found
-      return res.render('auth/login', {
-        errors: [{msg:"invalid Token"}],
-        successMsg: null
-      });
-    }
-  })
-  .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
 }
 
 // validate login form and give access to user
@@ -170,8 +169,7 @@ exports.postLogin = (req, res) => {
             errors: errors,
             successMsg: null
           });
-        }
-        else if(user[0].accStat == "not active") {
+        } else if (user[0].accStat == "not active") {
           errors.push({
             msg: "Your account is not active please check your email"
           });
@@ -179,8 +177,7 @@ exports.postLogin = (req, res) => {
             errors: errors,
             successMsg: null
           });
-        }
-        else {
+        } else {
           bcrypt.compare(password, user[0].password)
             .then(doMatch => {
               if (doMatch) {
@@ -206,60 +203,58 @@ exports.postLogin = (req, res) => {
       .catch(err => console.log(err));
   }
 }
-exports.resetPass = (req,res) => {
+// verifie user email and check if found send token
+exports.resetPass = (req, res) => {
   const userName = req.body.username;
   const email = req.body.email;
   var errors = [];
-  if(!email)
-    errors.push({msg: "please insert email to send you reset information"});
-  else if (!form.valideEmail(email))
-  {
+  if (!email)
+    errors.push({
+      msg: "please insert email to send you reset information"
+    });
+  else if (!form.valideEmail(email)) {
     errors.push({
       msg: "Please insert correct email address"
     });
-  }
-  else if(!form.valideName(userName))
-  {
-      errors.push({
-        msg: "Please insert correct Username"
-      });
-  }
-
-  if(errors.length == 0)
-  {
-    // Check email in DATABASE
-    User.findAccountWithEmail(userName,email)
-    .then(([data]) => {
-      if(data.length == 1)
-      {
-        // generate token
-        crypto.randomBytes(32, (err, buffer) => {
-          var token = buffer.toString('hex');
-        // insert to DATABASE
-          User.addPassToken(userName, token)
-          .then(() => {
-            // send email
-            form.sendEmail(email, 'Matcha Account', "Hello "+userName+ "click here to reset your password http://localhost:3000/auth/reset/"+token)
-              .then(() => {
-                req.flash('successMsg', 'Please check your email to reset Password');
-                return res.redirect('/auth/login');
-              })
-              .catch((err) => console.log(err));
-          })
-        });
-      }
-      else {
-        errors.push({msg:"no account found with that email"})
-        return res.render('auth/login', {
-          errors: errors,
-          successMsg: null
-        });
-      }
-
-
+  } else if (!form.valideName(userName)) {
+    errors.push({
+      msg: "Please insert correct Username"
     });
   }
-  else {
+
+  if (errors.length == 0) {
+    // Check email in DATABASE
+    User.findAccountWithEmail(userName, email)
+      .then(([data]) => {
+        if (data.length == 1) {
+          // generate token
+          crypto.randomBytes(32, (err, buffer) => {
+            var token = buffer.toString('hex');
+            // insert to DATABASE
+            User.addPassToken(userName, token)
+              .then(() => {
+                // send email
+                form.sendEmail(email, 'Matcha Account', "Hello " + userName + "click here to reset your password http://localhost:3000/auth/reset/" + token)
+                  .then(() => {
+                    req.flash('successMsg', 'Please check your email to reset Password');
+                    return res.redirect('/auth/login');
+                  })
+                  .catch((err) => console.log(err));
+              })
+          });
+        } else {
+          errors.push({
+            msg: "no account found with that email"
+          })
+          return res.render('auth/login', {
+            errors: errors,
+            successMsg: null
+          });
+        }
+
+
+      });
+  } else {
     return res.render('auth/login', {
       errors: errors,
       successMsg: null
@@ -268,52 +263,54 @@ exports.resetPass = (req,res) => {
   // res.render('auth/resetPass',{successMsg: null});
 }
 
-
-exports.getResetPass = (req,res) => {
+// get reset page with token
+exports.getResetPass = (req, res) => {
   var token = req.params.token;
-  res.render("auth/resetPass",{successMsg: null,token:token});
+  res.render("auth/resetPass", {
+    successMsg: null,
+    token: token
+  });
 }
-exports.postResetPass = (req,res) => {
-    var userName = req.body.username;
-    var newPass = req.body.newPassword;
-    var token = req.body.token;
-    var errors = [];
-    if (!form.validePassword(newPass))
-      errors.push({
-        msg: "passoword not valid"
+// post token userName newPass to verifie and add images
+exports.postResetPass = (req, res) => {
+  var userName = req.body.username;
+  var newPass = req.body.newPassword;
+  var token = req.body.token;
+  var errors = [];
+  if (!form.validePassword(newPass))
+    errors.push({
+      msg: "passoword not valid"
     });
-    if(errors.length == 0)
-    {
-      User.checkToken(userName,token)
+  if (errors.length == 0) {
+    User.checkToken(userName, token)
       .then(([data]) => {
-        if(data.length == 1)
-        {
+        if (data.length == 1) {
           //add new password
           bcrypt.hash(newPass, 12, (err, hash) => {
-            User.addnewPass(hash, token,userName)
-            .then(() => {
-              req.flash('successMsg', 'Your Password have been updated!');
-              return res.redirect('/auth/login');
-            })
-            .catch(err => console.log(err));
+            User.addnewPass(hash, token, userName)
+              .then(() => {
+                req.flash('successMsg', 'Your Password have been updated!');
+                return res.redirect('/auth/login');
+              })
+              .catch(err => console.log(err));
           });
           //redirect login
-        }
-        else {
-          errors.push({msg: "invalid details"});
+        } else {
+          errors.push({
+            msg: "invalid details"
+          });
           return res.render('auth/login', {
             errors: errors,
             successMsg: null
           });
         }
       })
-    }
-    else {
-      return res.render('auth/login', {
-        errors: errors,
-        successMsg: null
-      });
-    }
+  } else {
+    return res.render('auth/login', {
+      errors: errors,
+      successMsg: null
+    });
+  }
 
 }
 

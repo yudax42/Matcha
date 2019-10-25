@@ -2,18 +2,18 @@
 [√] - create author file
 [] - app must be responsive
 [] - App must be secure
-        => not store plain text password
-        => secure from Sql,Xss injection
-        => secure file upload
+        => [√] not store plain text password
+        => [√] secure from Sql,Xss injection
+        => [√] secure file upload
         =
 ## Mandatory part
 [] - Registration and Signing-in
         => Signup
         - [√] ask for email addres, username, first and last name,password
-        - [View] send email verification
+        - [√] send email verification
         => Login
         - [√] connect with username and password
-        - [View] implement forget password
+        - [√] implement forget password
 [] - User profile
         => Fill information
         - [√] first name

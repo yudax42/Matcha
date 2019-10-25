@@ -37,6 +37,9 @@ module.exports = class User {
   static addnewPass(hash, token,userName) {
     return db.execute('UPDATE users SET password = ? WHERE userName = ? AND resetPassToken = ?', [hash, userName,token]);
   }
+  static checkTokenEmail(token) {
+    return db.execute('SELECT * FROM users WHERE emailToken = ?', [token]);
+  }
   static checkToken(userName,token) {
     return db.execute('SELECT * FROM users WHERE resetPassToken = ? AND userName = ?', [token,userName]);
   }
