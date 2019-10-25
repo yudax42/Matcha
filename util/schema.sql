@@ -12,7 +12,9 @@ CREATE TABLE IF NOT EXISTS users(
 	birthDate	DATE,
 	age		INT,
 	bio		varchar(200),
-	accStat 	ENUM('active', 'not active')
+	accStat 	ENUM('active', 'not active'),
+	emailToken varchar(200),
+	resetPassToken varchar(200)
 );
 
 

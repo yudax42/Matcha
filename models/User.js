@@ -18,6 +18,10 @@ module.exports = class User {
   static findUser(userName) {
     return db.execute('SELECT * FROM users WHERE userName = ?', [userName]);
   }
+  static findAccountWithEmail(userName,email)
+  {
+    return db.execute('SELECT * FROM users WHERE userName = ? AND email = ?', [userName,email]);
+  }
   static fetchInterest(userId) {
     return db.execute('SELECT topic FROM interest WHERE user_id = ?', [userId]);
   }
@@ -27,7 +31,16 @@ module.exports = class User {
   static addToken(userName, token) {
     return db.execute('INSERT INTO users(emailToken) VALUES(?) WHERE userName = ?', [token, userName]);
   }
-  static checkToken(token) {
+  static addPassToken(userName, token) {
+    return db.execute('UPDATE users SET resetPassToken = ? WHERE userName = ?', [token, userName]);
+  }
+  static addnewPass(hash, token,userName) {
+    return db.execute('UPDATE users SET password = ? WHERE userName = ? AND resetPassToken = ?', [hash, userName,token]);
+  }
+  static checkToken(userName,token) {
+    return db.execute('SELECT * FROM users WHERE resetPassToken = ? AND userName = ?', [token,userName]);
+  }
+  static checkResetToken(token) {
     return db.execute('SELECT * FROM users WHERE emailToken = ?', [token]);
   }
   static activateAccount(token) {

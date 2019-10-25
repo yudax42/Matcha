@@ -8,5 +8,7 @@ router.post('/signup', authController.postSignup);
 router.post('/login', authController.postLogin);
 router.get('/logout', authController.postLogout);
 router.get('/validate/:token', authController.validateEmail);
-
+router.post('/resetPass',authController.resetPass);
+router.get('/reset/:token',authController.getResetPass);
+router.post('/reset/',authController.postResetPass);
 module.exports = router;

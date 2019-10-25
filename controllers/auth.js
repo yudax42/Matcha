@@ -206,6 +206,105 @@ exports.postLogin = (req, res) => {
       .catch(err => console.log(err));
   }
 }
+exports.resetPass = (req,res) => {
+  const userName = req.body.username;
+  const email = req.body.email;
+  var errors = [];
+  if(!email)
+    errors.push({msg: "please insert email to send you reset information"});
+  else if (!form.valideEmail(email))
+  {
+    errors.push({
+      msg: "Please insert correct email address"
+    });
+  }
+  else if(!form.valideName(userName))
+  {
+      errors.push({
+        msg: "Please insert correct Username"
+      });
+  }
+
+  if(errors.length == 0)
+  {
+    console.log(userName,email);
+    // Check email in DATABASE
+    User.findAccountWithEmail(userName,email)
+    .then(([data]) => {
+      if(data.length == 1)
+      {
+        // generate token
+        crypto.randomBytes(32, (err, buffer) => {
+          var token = buffer.toString('hex');
+        // insert to DATABASE
+          User.addPassToken(userName, token)
+          .then(() => {
+            // send email
+            form.sendEmail(email, 'Matcha Account', "Hello "+userName+ "click here to reset your password http://localhost:3000/auth/reset/"+token)
+              .then(() => {
+                req.flash('successMsg', 'Please check your email to reset Password');
+                return res.redirect('/auth/login');
+              })
+              .catch((err) => console.log(err));
+          })
+        });
+      }
+      else {
+        errors.push({msg:"no account found with that email"})
+        return res.render('auth/login', {
+          errors: errors,
+          successMsg: null
+        });
+      }
+
+
+    });
+  }
+  else {
+    return res.render('auth/login', {
+      errors: errors,
+      successMsg: null
+    });
+  }
+  // res.render('auth/resetPass',{successMsg: null});
+}
+
+
+exports.getResetPass = (req,res) => {
+  var token = req.params.token;
+  res.render("auth/resetPass",{successMsg: null,token:token});
+}
+exports.postResetPass = (req,res) => {
+    var userName = req.body.username;
+    var newPass = req.body.newPassword;
+    var token = req.body.token;
+    var errors = [];
+    User.checkToken(userName,token)
+    .then(([data]) => {
+      if(data.length == 1)
+      {
+        //add new password
+        bcrypt.hash(newPass, 12, (err, hash) => {
+          console.log(hash,token,userName);
+          User.addnewPass(hash, token,userName)
+          .then(() => {
+            req.flash('successMsg', 'Your Password have been updated!');
+            return res.redirect('/auth/login');
+          })
+          .catch(err => console.log(err));
+        });
+        //redirect login
+      }
+      else {
+        errors.push({msg: "invalid details"});
+        return res.render('auth/login', {
+          errors: errors,
+          successMsg: null
+        });
+      }
+    })
+}
+
 exports.postLogout = (req, res) => {
   req.session.destroy((err) => {
     if (err)
