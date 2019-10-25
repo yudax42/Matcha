@@ -7,11 +7,9 @@ window.onload = function fetchData() {
   // Get user Data
   axios.get('/user/profileData')
     .then(function (response) {
-      console.log(response);
       var data = response.data.formData;
       var listInterest = response.data.listInterest;
       var imgList = response.data.imgData;
-      console.log(imgList);
       //add images;
       imgList.forEach((img) => {
         switch(img.imgIndex) {
