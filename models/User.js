@@ -11,8 +11,8 @@ module.exports = class User {
     this.token = token;
   }
   add() {
-    return db.execute("insert into users(userName,firstName,lastName,email,password,accStat,emailToken) values(?,?,?,?,?,?,?)", [
-      this.userName, this.firstName, this.lastName, this.email, this.password, "not active",this.token
+    return db.execute("insert into users(userName,firstName,lastName,email,password,accStat,emailToken,sexPref) values(?,?,?,?,?,?,?,?)", [
+      this.userName, this.firstName, this.lastName, this.email, this.password, "not active",this.token,"both"
     ]);
   };
   static findUser(userName) {
@@ -38,6 +38,7 @@ module.exports = class User {
     return db.execute('UPDATE users SET password = ? WHERE userName = ? AND resetPassToken = ?', [hash, userName,token]);
   }
   static checkTokenEmail(token) {
+    console.log(token);
     return db.execute('SELECT * FROM users WHERE emailToken = ?', [token]);
   }
   static checkToken(userName,token) {
