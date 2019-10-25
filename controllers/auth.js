@@ -109,16 +109,18 @@ exports.validateEmail = (req, res) => {
   // Check if token exists
   User.checkToken(token)
   .then(([data]) => {
+    // if the is token in db do update
     if(data.length > 0)
     {
       if(data[0].emailToken == token && data[0].accStat == "not active")
       {
+        // activate account
         User.activateAccount(token)
         .then(() => {
           req.flash('successMsg', 'your account is activated You can login now!');
           return res.redirect('/auth/login');
         })
-      }
+      }// redirect if account is already verified
       else if(data[0].accStat == "active"){
         req.flash('successMsg', 'your account is already verified');
         return res.redirect('/auth/login');
@@ -127,8 +129,11 @@ exports.validateEmail = (req, res) => {
         return res.redirect('/auth/login');
       }
     }
-    else {
-      return res.redirect('/auth/login');
+    else { // redirect because it's not found
+      return res.render('auth/login', {
+        errors: [{msg:"invalid Token"}],
+        successMsg: null
+      });
     }
   })
   .catch(err => console.log(err));
