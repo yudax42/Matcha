@@ -7,6 +7,6 @@ router.get('/login', authController.getLogin);
 router.post('/signup', authController.postSignup);
 router.post('/login', authController.postLogin);
 router.get('/logout', authController.postLogout);
-
+router.get('/validate/:token', authController.validateEmail);
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const form = require('../models/Form');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 
 
@@ -81,22 +82,56 @@ exports.postSignup = (req, res) => {
       })
     } else {
       bcrypt.hash(password, 12, (err, hash) => {
-        const newUser = new User(username, firstName, lastName, email, hash);
-        newUser.add().then(() => {
-          form.sendEmail(email, 'Matcha Account', "Your Account Created successfuly")
-            .then(() => {
-              req.flash('successMsg', 'You can Login now !');
-              return res.redirect('/auth/login');
-            })
-            .catch((err) => console.log(err));
-
-        }).catch(err => console.log(err));
+        crypto.randomBytes(32, (err, buffer) => {
+          var token = buffer.toString('hex');
+          if (err)
+            res.redirect('/auth/signup');
+          const newUser = new User(username, firstName, lastName, email, hash,token);
+          newUser.add().then(() => {
+            // send email
+            form.sendEmail(email, 'Matcha Account', "Hello "+username+ "click here to validate your account http://localhost:3000/auth/validate/"+token)
+              .then(() => {
+                req.flash('successMsg', 'you account is created, You need to check your email to activate!');
+                return res.redirect('/auth/login');
+              })
+              .catch((err) => console.log(err));
+          });
+        })
       });
     }
   });
+}
 
 
-
+// validate email
+exports.validateEmail = (req, res) => {
+  const token = req.param('token');
+  // Check if token exists
+  User.checkToken(token)
+  .then(([data]) => {
+    if(data.length > 0)
+    {
+      if(data[0].emailToken == token && data[0].accStat == "not active")
+      {
+        User.activateAccount(token)
+        .then(() => {
+          req.flash('successMsg', 'your account is activated You can login now!');
+          return res.redirect('/auth/login');
+        })
+      }
+      else if(data[0].accStat == "active"){
+        req.flash('successMsg', 'your account is already verified');
+        return res.redirect('/auth/login');
+      }
+      else {
+        return res.redirect('/auth/login');
+      }
+    }
+    else {
+      return res.redirect('/auth/login');
+    }
+  })
+  .catch(err => console.log(err));
 }
 
 // validate login form and give access to user

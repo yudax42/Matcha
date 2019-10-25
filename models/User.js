@@ -2,16 +2,17 @@ const db = require('../util/database');
 
 
 module.exports = class User {
-  constructor(userName, firstName, lastName, email, password) {
+  constructor(userName, firstName, lastName, email, password,token) {
     this.userName = userName;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.password = password;
+    this.token = token;
   }
   add() {
-    return db.execute("insert into users(userName,firstName,lastName,email,password,accStat) values(?,?,?,?,?,?)", [
-      this.userName, this.firstName, this.lastName, this.email, this.password, "not active"
+    return db.execute("insert into users(userName,firstName,lastName,email,password,accStat,emailToken) values(?,?,?,?,?,?,?)", [
+      this.userName, this.firstName, this.lastName, this.email, this.password, "not active",this.token
     ]);
   };
   static findUser(userName) {
@@ -22,6 +23,16 @@ module.exports = class User {
   }
   static fetchImages(userId) {
     return db.execute('SELECT imgPath,imgIndex FROM profilePictures WHERE user_id = ?', [userId]);
+  }
+  static addToken(userName, token) {
+    return db.execute('INSERT INTO users(emailToken) VALUES(?) WHERE userName = ?', [token, userName]);
+  }
+  static checkToken(token) {
+    return db.execute('SELECT * FROM users WHERE emailToken = ?', [token]);
+  }
+  static activateAccount(token) {
+    console.log(token);
+    return db.execute('UPDATE users SET accStat = "active" WHERE emailToken = ?', [token]);
   }
   static deleteAllInterest(userId) {
     return db.execute('DELETE FROM interest WHERE user_id = ?', [userId]);
@@ -35,6 +46,7 @@ module.exports = class User {
   static addImage(userId, path, imgIndex) {
     return db.execute('INSERT INTO profilePictures(user_id,imgPath,imgIndex) VALUES(?,?,?)', [userId, path, imgIndex]);
   }
+
   static deleteImgIndex(userId, imgIndex) {
     return db.execute('DELETE FROM profilePictures WHERE imgIndex = ? AND user_id = ? ', [imgIndex, userId]);
   }
