@@ -16,13 +16,15 @@
     "express-ejs-layouts": "^2.5.0",
     "express-mysql-session": "^2.1.0",
     "express-session": "^1.17.0",
+    "iplocation": "^6.1.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "multer": "^1.4.2",
     "mysql2": "^1.7.0",
     "ngrok": "^3.2.5",
     "nodemailer": "^6.3.1",
-    "nodemailer-sendgrid-transport": "^0.2.0"
+    "nodemailer-sendgrid-transport": "^0.2.0",
+    "public-ip": "^3.2.0"
   },
   "devDependencies": {},
   "scripts": {

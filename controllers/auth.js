@@ -2,7 +2,8 @@ const User = require('../models/User');
 const form = require('../models/Form');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-
+const publicIp = require('public-ip');
+const iplocation = require("iplocation").default;
 
 
 // render signup page
@@ -88,13 +89,22 @@ exports.postSignup = (req, res) => {
             res.redirect('/auth/signup');
           const newUser = new User(username, firstName, lastName, email, hash, token);
           newUser.add().then(() => {
-            // send email
-            form.sendEmail(email, 'Matcha Account', "Hello " + username + "click here to validate your account http://localhost:3000/auth/validate/" + token)
-              .then(() => {
-                req.flash('successMsg', 'you account is created, You need to check your email to activate!');
-                return res.redirect('/auth/login');
-              })
-              .catch((err) => console.log(err));
+            const ip = (async () => {return await publicIp.v4();})();
+            ip.then((ip) => {
+              iplocation(ip,[],(err,response)=>{
+                console.log(response);
+                User.firstTimeSaveIpLocation(username,response.longitude,response.latitude)
+                .then(() => {
+                  // send email
+                  form.sendEmail(email, 'Matcha Account', "Hello " + username + "click here to validate your account http://localhost:3000/auth/validate/" + token)
+                    .then(() => {
+                      req.flash('successMsg', 'you account is created, You need to check your email to activate!');
+                      return res.redirect('/auth/login');
+                    })
+                    .catch((err) => console.log(err));
+                })
+              });
+            });
           });
         })
       });
@@ -140,6 +150,8 @@ exports.validateEmail = (req, res) => {
 
 // validate login form and give access to user
 exports.postLogin = (req, res) => {
+
+
   const userName = req.body.username;
   const password = req.body.password;
   let errors = [];
@@ -181,12 +193,23 @@ exports.postLogin = (req, res) => {
           bcrypt.compare(password, user[0].password)
             .then(doMatch => {
               if (doMatch) {
-                req.session.isLoggedIn = true;
-                req.session.userName = user[0].userName;
-                req.session.userId = user[0].id;
-                return req.session.save(err => {
-                  return res.redirect('/user/profile');
-                });
+                const ip = (async () => {return await publicIp.v4();})();
+                ip.then((ip) => {
+                  iplocation(ip,[],(err,response)=>{
+                    console.log(response);
+                    User.saveIpLocation(user[0].userName,response.longitude,response.latitude)
+                    .then(() => {
+                      req.session.isLoggedIn = true;
+                      req.session.userName = user[0].userName;
+                      req.session.userId = user[0].id;
+                      req.session.longitude = response.long;
+                      req.session.latitude = response.lat;
+                      return req.session.save(err => {
+                        return res.redirect('/user/profile');
+                      });
+                    });
+                  });
+                })
               } else {
                 errors.push({
                   msg: "No account Found!"

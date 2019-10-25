@@ -32,3 +32,12 @@ CREATE TABLE profilePictures(
 	imgIndex	varchar(22),
 	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 )
+
+CREATE TABLE userLocation(
+	id				INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,
+	userName	varchar(15) UNIQUE,
+	geoLong		FLOAT,
+	geoLat    FLOAT,
+	ipLong		FLOAT,
+	ipLat 		FLOAT
+)
