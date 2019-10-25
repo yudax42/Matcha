@@ -170,7 +170,17 @@ exports.postLogin = (req, res) => {
             errors: errors,
             successMsg: null
           });
-        } else {
+        }
+        else if(user[0].accStat == "not active") {
+          errors.push({
+            msg: "Your account is not active please check your email"
+          });
+          return res.render('auth/login', {
+            errors: errors,
+            successMsg: null
+          });
+        }
+        else {
           bcrypt.compare(password, user[0].password)
             .then(doMatch => {
               if (doMatch) {

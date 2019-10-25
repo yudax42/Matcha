@@ -31,8 +31,10 @@ module.exports = class User {
     return db.execute('SELECT * FROM users WHERE emailToken = ?', [token]);
   }
   static activateAccount(token) {
-    console.log(token);
     return db.execute('UPDATE users SET accStat = "active" WHERE emailToken = ?', [token]);
+  }
+  static accountStatus(userName) {
+    return db.execute('SELECT accStat FROM users WHERE userName = ?', [userName]);
   }
   static deleteAllInterest(userId) {
     return db.execute('DELETE FROM interest WHERE user_id = ?', [userId]);
