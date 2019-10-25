@@ -82,7 +82,10 @@ exports.getProfileData = (req,res) => {
 				dbInterestArr.push(data[i].topic);
 				i++;
 			}
-			res.json({formData:data1[0],listInterest:dbInterestArr});
+      user.fetchImages(userId)
+      .then(([data3]) => {
+          res.json({formData:data1[0],listInterest:dbInterestArr,imgData:data3});
+      })
 		});
 
 	})

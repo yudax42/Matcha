@@ -7,9 +7,31 @@ window.onload = function fetchData() {
   // Get user Data
   axios.get('/user/profileData')
     .then(function (response) {
+      console.log(response);
       var data = response.data.formData;
       var listInterest = response.data.listInterest;
-
+      var imgList = response.data.imgData;
+      console.log(imgList);
+      //add images;
+      imgList.forEach((img) => {
+        switch(img.imgIndex) {
+          case "profile":
+            $('#avatarPreview').css('background-image', 'url(/'+img.imgPath +')');
+            break;
+          case "img1":
+            $('#img1').css('background-image', 'url(/'+img.imgPath +')');
+            break;
+          case "img2":
+            $('#img2').css('background-image', 'url(/'+img.imgPath +')');
+            break;
+          case "img3":
+            $('#img3').css('background-image', 'url(/'+img.imgPath +')');
+            break;
+          case "img4":
+            $('#img4').css('background-image', 'url(/'+img.imgPath +')');
+            break;
+        }
+      });
       $('#profileName').html(data.firstName + " " + data.lastName);
       $('#username').val(data.userName);
       $('#firstName').val(data.firstName);
@@ -31,6 +53,7 @@ window.onload = function fetchData() {
       listInterest.forEach((interest) => {
         $("#listInterest").tagsinput("add",interest);
       });
+
     })
     .catch(function (error) {
       // console.log("there was and error please try again later");

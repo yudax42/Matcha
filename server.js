@@ -59,6 +59,7 @@ app.use((req,res,next) => {
 	next();
 });
 app.use(express.static(path.join(__dirname,'public')));
+app.use('/images',express.static(path.join(__dirname,'images')));
 app.use(expressLayouts);
 app.use(flash());
 app.get('/',(req,res) => {res.render('user/root');});

@@ -23,6 +23,10 @@ module.exports = class User{
 	{
 		return db.execute('SELECT topic FROM interest WHERE user_id = ?',[userId]);
 	}
+	static fetchImages(userId)
+	{
+		return db.execute('SELECT imgPath,imgIndex FROM profilePictures WHERE user_id = ?',[userId]);
+	}
 	static deleteAllInterest(userId)
 	{
 		return db.execute('DELETE FROM interest WHERE user_id = ?',[userId]);
