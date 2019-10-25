@@ -227,7 +227,6 @@ exports.resetPass = (req,res) => {
 
   if(errors.length == 0)
   {
-    console.log(userName,email);
     // Check email in DATABASE
     User.findAccountWithEmail(userName,email)
     .then(([data]) => {
@@ -279,30 +278,43 @@ exports.postResetPass = (req,res) => {
     var newPass = req.body.newPassword;
     var token = req.body.token;
     var errors = [];
-    User.checkToken(userName,token)
-    .then(([data]) => {
-      if(data.length == 1)
-      {
-        //add new password
-        bcrypt.hash(newPass, 12, (err, hash) => {
-          console.log(hash,token,userName);
-          User.addnewPass(hash, token,userName)
-          .then(() => {
-            req.flash('successMsg', 'Your Password have been updated!');
-            return res.redirect('/auth/login');
-          })
-          .catch(err => console.log(err));
-        });
-        //redirect login
-      }
-      else {
-        errors.push({msg: "invalid details"});
-        return res.render('auth/login', {
-          errors: errors,
-          successMsg: null
-        });
-      }
-    })
+    if (!form.validePassword(newPass))
+      errors.push({
+        msg: "passoword not valid"
+    });
+    if(errors.length == 0)
+    {
+      User.checkToken(userName,token)
+      .then(([data]) => {
+        if(data.length == 1)
+        {
+          //add new password
+          bcrypt.hash(newPass, 12, (err, hash) => {
+            User.addnewPass(hash, token,userName)
+            .then(() => {
+              req.flash('successMsg', 'Your Password have been updated!');
+              return res.redirect('/auth/login');
+            })
+            .catch(err => console.log(err));
+          });
+          //redirect login
+        }
+        else {
+          errors.push({msg: "invalid details"});
+          return res.render('auth/login', {
+            errors: errors,
+            successMsg: null
+          });
+        }
+      })
+    }
+    else {
+      return res.render('auth/login', {
+        errors: errors,
+        successMsg: null
+      });
+    }
+
 }
 
 exports.postLogout = (req, res) => {
