@@ -1,19 +1,17 @@
-.modalText
-{
-    background: none;
-    color: #007aff;
-    margin: 0;
-    border: none;
-    padding: 0;
+.modalText {
+  background: none;
+  color: #007aff;
+  margin: 0;
+  border: none;
+  padding: 0;
 }
 
-
 .badge-info {
-    color: #fff;
-    background-color: #007aff;
-    font-family: inherit;
+  color: #fff;
+  background-color: #007aff;
+  font-family: inherit;
 }
 
 .users .card img {
-    height: 250px
+  height: 250px
 }
