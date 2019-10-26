@@ -68,11 +68,16 @@ module.exports = class User {
   // GeoLocation
   static firstTimeSaveIpLocation(userName,long,lat)
   {
-    return db.execute('INSERT INTO userLocation(userName,ipLong,ipLat) VALUES(?,?,?)',[userName,long,lat]);
+    return db.execute('INSERT INTO userLocation(userName,ipLong,ipLat) VALUES(?,?,)',[userName,long,lat]);
   }
   static saveIpLocation(userName,long,lat)
   {
     return db.execute('UPDATE userLocation SET ipLong = ?, ipLat = ? WHERE userName = ?',[long,lat,userName]);
+  }
+  static saveGeoLocation(userName,long,lat)
+  {
+    console.log(userName,long,lat);
+    return db.execute('UPDATE userLocation SET geoLong = ?, geoLat = ? WHERE userName = ?',[long,lat,userName]);
   }
   static deleteImgIndex(userId, imgIndex) {
     return db.execute('DELETE FROM profilePictures WHERE imgIndex = ? AND user_id = ? ', [imgIndex, userId]);

@@ -24,3 +24,15 @@ $("#inputImg3").change(function() {
 $("#inputImg4").change(function() {
   readURL(this, "img4");
 });
+
+// locationInfo
+$("#location").click(() => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      $("#latitude").html(position.coords.latitude);
+      $("#longitude").html(position.coords.longitude);
+    });
+  } else {
+    $(".locationInfo").html("Geolocation is not supported by this browser.");
+  }
+})

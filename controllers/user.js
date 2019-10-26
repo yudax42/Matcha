@@ -108,7 +108,9 @@ exports.postProfileData = (req, res) => {
     secPredTotal,
     dateOfBirth,
     bio,
-    interest
+    interest,
+    longitude,
+    latitude
   } = req.query;
   const errors = [];
   const interests = ["science", "tech", "food", "swimming", "football", "anime", "e-games", "makeUp", "series", "movies", "cinema", "art", "music", "self improvement", "reading"];
@@ -207,16 +209,19 @@ exports.postProfileData = (req, res) => {
             bcrypt.hash(password, 12, (err, hash) => {
               user.updateProfileData(userName, firstName, lastName, email, hash, gender, secPredTotal[0], dateOfBirth, age, bio, sessionUser)
                 .then(() => {
-                  req.session.userName = userName;
-                  while (i < pushDbArray.length) {
-                    user.addInterest(userId, pushDbArray[i])
-                      .then(() => {})
-                      .catch((err) => console.log(err));
-                    i++;
-                  }
-                  res.json([{
-                    msg: "done"
-                  }]);
+                  user.saveGeoLocation(userName,longitude,latitude)
+                  .then(() => {
+                    req.session.userName = userName;
+                    while (i < pushDbArray.length) {
+                      user.addInterest(userId, pushDbArray[i])
+                        .then(() => {})
+                        .catch((err) => console.log(err));
+                      i++;
+                    }
+                    res.json([{
+                      msg: "done"
+                    }]);
+                  })
                 })
                 .catch(err => console.log(err));
             });

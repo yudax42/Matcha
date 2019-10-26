@@ -64,6 +64,8 @@ const send = () => {
   var password = $('#password').val();
   var gender = $("#gender option:selected").val();
   var secPredTotal = [];
+  var longitude = $("#longitude").html();
+  var latitude = $("#longitude").html();
 
   $.each($("input[name='secPref']:checked"), function() {
     secPredTotal.push($(this).attr("id"));
@@ -90,7 +92,9 @@ const send = () => {
         secPredTotal: secPredTotal,
         dateOfBirth: dateOfBirth,
         bio: bio,
-        interest: interest
+        interest: interest,
+        longitude: longitude,
+        latitude: latitude
       }
     })
     .then((response) => {
