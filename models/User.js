@@ -68,7 +68,7 @@ module.exports = class User {
   // GeoLocation
   static firstTimeSaveIpLocation(userName,long,lat)
   {
-    return db.execute('INSERT INTO userLocation(userName,ipLong,ipLat) VALUES(?,?,)',[userName,long,lat]);
+    return db.execute('INSERT INTO userLocation(userName,ipLong,ipLat) VALUES(?,?,?)',[userName,long,lat]);
   }
   static saveIpLocation(userName,long,lat)
   {

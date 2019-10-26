@@ -6,10 +6,10 @@ window.onload = function fetchData() {
   // Get user Data
   axios.get('/user/profileData')
     .then(function(response) {
-      console.log(response);
       var data = response.data.formData;
       var listInterest = response.data.listInterest;
       var imgList = response.data.imgData;
+      console.log(listInterest);
       var geoInfo = response.data.geoInfo;
       //add images;
       imgList.forEach((img) => {

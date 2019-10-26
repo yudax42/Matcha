@@ -150,8 +150,6 @@ exports.validateEmail = (req, res) => {
 
 // validate login form and give access to user
 exports.postLogin = (req, res) => {
-
-
   const userName = req.body.username;
   const password = req.body.password;
   let errors = [];
@@ -202,8 +200,12 @@ exports.postLogin = (req, res) => {
                       req.session.isLoggedIn = true;
                       req.session.userName = user[0].userName;
                       req.session.userId = user[0].id;
-                      req.session.longitude = response.long;
-                      req.session.latitude = response.lat;
+                      req.session.age = user[0].age;
+                      req.session.longitude = response.longitude;
+                      req.session.latitude = response.latitude;
+                      req.session.sexPref = user[0].sexPref;
+                      req.session.gender = user[0].gender;
+                      console.log(req.session.sexPref);
                       return req.session.save(err => {
                         return res.redirect('/user/profile');
                       });

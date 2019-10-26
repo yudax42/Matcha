@@ -11,6 +11,31 @@ exports.getProfile = (req, res) => {
   });
 };
 exports.getMatch = (req, res) => {
+  const userName = req.session.userName;
+  const userId = req.session.userId;
+  const gender = req.session.gender;
+  const sexPref = req.session.sexPref;
+  console.log(req.session);
+  // cas 1 : Men -> MEN
+  if(gender == "male" && sexPref == "male")
+  {
+
+  }
+  // cas 2 : Men -> WOMEN
+  if(gender == "male" && sexPref == "female")
+  {
+
+  }
+  // cas 3 : Men -> BOTH
+  if(gender == "male" && sexPref == "both")
+  {
+
+  }
+  // cas 4 : WOMEN -> WOMEN
+  if(gender == "")
+  // cas 5 : WOMEN -> MEN
+
+  // cas 6 : WOMEN -> BOTH
   res.render('user/home', {
     errorMsg: req.flash('error')
   });
@@ -70,6 +95,7 @@ exports.addProfileImgs = (req, res) => {
 exports.getProfileData = (req, res) => {
   const userName = req.session.userName;
   const userId = req.session.userId;
+  const sexPref = req.session.sexPref;
   user.fetchUserData(userName)
     .then(([data1]) => {
       user.fetchInterest(userId)
@@ -193,6 +219,11 @@ exports.postProfileData = (req, res) => {
             break;
           }
         }
+        // check GeoLocation
+        if(!longitude)
+          longitude = 0;
+        if(!latitude)
+          latitude = 0;
         // Remove duplicated items
         pushDbArray = _.uniq(interest);
       } else
@@ -216,6 +247,11 @@ exports.postProfileData = (req, res) => {
                   user.saveGeoLocation(userName,longitude,latitude)
                   .then(() => {
                     req.session.userName = userName;
+                    req.session.sexPref = secPredTotal;
+                    req.session.gender = gender;
+                    req.session.age = age;
+                    req.session.longitude = response.longitude;
+                    req.session.latitude = response.latitude;
                     while (i < pushDbArray.length) {
                       user.addInterest(userId, pushDbArray[i])
                         .then(() => {})
