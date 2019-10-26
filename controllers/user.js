@@ -82,11 +82,15 @@ exports.getProfileData = (req, res) => {
           }
           user.fetchImages(userId)
             .then(([data3]) => {
-              res.json({
-                formData: data1[0],
-                listInterest: dbInterestArr,
-                imgData: data3
-              });
+              user.fetchGeoLoc(userName)
+              .then(([data4]) => {
+                res.json({
+                  formData: data1[0],
+                  listInterest: dbInterestArr,
+                  imgData: data3,
+                  geoInfo: data4[0]
+                });
+              })
             })
         });
 

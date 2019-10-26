@@ -6,9 +6,11 @@ window.onload = function fetchData() {
   // Get user Data
   axios.get('/user/profileData')
     .then(function(response) {
+      console.log(response);
       var data = response.data.formData;
       var listInterest = response.data.listInterest;
       var imgList = response.data.imgData;
+      var geoInfo = response.data.geoInfo;
       //add images;
       imgList.forEach((img) => {
         switch (img.imgIndex) {
@@ -44,6 +46,8 @@ window.onload = function fetchData() {
       var oldFormate = data.birthDate.split('T')[0];
       var newArrFormat = oldFormate.split("-");
       $("#ageInput").val(newArrFormat[1] + "/" + newArrFormat[2] + "/" + newArrFormat[0]);
+      $("#latitude").html(geoInfo.geoLat);
+      $("#longitude").html(geoInfo.geoLong);
       $("#bio").val(data.bio);
       listInterest.forEach((interest) => {
         $("#listInterest").tagsinput("add", interest);
