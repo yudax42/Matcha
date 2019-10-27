@@ -201,6 +201,7 @@ exports.postLogin = (req, res) => {
                       req.session.userName = user[0].userName;
                       req.session.userId = user[0].id;
                       req.session.age = user[0].age;
+                      console.log(response.longitude,response.latitude);
                       req.session.longitude = response.longitude;
                       req.session.latitude = response.latitude;
                       req.session.sexPref = user[0].sexPref;

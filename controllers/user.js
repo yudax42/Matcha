@@ -4,6 +4,7 @@ const moment = require('moment');
 const bcrypt = require('bcryptjs');
 var _ = require('lodash');
 var fs = require('fs');
+var Distance = require('geo-distance');
 
 exports.getProfile = (req, res) => {
   res.render('user/profile', {
@@ -15,24 +16,45 @@ exports.getMatch = (req, res) => {
   const userId = req.session.userId;
   const gender = req.session.gender;
   const sexPref = req.session.sexPref;
+  var myCor = {lat:req.session.latitude,lon:req.session.geoLong}
   const age = 25;
   var min;
   var max = age + 3;
   (age - 18) > 3 ? min = age-3 : min = 18;
-  console.log(min," ",max)
+  console.log(sexPref);
   if(sexPref[0] == "male" || sexPref[0] == "female")
   {
     user.filterUsersGender(sexPref[0],min,max,userName)
     .then(([data]) => {
-      console.log(data);
+      // console.log(data[0]);
+     
     })
     .catch(err => console.log(err))
   }
-  else if(sexPref[0] == 'both')
+  else if(sexPref == 'both')
   {
+   
+    var locArray = [];
     user.filterUsers(min,max,userName)
     .then(([data]) => {
+
+      //sort by location
+      locArray = _.orderBy(data,(data)=> {
+
+        if(data.geoLong && data.geoLat)
+        {
+          var userPoint = {lat:data.geoLat,lon:data.geoLong};
+          return (Distance.between(myCor, userPoint).radians);
+        }
+        // else
+        // {
+        //   var userPoint = {lat:data.ipLat,lon:data.ipLong};
+        //   return (Distance.between(myCorIp, userPoint));
+        // }
+      },['asc']);
       console.log(data);
+      console.log("________________");
+      console.log(locArray);
     })
     .catch(err => console.log(err))
   }

@@ -16,6 +16,7 @@
     "express-ejs-layouts": "^2.5.0",
     "express-mysql-session": "^2.1.0",
     "express-session": "^1.17.0",
+    "geo-distance": "^0.2.0",
     "iplocation": "^6.1.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",

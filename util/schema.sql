@@ -41,5 +41,5 @@ CREATE TABLE userLocation(
 	geoLat    FLOAT,
 	ipLong		FLOAT,
 	ipLat 		FLOAT,
-	FOREIGN KEY (userName) REFERENCES users(userName) ON DELETE CASCADE
+	FOREIGN KEY (userName) REFERENCES users(userName) ON DELETE CASCADE ON UPDATE CASCADE 
 )
