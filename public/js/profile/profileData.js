@@ -9,8 +9,11 @@ window.onload = function fetchData() {
       var data = response.data.formData;
       var listInterest = response.data.listInterest;
       var imgList = response.data.imgData;
-      console.log(listInterest);
       var geoInfo = response.data.geoInfo;
+      console.log(listInterest); 
+      listInterest.forEach((interest) => {
+        $("#listInterest").tagsinput("add", interest);
+      });
       //add images;
       imgList.forEach((img) => {
         switch (img.imgIndex) {
@@ -49,9 +52,7 @@ window.onload = function fetchData() {
       $("#latitude").html(geoInfo.geoLat);
       $("#longitude").html(geoInfo.geoLong);
       $("#bio").val(data.bio);
-      listInterest.forEach((interest) => {
-        $("#listInterest").tagsinput("add", interest);
-      });
+
 
     })
     .catch(function(error) {

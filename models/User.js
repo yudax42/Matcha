@@ -88,6 +88,14 @@ module.exports = class User {
   static checkImgIndex(userId, imgIndex) {
     return db.execute('SELECT * FROM profilePictures WHERE imgIndex = ?', [imgIndex]);
   }
+  static filterUsersGender(sexPref,min,max,userName)
+  {
+    return db.execute('select users.userName,users.gender,users.age,users.bio,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.gender = ? AND users.age <= ? AND users.age >= ? AND users.userName != ?',[sexPref,max,min,userName]);
+  }
+  static filterUsers(min,max,userName)
+  {
+    return db.execute('select users.userName,users.gender,users.age,users.bio,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.age <= ? AND users.age >= ? AND users.userName != ?',[max,min,userName]);
+  }
   static updateProfileData(userName, firstName, lastName, email, password, gender, secPredTotal, dateOfBirth, age, bio, sessionUser) {
     console.log(dateOfBirth);
     return db.execute('UPDATE users SET userName = ?, firstName = ?, lastName = ?, email = ?, password = ?, gender = ?, sexPref = ?,birthDate = STR_TO_DATE(REPLACE(?,"/","-"), "%m-%d-%Y"),age = ?,bio = ? WHERE userName = ?;',

@@ -15,27 +15,28 @@ exports.getMatch = (req, res) => {
   const userId = req.session.userId;
   const gender = req.session.gender;
   const sexPref = req.session.sexPref;
-  console.log(req.session);
-  // cas 1 : Men -> MEN
-  if(gender == "male" && sexPref == "male")
+  const age = 25;
+  var min;
+  var max = age + 3;
+  (age - 18) > 3 ? min = age-3 : min = 18;
+  console.log(min," ",max)
+  if(sexPref[0] == "male" || sexPref[0] == "female")
   {
-
+    user.filterUsersGender(sexPref[0],min,max,userName)
+    .then(([data]) => {
+      console.log(data);
+    })
+    .catch(err => console.log(err))
   }
-  // cas 2 : Men -> WOMEN
-  if(gender == "male" && sexPref == "female")
+  else if(sexPref[0] == 'both')
   {
-
+    user.filterUsers(min,max,userName)
+    .then(([data]) => {
+      console.log(data);
+    })
+    .catch(err => console.log(err))
   }
-  // cas 3 : Men -> BOTH
-  if(gender == "male" && sexPref == "both")
-  {
 
-  }
-  // cas 4 : WOMEN -> WOMEN
-  if(gender == "")
-  // cas 5 : WOMEN -> MEN
-
-  // cas 6 : WOMEN -> BOTH
   res.render('user/home', {
     errorMsg: req.flash('error')
   });
@@ -128,7 +129,7 @@ exports.postProfileData = (req, res) => {
   // session variable
   const sessionUser = req.session.userName;
   const userId = req.session.userId;
-  const {
+  var {
     userName,
     firstName,
     lastName,

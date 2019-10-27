@@ -1,8 +1,8 @@
 Create nodeJs container
 ======================
 docker run -it alpine
-	apk install nodejs 
-	apk install npm
+	apk add nodejs 
+	apk add npm
 	npm install nodemon -g
 
 docker commit container_id nodejs
