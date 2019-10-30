@@ -10,7 +10,6 @@ window.onload = function fetchData() {
       var listInterest = response.data.listInterest;
       var imgList = response.data.imgData;
       var geoInfo = response.data.geoInfo;
-      console.log(listInterest); 
       listInterest.forEach((interest) => {
         $("#listInterest").tagsinput("add", interest);
       });
@@ -49,6 +48,7 @@ window.onload = function fetchData() {
       var oldFormate = data.birthDate.split('T')[0];
       var newArrFormat = oldFormate.split("-");
       $("#ageInput").val(newArrFormat[1] + "/" + newArrFormat[2] + "/" + newArrFormat[0]);
+      console.log(geoInfo);
       $("#latitude").html(geoInfo.geoLat);
       $("#longitude").html(geoInfo.geoLong);
       $("#bio").val(data.bio);

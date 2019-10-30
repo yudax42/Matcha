@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users(
 	accStat 	ENUM('active', 'not active'),
 	emailToken varchar(200),
 	resetPassToken varchar(200),
-	fameRating int
+	fameRating TINYINT
 );
 
 
@@ -23,7 +23,7 @@ CREATE TABLE interest(
 	id			INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,
 	user_id		INT,
 	topic		varchar(30),
-	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE 
+	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 )
 
 CREATE TABLE profilePictures(
@@ -31,7 +31,7 @@ CREATE TABLE profilePictures(
 	user_id		INT,
 	imgPath		varchar(250),
 	imgIndex	varchar(22),
-	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE 
+	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 )
 
 CREATE TABLE userLocation(
@@ -41,5 +41,5 @@ CREATE TABLE userLocation(
 	geoLat    FLOAT,
 	ipLong		FLOAT,
 	ipLat 		FLOAT,
-	FOREIGN KEY (userName) REFERENCES users(userName) ON DELETE CASCADE ON UPDATE CASCADE 
+	FOREIGN KEY (userName) REFERENCES users(userName) ON DELETE CASCADE ON UPDATE CASCADE
 )

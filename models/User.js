@@ -11,8 +11,8 @@ module.exports = class User {
     this.token = token;
   }
   add() {
-    return db.execute("insert into users(userName,firstName,lastName,email,password,accStat,emailToken,sexPref) values(?,?,?,?,?,?,?,?)", [
-      this.userName, this.firstName, this.lastName, this.email, this.password, "not active",this.token,"both"
+    return db.execute("insert into users(userName,firstName,lastName,email,password,accStat,emailToken,sexPref,fameRating) values(?,?,?,?,?,?,?,?,?)", [
+      this.userName, this.firstName, this.lastName, this.email, this.password, "not active",this.token,"both",0
     ]);
   };
   static findUser(userName) {

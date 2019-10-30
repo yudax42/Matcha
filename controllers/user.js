@@ -26,12 +26,12 @@ exports.getMatch = (req, res) => {
   {
     user.filterUsersGender(sexPref[0],min,max,userName)
     .then(([data]) => {
-      // console.log(data[0]);
+      console.log(data[0]);
      
     })
     .catch(err => console.log(err))
   }
-  else if(sexPref == 'both')
+  else if(sexPref[0] == 'both')
   {
    
     var locArray = [];
@@ -40,18 +40,21 @@ exports.getMatch = (req, res) => {
 
       //sort by location
       locArray = _.orderBy(data,(data)=> {
-
         if(data.geoLong && data.geoLat)
         {
           var userPoint = {lat:data.geoLat,lon:data.geoLong};
+          if((Distance.between(myCor, userPoint).radians)*6371 > 10)
+          {
+            console.log(userPoint,myCor);
+            console.log((Distance.between(myCor, userPoint).radians)*6371);
+          }
           return (Distance.between(myCor, userPoint).radians);
         }
-        // else
-        // {
-        //   var userPoint = {lat:data.ipLat,lon:data.ipLong};
-        //   return (Distance.between(myCorIp, userPoint));
-        // }
       },['asc']);
+      //sort by fame rating
+
+      //sort by tags
+
       console.log(data);
       console.log("________________");
       console.log(locArray);
