@@ -201,12 +201,10 @@ exports.postLogin = (req, res) => {
                       req.session.userName = user[0].userName;
                       req.session.userId = user[0].id;
                       req.session.age = user[0].age;
-                      console.log(response.longitude,response.latitude);
                       req.session.longitude = response.longitude;
                       req.session.latitude = response.latitude;
                       req.session.sexPref = user[0].sexPref;
                       req.session.gender = user[0].gender;
-                      console.log(req.session.sexPref);
                       return req.session.save(err => {
                         return res.redirect('/user/profile');
                       });

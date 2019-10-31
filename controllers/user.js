@@ -16,48 +16,68 @@ exports.getMatch = (req, res) => {
   const userId = req.session.userId;
   const gender = req.session.gender;
   const sexPref = req.session.sexPref;
-  var myCor = {lat:req.session.latitude,lon:req.session.geoLong}
+  var myCor = {lat:req.session.latitude,lon:req.session.longitude}
+  console.log(myCor);
   const age = 25;
   var min;
   var max = age + 3;
+  var defaultDistance = req.params.distance || 8000;
   (age - 18) > 3 ? min = age-3 : min = 18;
-  console.log(sexPref);
+
   if(sexPref[0] == "male" || sexPref[0] == "female")
   {
     user.filterUsersGender(sexPref[0],min,max,userName)
     .then(([data]) => {
       console.log(data[0]);
-     
+
     })
     .catch(err => console.log(err))
   }
-  else if(sexPref[0] == 'both')
+  else if(sexPref == 'both')
   {
-   
+
     var locArray = [];
     user.filterUsers(min,max,userName)
     .then(([data]) => {
+      // remove users above 80 km
+      rightUsers = _.map(data,(user) => {
+        var userPoint = {lat:user.geoLat,lon:user.geoLong};
+        if((Distance.between(myCor, userPoint).radians)*6371 < defaultDistance)
+          return user;
+      })
+      rightUsers = _.without(rightUsers,undefined); // remove undefined elements
 
       //sort by location
-      locArray = _.orderBy(data,(data)=> {
+      rightUsers = _.orderBy(rightUsers,(data)=> {
         if(data.geoLong && data.geoLat)
         {
           var userPoint = {lat:data.geoLat,lon:data.geoLong};
-          if((Distance.between(myCor, userPoint).radians)*6371 > 10)
-          {
-            console.log(userPoint,myCor);
-            console.log((Distance.between(myCor, userPoint).radians)*6371);
-          }
           return (Distance.between(myCor, userPoint).radians);
+          // m radians = distance in km / 6371
         }
       },['asc']);
       //sort by fame rating
-
+      rightUsers = _.orderBy(rightUsers,['fameRating'],['desc']);
+      console.log("before => ",rightUsers);
       //sort by tags
+      rightUsers = _.orderBy(rightUsers,[(data)=>{
+        user.fetchInterest(userId)
+        .then(([myInterests]) => {
+          user.fetchInterestOthers(data.userName)
+          .then(([otherInterests]) =>{
+            var common = _.intersectionWith(myInterests, otherInterests, _.isEqual);
+            console.log(common.length);
+            return common.length;
+          })
+        })
+      }],['desc'])
+      console.log("after => ",rightUsers);
 
-      console.log(data);
-      console.log("________________");
-      console.log(locArray);
+
+      // console.log(data,"\n\n\n\n\n",rightUsers);
+
+
+
     })
     .catch(err => console.log(err))
   }

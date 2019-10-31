@@ -25,6 +25,9 @@ module.exports = class User {
   static fetchInterest(userId) {
     return db.execute('SELECT topic FROM interest WHERE user_id = ?', [userId]);
   }
+  static fetchInterestOthers(userName) {
+    return db.execute('select topic from interest where user_id in (select id from users where userName = ?)', [userName]);
+  }
   static fetchImages(userId) {
     return db.execute('SELECT imgPath,imgIndex FROM profilePictures WHERE user_id = ?', [userId]);
   }
@@ -90,11 +93,11 @@ module.exports = class User {
   }
   static filterUsersGender(sexPref,min,max,userName)
   {
-    return db.execute('select users.userName,users.gender,users.age,users.bio,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.gender = ? AND users.age <= ? AND users.age >= ? AND users.userName != ? ORDER BY age ASC',[sexPref,max,min,userName]);
+    return db.execute('select users.userName,users.gender,users.age,users.bio,users.fameRating,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.gender = ? AND users.age <= ? AND users.age >= ? AND users.userName != ? ORDER BY age ASC',[sexPref,max,min,userName]);
   }
   static filterUsers(min,max,userName)
   {
-    return db.execute('select users.userName,users.gender,users.age,users.bio,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.age <= ? AND users.age >= ? AND users.userName != ? ORDER BY age ASC',[max,min,userName]);
+    return db.execute('select users.userName,users.gender,users.age,users.bio,users.fameRating,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.age <= ? AND users.age >= ? AND users.userName != ? ORDER BY age ASC',[max,min,userName]);
   }
   static updateProfileData(userName, firstName, lastName, email, password, gender, secPredTotal, dateOfBirth, age, bio, sessionUser) {
     console.log(dateOfBirth);
