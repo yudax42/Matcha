@@ -28,6 +28,10 @@ module.exports = class User {
   static fetchInterestOthers(userName) {
     return db.execute('select topic from interest where user_id in (select id from users where userName = ?)', [userName]);
   }
+  static getProfileImg(userName)
+  {
+    return db.execute('SELECT imgPath FROM profilePictures WHERE user_id in (select id from users where userName = ?) AND imgIndex="profile"', [userName]);
+  }
   static fetchImages(userId) {
     return db.execute('SELECT imgPath,imgIndex FROM profilePictures WHERE user_id = ?', [userId]);
   }
