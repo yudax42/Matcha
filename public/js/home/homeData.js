@@ -3,7 +3,6 @@ window.onload = function fetchUsers() {
     axios.get('/user/homeData')
     .then(function(response) {
         var users = response.data;
-        console.log(users);
         users.forEach(user => {
             var content = `
             <div class="col-sm-5 mx-4 mb-4">

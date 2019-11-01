@@ -24,12 +24,12 @@ exports.getMatchData = (req, res) => {
   const sexPref = req.session.sexPref;
   var myCor = {lat:req.session.latitude,lon:req.session.longitude}
   console.log(myCor);
-  const age = 25;
+  const age = req.session.age;
   var min;
   var max = age + 3;
   var defaultDistance = req.params.distance || 8000;
   (age - 18) > 3 ? min = age-3 : min = 18;
-
+  console.log(sexPref);
   if(sexPref[0] == "male" || sexPref[0] == "female")
   {
     user.filterUsersGender(sexPref[0],min,max,userName)
@@ -39,9 +39,9 @@ exports.getMatchData = (req, res) => {
     })
     .catch(err => console.log(err))
   }
-  else if(sexPref == 'both')
+  else if(sexPref == 'both' || sexPref[0] == 'both')
   {
-
+    
     var locArray = [];
     user.filterUsers(min,max,userName)
     .then(async ([data]) => {
@@ -230,9 +230,11 @@ exports.postProfileData = (req, res) => {
           });
       }
       // Check date of birth
-      var dateCheck = moment(dateOfBirth, 'MM/DD/YYYY', true).isValid();
+      var dateCheck = new Date();
+
+      var dateCheck = moment(new Date(dateOfBirth), 'MM/DD/YYYY', true).isValid();
       if (dateCheck == true) {
-        var age = moment().diff(dateOfBirth, 'years');
+        var age = moment().diff(new Date(dateOfBirth), 'years');
         // console.log(age);
         if (age < 17 || age > 100)
           errors.push({
@@ -291,14 +293,14 @@ exports.postProfileData = (req, res) => {
             bcrypt.hash(password, 12, (err, hash) => {
               user.updateProfileData(userName, firstName, lastName, email, hash, gender, secPredTotal[0], dateOfBirth, age, bio, sessionUser)
                 .then(() => {
-                  user.saveGeoLocation(userName,longitude,latitude)
+                  user.saveGeoLocation(userName,parseFloat(longitude).toFixed(4),parseFloat(latitude).toFixed(4))
                   .then(() => {
                     req.session.userName = userName;
                     req.session.sexPref = secPredTotal;
                     req.session.gender = gender;
                     req.session.age = age;
-                    req.session.longitude = response.longitude;
-                    req.session.latitude = response.latitude;
+                    req.session.longitude = parseFloat(longitude).toFixed(4);
+                    req.session.latitude = parseFloat(latitude).toFixed(4);
                     while (i < pushDbArray.length) {
                       user.addInterest(userId, pushDbArray[i])
                         .then(() => {})
