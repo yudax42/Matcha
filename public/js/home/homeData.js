@@ -1,8 +1,11 @@
+$("input[type=hidden]").bind("change");
 
 window.onload = function fetchUsers() {
     axios.get('/user/homeData')
     .then(function(response) {
         var users = response.data;
+        if(users.length == 0)
+            $(".users").append("<b>No result found</b>");
         users.forEach(user => {
             var content = `
             <div class="col-sm-5 mx-4 mb-4">
@@ -21,7 +24,17 @@ window.onload = function fetchUsers() {
             `;
             $(".users").append(content);
         });
-        
+             
     })
     .catch(err => console.log(err))
 }
+var fetchCustomData = () => {
+    console.log("i got called");
+    var fameRating = Math.ceil($("#fameRating").val());
+    var distance = Math.ceil($("#distance").val());
+    console.log(fameRating,distance);
+
+};
+
+$("#fameRating").customSlider.on('change', fetchCustomData());
+$("#shards-custom-slider").customSlider.on('change', fetchCustomData());

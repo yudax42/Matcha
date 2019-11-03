@@ -33,8 +33,45 @@ exports.getMatchData = (req, res) => {
   if(sexPref[0] == "male" || sexPref[0] == "female")
   {
     user.filterUsersGender(sexPref[0],min,max,userName)
-    .then(([data]) => {
-      console.log(data[0]);
+    .then(async ([data]) => {
+      // remove users above 80 km
+      rightUsers = _.map(data,(user) => {
+        var userPoint = {lat:(user.geoLat || user.ipLat),lon:(user.geoLong || user.ipLong)};
+        if((Distance.between(myCor, userPoint).radians)*6371 < defaultDistance)
+          return user;
+      })
+      rightUsers = _.without(rightUsers,undefined); // remove undefined elements
+
+      //sort by location
+      rightUsers = _.orderBy(rightUsers,(data)=> {
+          var userPoint = {lat:(user.geoLat || user.ipLat),lon:(user.geoLong || user.ipLong)};
+          return (Distance.between(myCor, userPoint).radians);
+          // m radians = distance in km / 6371
+      },['asc']);
+      //sort by fame rating
+      rightUsers = _.orderBy(rightUsers,['fameRating'],['desc']);
+      //sort by tags
+      var myInterests = await user.fetchInterest(userId);
+      // add common tags count
+      var sortByTags = (rightUsers) => {
+        return new Promise(async (resolve,reject) => {
+          if (!rightUsers)
+            reject("No parameter");
+          for(const userR of rightUsers)
+          {
+            var otherInterests = await user.fetchInterestOthers(userR.userName);
+            var profileImg = await user.getProfileImg(userR.userName);
+            var common = _.intersectionWith(myInterests[0], otherInterests[0], _.isEqual);
+            userR.commonTagsCount = common.length;
+            userR.profileImg = profileImg[0][0].imgPath;
+          }
+          resolve(rightUsers)
+        })
+      }
+      rightUsers = await sortByTags(rightUsers);
+      rightUsers =  _.orderBy(rightUsers,['commonTagsCount'],['desc']);
+      console.log(rightUsers);
+      res.json(rightUsers);
 
     })
     .catch(err => console.log(err))
