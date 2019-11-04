@@ -32,14 +32,13 @@ exports.getMatchData = (req, res) => {
   console.log(fameRating,distance,ageRangeMin,ageRangeMax,genderPref,interest);
   var maxFameRating = fameRating || 5;
   var defaultDistance =   8000;
-  var max = ageRangeMax || age + 3;
-  var min = ageRangeMin || (age - 18) > 3 ? min = age-3 : min = 18;;
+  var max = parseInt(ageRangeMax) || age + 3;
+  var min = parseInt(ageRangeMin) || ((age - 18) > 3 ? age-3 : 18);
   var sexPref = [genderPref] || req.session.sexPref;
 
   
   if(sexPref[0] == "male" || sexPref[0] == "female")
   {
-    console.log("I'm here 1");
     user.filterUsersGender(sexPref[0],min,max,maxFameRating,userName)
     .then(async ([data]) => {
       // remove users above 80 km
