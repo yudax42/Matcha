@@ -17,22 +17,30 @@ exports.getMatch = (req, res) => {
   });
 };
 
+
 exports.getMatchData = (req, res) => {
+
   const userName = req.session.userName;
   const userId = req.session.userId;
   const gender = req.session.gender;
-  const sexPref = req.session.sexPref;
-  var myCor = {lat:req.session.latitude,lon:req.session.longitude}
-  console.log(myCor);
+
   const age = req.session.age;
-  var min;
-  var max = age + 3;
-  var defaultDistance = req.params.distance || 8000;
-  (age - 18) > 3 ? min = age-3 : min = 18;
-  console.log(sexPref);
+  var myCor = {lat:req.session.latitude,lon:req.session.longitude}
+  
+  //search data
+  var {fameRating,distance,ageRangeMin,ageRangeMax,genderPref,interest} = req.query;
+  console.log(fameRating,distance,ageRangeMin,ageRangeMax,genderPref,interest);
+  var maxFameRating = fameRating || 5;
+  var defaultDistance =   8000;
+  var max = ageRangeMax || age + 3;
+  var min = ageRangeMin || (age - 18) > 3 ? min = age-3 : min = 18;;
+  var sexPref = [genderPref] || req.session.sexPref;
+
+  
   if(sexPref[0] == "male" || sexPref[0] == "female")
   {
-    user.filterUsersGender(sexPref[0],min,max,userName)
+    console.log("I'm here 1");
+    user.filterUsersGender(sexPref[0],min,max,maxFameRating,userName)
     .then(async ([data]) => {
       // remove users above 80 km
       rightUsers = _.map(data,(user) => {
@@ -46,12 +54,12 @@ exports.getMatchData = (req, res) => {
       rightUsers = _.orderBy(rightUsers,(data)=> {
           var userPoint = {lat:(user.geoLat || user.ipLat),lon:(user.geoLong || user.ipLong)};
           return (Distance.between(myCor, userPoint).radians);
-          // m radians = distance in km / 6371
+          // m radians = distance in km / 6371 
       },['asc']);
       //sort by fame rating
       rightUsers = _.orderBy(rightUsers,['fameRating'],['desc']);
       //sort by tags
-      var myInterests = await user.fetchInterest(userId);
+      var myInterests = interest || await user.fetchInterest(userId);
       // add common tags count
       var sortByTags = (rightUsers) => {
         return new Promise(async (resolve,reject) => {
@@ -78,7 +86,7 @@ exports.getMatchData = (req, res) => {
   }
   else if(sexPref == 'both' || sexPref[0] == 'both')
   {
-    
+    console.log("I'm here 2");
     var locArray = [];
     user.filterUsers(min,max,userName)
     .then(async ([data]) => {

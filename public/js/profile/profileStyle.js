@@ -36,3 +36,5 @@ $("#location").click(() => {
     $(".locationInfo").html("Geolocation is not supported by this browser.");
   }
 })
+
+

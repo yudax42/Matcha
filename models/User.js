@@ -95,9 +95,9 @@ module.exports = class User {
   static checkImgIndex(userId, imgIndex) {
     return db.execute('SELECT * FROM profilePictures WHERE imgIndex = ?', [imgIndex]);
   }
-  static filterUsersGender(sexPref,min,max,userName)
+  static filterUsersGender(sexPref,min,max,maxFameRating,userName)
   {
-    return db.execute('select users.userName,users.gender,users.age,users.bio,users.fameRating,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.gender = ? AND users.age <= ? AND users.age >= ? AND users.userName != ? ORDER BY age ASC',[sexPref,max,min,userName]);
+    return db.execute('select users.userName,users.gender,users.age,users.bio,users.fameRating,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.gender = ? AND users.age <= ? AND users.age >= ? AND users.userName != ? AND users.fameRating < ?  ORDER BY age ASC',[sexPref,max,min,userName,maxFameRating]);
   }
   static filterUsers(min,max,userName)
   {
