@@ -19,7 +19,6 @@ exports.getMatch = (req, res) => {
 
 
 exports.getMatchData = (req, res) => {
-
   const userName = req.session.userName;
   const userId = req.session.userId;
   const gender = req.session.gender;
@@ -39,6 +38,7 @@ exports.getMatchData = (req, res) => {
   
   if(sexPref[0] == "male" || sexPref[0] == "female")
   {
+    console.log(min,max);
     user.filterUsersGender(sexPref[0],min,max,maxFameRating,userName)
     .then(async ([data]) => {
       // remove users above 80 km
