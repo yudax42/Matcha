@@ -7,14 +7,10 @@ var fs = require('fs');
 var Distance = require('geo-distance');
 
 exports.getProfile = (req, res) => {
-  res.render('user/profile', {
-    errorMsg: req.flash('error')
-  });
+  res.render('user/profile', {errorMsg: req.flash('error')});
 };
 exports.getMatch = (req, res) => {
-  res.render('user/home', {
-    errorMsg: req.flash('error')
-  });
+  res.render('user/home', {errorMsg: req.flash('error')});
 };
 
 
@@ -22,23 +18,19 @@ exports.getMatchData = (req, res) => {
   const userName = req.session.userName;
   const userId = req.session.userId;
   const gender = req.session.gender;
-
   const age = req.session.age;
   var myCor = {lat:req.session.latitude,lon:req.session.longitude}
   
   //search data
   var {fameRating,distance,ageRangeMin,ageRangeMax,genderPref,interest} = req.query;
-  console.log(fameRating,distance,ageRangeMin,ageRangeMax,genderPref,interest);
   var maxFameRating = fameRating || 5;
-  var defaultDistance =   8000;
+  var defaultDistance =  8000;
   var max = parseInt(ageRangeMax) || age + 3;
   var min = parseInt(ageRangeMin) || ((age - 18) > 3 ? age-3 : 18);
   var sexPref = [genderPref] || req.session.sexPref;
-
   
   if(sexPref[0] == "male" || sexPref[0] == "female")
   {
-    console.log(min,max);
     user.filterUsersGender(sexPref[0],min,max,maxFameRating,userName)
     .then(async ([data]) => {
       // remove users above 80 km

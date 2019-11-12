@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        header
+        {
+            height: 66px;
+            padding: 30px;
+            background: #f95d5d;
+            color: #eee;
+            text-align: center;
+        }
+        section
+        {
+            min-height: 113px;
+            padding: 28px;
+            background-color: #eee;
+            color: #333;
+            font-size: 22px;
+        }
+        .hello{
+            margin: auto;
+            display: block;
+            max-width: 272px;
+            border-radius: 10px;
+        }
+        a
+        {
+            color: white;
+            text-decoration: none;
+            background: #ff4e56;
+            padding: 11px;
+            border-radius: 6px
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Matcha</h1>
+        </header>
+        <section>
+            <img class="hello" src="https://media.giphy.com/media/l46CjoMYO5n2hQnWE/giphy.gif" alt="hello"/>
+            <p>Hello <b><%=userName%></b> 👋,</p>
+            <p><%= text %></p>
+            <% if(link){%>
+                <a style="color:#fff" href="<%=link%>">Click Me!</a>
+            <% }%>
+            <p>With ❤️, Matcha.com</p>
+        </section>
+    </div>
+    
+</body>
+</html>
