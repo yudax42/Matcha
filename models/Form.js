@@ -11,7 +11,7 @@ exports.valideUserName = (userName) => {
     return (1);
 }
 exports.valideName = (name) => {
-  if (name.length > 4 && name.length <= 15 && (name.match(/[^a-z\d]/g) || name.match(/[^A-Z\d]/g)))
+  if (name.length > 4 && name.length <= 15 && name.match(/^[A-Za-z]+$/))
     return (1);
 }
 exports.validePassword = (password) => {

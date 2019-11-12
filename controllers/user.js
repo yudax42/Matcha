@@ -175,185 +175,137 @@ exports.addProfileImgs = (req, res) => {
   }
 }
 
-exports.getProfileData = (req, res) => {
-  const userName = req.session.userName;
-  const userId = req.session.userId;
-  const sexPref = req.session.sexPref;
-  user.fetchUserData(userName)
-    .then(([data1]) => {
-      user.fetchInterest(userId)
-        .then(([data]) => {
-          var i = 0;
-          var dbInterestArr = [];
-          while (i < data.length) {
-            dbInterestArr.push(data[i].topic);
-            i++;
-          }
-          user.fetchImages(userId)
-            .then(([data3]) => {
-              user.fetchGeoLoc(userName)
-              .then(([data4]) => {
-                res.json({
-                  formData: data1[0],
-                  listInterest: dbInterestArr,
-                  imgData: data3,
-                  geoInfo: data4[0]
-                });
-              })
-            })
-        });
+exports.getProfileData = async (req, res) => {
+  let userName = req.session.userName;
+  let userId = req.session.userId;
+  let userData = (await user.fetchUserData(userName))[0];
+  let interest = (await user.fetchInterest(userId))[0];
+  let images = (await user.fetchImages(userId))[0];
+  let Geoloc = (await user.fetchGeoLoc(userName))[0];
+  let i = 0;
+  let dbInterestArr = [];
 
-    })
-    .catch(err => console.log(err));
+  while (i < interest.length) {
+    dbInterestArr.push(interest[i].topic);
+    i++;
+  }
+
+  res.json({
+    formData: userData[0],
+    listInterest: dbInterestArr,
+    imgData: images,
+    geoInfo: Geoloc[0]
+  });
 }
 
-exports.postProfileData = (req, res) => {
-  // session variable
+exports.postProfileData = async(req, res) => {
   const sessionUser = req.session.userName;
   const userId = req.session.userId;
+  const userName = (req.query.userName).trim();
+  const firstName = (req.query.firstName).trim();
+  const lastName = (req.query.lastName).trim();
+  const email = (req.query.email).trim();
+  const bio = (req.query.bio).trim();
   var {
-    userName,
-    firstName,
-    lastName,
-    email,
     password,
     gender,
-    secPredTotal,
+    secPrefTotal,
     dateOfBirth,
-    bio,
     interest,
     longitude,
     latitude
   } = req.query;
   const errors = [];
   const interests = ["science", "tech", "food", "swimming", "football", "anime", "e-games", "makeUp", "series", "movies", "cinema", "art", "music", "self improvement", "reading"];
+
+  
+  var response = (await user.findUser(userName))[0];
+  // Check username , firstname , lastname
+  // console.log(firstName,form.valideName(firstName));
+  if (!form.valideUserName(userName) || !form.valideName(firstName) || !form.valideName(lastName))
+    errors.push({msg: "Not valid input"});
   // Check if the userName is already in database
-  user.findUser(userName).
-  then(([response]) => {
-      if (response.length > 0 && response[0].userName != sessionUser)
-        errors.push({
-          msg: "this userName already exists ."
-        });
-      // Check username , firstname , lastname
-      if (!form.valideName(userName) || !form.valideName(firstName) || !form.valideName(lastName))
-        errors.push({
-          msg: "Not valid input"
-        });
-      //Check Email
-      if (!form.valideEmail(email))
-        errors.push({
-          msg: "email Not Valid"
-        });
-      //Check Password
-      if (!form.validePassword(password))
-        errors.push({
-          msg: "Password not valide"
-        });
-      // Check Gender
-      if (!(gender == "male" || gender == "female"))
-        errors.push({
-          msg: "Please enter Valid gender value"
-        });
-      // Check Sex Preferences
-      if (secPredTotal == undefined) {
-        errors.push({
-          msg: "at least one gender must be selected"
-        });
-      } else if (secPredTotal.length > 0) {
-        if (!(secPredTotal.length <= 2 && (secPredTotal.includes("male") || secPredTotal.includes("female"))))
-          errors.push({
-            msg: "Please enter Valid SexPreferences values"
-          });
+  if (response.length > 0 && response[0].userName != sessionUser)
+    errors.push({ msg: "This username already exists." });
+  //Check Email
+  if (!form.valideEmail(email))
+    errors.push({msg: "Email Not Valid"});
+  //Check Password
+  if (!form.validePassword(password))
+    errors.push({msg: "Password not valide"});
+  // Check Gender
+  if (!(gender == "male" || gender == "female"))
+    errors.push({msg: "Please enter valid gender value"});
+  // Check Sex Preferences
+  if (secPrefTotal == undefined) {
+    errors.push({msg: "At least one gender must be selected"
+    });
+  } else if (secPrefTotal.length > 0) {
+    if (!(secPrefTotal.length <= 2 && (secPrefTotal.includes("male") || secPrefTotal.includes("female"))))
+      errors.push({msg: "Please enter Valid SexPreferences values"});
+  }
+  // Check date of birth
+  var dateCheck = new Date();
+  var dateCheck = moment(new Date(dateOfBirth), 'MM/DD/YYYY', true).isValid();
+  if (dateCheck == true) {
+    var age = moment().diff(new Date(dateOfBirth), 'years');
+    // console.log(age);
+    if (age < 17 || age > 100)
+      errors.push({msg: "Restricted Age!"});
+  } else
+    errors.push({msg: "Date is not Valid"});
+  // Check Biography
+  if (bio.length > 255)
+    errors.push({msg: "Your Bio is too long"});
+  // check GeoLocation
+  if(!longitude)
+    longitude = 0;
+  if(!latitude)
+    latitude = 0;
+  // Check interest
+  if (!interest)
+    errors.push({msg: "Please choose at least one interest"})
+  else if (interest.length < 6) {
+    var i = 0;
+    while (i < interest.length) {
+      if (interests.includes(interest[i].toLowerCase()))
+        i++;
+      else {
+        errors.push({msg: "Please select interset from the list above"});
+        break;
       }
-      // Check date of birth
-      var dateCheck = new Date();
-
-      var dateCheck = moment(new Date(dateOfBirth), 'MM/DD/YYYY', true).isValid();
-      if (dateCheck == true) {
-        var age = moment().diff(new Date(dateOfBirth), 'years');
-        // console.log(age);
-        if (age < 17 || age > 100)
-          errors.push({
-            msg: "Restricted Age!"
-          });
-      } else
-        errors.push({
-          msg: "Date is not Valid"
-        });
-
-      // Check Biography
-      if (bio.length > 255)
-        errors.push({
-          msg: "Your Bio is too long"
-        });
-
-      // Check interest
-      if (!interest)
-        errors.push({
-          msg: "Please choose at least one interest"
-        })
-      else if (interest.length < 6) {
-        var i = 0;
-        while (i < interest.length) {
-          if (interests.includes(interest[i].toLowerCase()))
-            i++;
-          else {
-            errors.push({
-              msg: "Please select interset from the list above"
-            });
-            break;
-          }
-        }
-        // check GeoLocation
-        if(!longitude)
-          longitude = 0;
-        if(!latitude)
-          latitude = 0;
-        // Remove duplicated items
-        pushDbArray = _.uniq(interest);
-      } else
-        errors.push({
-          msg: "You have 6 interest choices"
-        });
-
-      if (errors.length > 0) {
-        res.json(errors);
-      } else {
-        if (secPredTotal.length == 2)
-          secPredTotal[0] = "both";
-        // Update
-        var i = 0;
-        // Delete all old interest to add new ones
-        user.deleteAllInterest(userId)
-          .then(() => {
-            bcrypt.hash(password, 12, (err, hash) => {
-              user.updateProfileData(userName, firstName, lastName, email, hash, gender, secPredTotal[0], dateOfBirth, age, bio, sessionUser)
-                .then(() => {
-                  user.saveGeoLocation(userName,parseFloat(longitude).toFixed(4),parseFloat(latitude).toFixed(4))
-                  .then(() => {
-                    req.session.userName = userName;
-                    req.session.sexPref = secPredTotal;
-                    req.session.gender = gender;
-                    req.session.age = age;
-                    req.session.longitude = parseFloat(longitude).toFixed(4);
-                    req.session.latitude = parseFloat(latitude).toFixed(4);
-                    while (i < pushDbArray.length) {
-                      user.addInterest(userId, pushDbArray[i])
-                        .then(() => {})
-                        .catch((err) => console.log(err));
-                      i++;
-                    }
-                    res.json([{
-                      msg: "done"
-                    }]);
-                  })
-                })
-                .catch(err => console.log(err));
-            });
-          });
-
-      }
-    })
-    .catch((err) => console.log(err));
+    }
+    // Remove duplicated items
+    pushDbArray = _.uniq(interest);
+  } else
+    errors.push({ msg: "You have 6 interest choices" });
+  
+  if (errors.length > 0) {
+    res.json(errors);
+  } else {
+    if (secPrefTotal.length == 2)
+      secPrefTotal[0] = "both";
+    // Update
+    var i = 0;
+    // Delete all old interest to add new ones
+    await user.deleteAllInterest(userId);
+    // hash the new password || old password
+    var hash = await bcrypt.hash(password, 12);
+    await user.updateProfileData(userName, firstName, lastName, email, hash, gender, secPrefTotal[0], dateOfBirth, age, bio, sessionUser);
+    await user.saveGeoLocation(userName, parseFloat(longitude).toFixed(4), parseFloat(latitude).toFixed(4));
+    // save new values to session
+    req.session.userName = userName;
+    req.session.sexPref = secPrefTotal;
+    req.session.gender = gender;
+    req.session.age = age;
+    req.session.longitude = parseFloat(longitude).toFixed(4);
+    req.session.latitude = parseFloat(latitude).toFixed(4);
+    // add new interests
+    while (i < pushDbArray.length) {
+      await user.addInterest(userId, pushDbArray[i]);
+      i++;
+    }
+    res.json([{msg: "done"}]);
+  }
 
 }

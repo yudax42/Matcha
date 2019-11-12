@@ -94,7 +94,7 @@ const send = () => {
         email: email,
         password: password,
         gender: gender,
-        secPredTotal: secPredTotal,
+        secPrefTotal: secPredTotal,
         dateOfBirth: dateOfBirth,
         bio: bio,
         interest: interest,

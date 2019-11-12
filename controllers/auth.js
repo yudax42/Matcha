@@ -105,19 +105,18 @@ exports.activateAccount = async (req, res) => {
 
 // validate login form and give access to user
 exports.postLogin = async(req, res) => {
-  const userName = req.body.username;
+  const userName = (req.body.username).trim();
   const password = req.body.password;
   let errors = [];
-
   if (!userName || !password)
     errors.push({msg: "please fill in all fields!"});
-  else if (!form.valideName(userName) || !form.validePassword(password))
-    errors.push({msg: "Not valid input"});
+  else if (!form.valideUserName(userName) || !form.validePassword(password))
+    errors.push({ msg: "Not valid input" });
   if (errors.length > 0) 
     res.render("auth/login", {errors: errors,username: userName,successMsg: null});
   else {
     const user = (await User.findUser(userName))[0];
-    if (!user) {
+    if (user.length == 0) {
       errors.push({msg: "No user found please try again!"});
       return res.render("auth/login", {errors: errors,successMsg: null});
     } else if (user[0].accStat == "not active") {
@@ -140,7 +139,6 @@ exports.postLogin = async(req, res) => {
         return req.session.save(err => {
           return res.redirect("/user/profile");
         });
-
       } else {
         errors.push({ msg: "No account Found!" });
         return res.render("auth/login", { errors: errors, successMsg: null });
@@ -150,7 +148,7 @@ exports.postLogin = async(req, res) => {
 };
 // verifie user email and check if found send token
 exports.resetPass = async (req, res) => {
-  const userName = req.body.username;
+  const userName = (req.body.username).trim();
   const email = req.body.email;
   var errors = [];
   if (!email)
@@ -162,7 +160,8 @@ exports.resetPass = async (req, res) => {
   }
   if (errors.length == 0) {
     // Check email in DATABASE
-    var data = await User.findAccountWithEmail(userName, email);
+    var data = (await User.findAccountWithEmail(userName, email))[0];
+    console.log(data);
     if (data.length == 1) {
       // generate token
       crypto.randomBytes(32, async(err, buffer) => {
@@ -170,7 +169,7 @@ exports.resetPass = async (req, res) => {
         // insert to DATABASE
         await User.addPassToken(userName, token);
         // send email
-        await form.sendEmail(email, "Matcha Account", "Hello " + userName + "click here to reset your password http://localhost:3000/auth/reset/" + token);
+        await form.sendEmail(email, "Matcha Account",userName, "Please click the link below to reset your password ", "http://localhost:3000/auth/reset/" + token);
         // add flash msg
         req.flash("successMsg", "Please check your email to reset Password");
         // Redirect to login
@@ -192,14 +191,14 @@ exports.getResetPass = (req, res) => {
 
 // post token userName newPass to verifie and add images
 exports.postResetPass = async(req, res) => {
-  var userName = req.body.username;
+  var userName = (req.body.username).trim();
   var newPass = req.body.newPassword;
   var token = req.body.token;
   var errors = [];
   if (!form.validePassword(newPass))
     errors.push({msg: "passoword not valid"});
   if (errors.length == 0) {
-    var data = await User.checkToken(userName, token);
+    var data = (await User.checkToken(userName, token))[0];
     if (data.length == 1) {
       //add new password
       bcrypt.hash(newPass, 12, async(err, hash) => {
