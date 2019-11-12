@@ -64,7 +64,7 @@ module.exports = class User {
     return db.execute('DELETE FROM interest WHERE user_id = ?', [userId]);
   }
   static fetchUserData(userName) {
-    return db.execute('SELECT userName,firstName,lastName,email,gender,sexPref,birthDate,age,bio FROM users WHERE userName = ?', [userName]);
+    return db.execute('SELECT userName,firstName,fameRating,lastName,email,gender,sexPref,birthDate,age,bio FROM users WHERE userName = ?', [userName]);
   }
   static addInterest(userId, topic) {
     return db.execute('INSERT INTO interest(user_id,topic) VALUES(?,?)', [userId, topic]);
@@ -92,8 +92,8 @@ module.exports = class User {
   static deleteImgIndex(userId, imgIndex) {
     return db.execute('DELETE FROM profilePictures WHERE imgIndex = ? AND user_id = ? ', [imgIndex, userId]);
   }
-  static checkImgIndex(userId, imgIndex) {
-    return db.execute('SELECT * FROM profilePictures WHERE imgIndex = ?', [imgIndex]);
+  static checkImgIndex(imgIndex,userId) {
+    return db.execute('SELECT * FROM profilePictures WHERE imgIndex = ? and user_id = ?', [imgIndex,userId]);
   }
   static filterUsersGender(sexPref,min,max,maxFameRating,userName)
   {

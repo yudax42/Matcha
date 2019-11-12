@@ -1,55 +1,57 @@
-<div class="container mt-5">
-  <div class="row">
-    <div class="col-sm-12 col-md-3">
-      <h5>Discovry Settings</h5>
-      <ul class="list-group">
-        <li class="list-group-item">
-          <label class="mb-3">Fame Rating (⭐)</label>
-          <div id="fameRating">
-            <input type="hidden" id="fameRatingInput" class='custom-slider-input' name="custom-slider-value">
-          </div>
-        </li>
-        <li class="list-group-item">
-          <label class="mb-3">Maximum Distance (km)</label>
-          <div id="shards-custom-slider">
-            <input type="hidden" id="distanceInput" class='custom-slider-input' name="custom-slider-value">
-          </div>
-        </li>
-        <li class="list-group-item">
-          <label class="mb-3">Age Range</label>
-          <div id="shards-custom-slider2">
-            <input type="hidden" id="ageR1" class='custom-slider-input' name="custom-slider-value-1">
-            <input type="hidden" id="ageR2" class='custom-slider-input' name="custom-slider-value-2">
-          </div>
-        </li>
-        <li class="list-group-item">
-          <label class="mb-3">looking for ?</label><br>
-          <input type="radio" name="gender" value="male"> Male<br>
-          <input type="radio" name="gender" value="female"> Female<br>
-          <input type="radio" name="gender" value="both"> Everyone
-        </li>
-        <li class="list-group-item">
-          <label>What are you interested in?</label>
-          <div class="u-tagsinput">
-            <input type="text" class="tags" id="tagsInput" value="" data-role="tagsinput">
-          </div>
-            <!-- csrf Token -->
-          <input type="hidden" name="_csrf" id="csrf" value="<%= csrfToken %>">
-        </li>
-        <li class="list-group-item">
-          <button type="button" id="search" class="btn w-100  btn-warning"><i class="material-icons">search</i>Search</button>
-        </li>
-      </ul>
-    </div>
-    <div class="col-md-9 col-sm-12">
-      <h5>Suggested Profiles</h5>
-      <div class="row users">
+<div class="container home ">
 
-      </div>
-
-
-    </div>
+  <div id="mySidenav" class="sidenav">
+    <h5>Discovry Settings</h5>
+    <ul class="list-group w-50 mx-auto">
+      <li class="list-group-item">
+        <label class="mb-3">Fame Rating (⭐)</label>
+        <div id="fameRating">
+          <input type="hidden" id="fameRatingInput" class='custom-slider-input' name="custom-slider-value">
+        </div>
+      </li>
+      <li class="list-group-item">
+        <label class="mb-3">Maximum Distance (km)</label>
+        <div id="shards-custom-slider">
+          <input type="hidden" id="distanceInput" class='custom-slider-input' name="custom-slider-value">
+        </div>
+      </li>
+      <li class="list-group-item">
+        <label class="mb-3">Age Range</label>
+        <div id="shards-custom-slider2">
+          <input type="hidden" id="ageR1" class='custom-slider-input' name="custom-slider-value-1">
+          <input type="hidden" id="ageR2" class='custom-slider-input' name="custom-slider-value-2">
+        </div>
+      </li>
+      <li class="list-group-item">
+        <label class="mb-3">looking for ?</label><br>
+        <input type="radio" name="gender" value="male"> Male<br>
+        <input type="radio" name="gender" value="female"> Female<br>
+        <input type="radio" name="gender" value="both"> Everyone
+      </li>
+      <li class="list-group-item">
+        <label>What are you interested in?</label>
+        <div class="u-tagsinput">
+          <input type="text" class="tags" id="tagsInput" value="" data-role="tagsinput">
+        </div>
+          <!-- csrf Token -->
+        <input type="hidden" name="_csrf" id="csrf" value="<%= csrfToken %>">
+      </li>
+      <li class="list-group-item">
+        <button type="button" id="search" class="btn w-100  btn-warning"><i class="material-icons">search</i>Search</button>
+      </li>
+    </ul>
   </div>
 </div>
+  <div id="main" class="col-lg-12 col-md-12 col-sm-12">
+    <h5>Suggested Profiles</h5>
+    <span class="openTopBar" style="font-size:30px;cursor:pointer" onclick="openNav()"><i class="material-icons">search</i></span>
+
+    <div  class="row users">
+
+    </div>
+
+
+  </div>
+
 <script type="text/javascript" src="/js/home/homeData.js"></script>
 <script type="text/javascript" src="/js/home/homeStyle.js"></script>

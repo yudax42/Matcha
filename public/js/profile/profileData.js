@@ -5,11 +5,13 @@ axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('[name="_
 window.onload = function fetchData() {
   // Get user Data
   axios.get('/user/profileData')
-    .then(function(response) {
+    .then(function (response) {
+      console.log(response);
       var data = response.data.formData;
       var listInterest = response.data.listInterest;
       var imgList = response.data.imgData;
       var geoInfo = response.data.geoInfo;
+      var fameRating = data.fameRating;
       listInterest.forEach((interest) => {
         $("#listInterest").tagsinput("add", interest);
       });
@@ -39,6 +41,14 @@ window.onload = function fetchData() {
       $('#lastName').val(data.lastName);
       $('#email').val(data.email);
       $("#gender").val(data.gender);
+      if (fameRating == 0)
+        $('.fameUl').append("<li>🕵️ low FameRating!</li>");
+      else
+      {
+        for (i = 0; i < fameRating; i++)
+          $('.fameUl').append("<li>⭐</li>");
+      }
+      console.log(fameRating + "🕵️");
       if (data.sexPref == "both") {
         $('#male').prop('checked', true);
         $('#female').prop('checked', true);

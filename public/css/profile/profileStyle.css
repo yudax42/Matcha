@@ -54,3 +54,17 @@
   background-repeat: no-repeat;
   background-position: center;
 }
+
+.fameRating ul 
+{
+  list-style: none;
+}
+.fameRating ul li
+{
+  display: inline-block;
+}
+.fameRating
+{
+  padding: 10px;
+  margin-left: -38px;
+}

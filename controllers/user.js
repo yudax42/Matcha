@@ -100,77 +100,64 @@ exports.getMatchData = (req, res) => {
       //sort by tags
       var myInterests = await user.fetchInterest(userId);
       // add common tags count
-      var sortByTags = (rightUsers) => {
-        return new Promise(async (resolve,reject) => {
-          if (!rightUsers)
-            reject("No parameter");
-          for(const userR of rightUsers)
-          {
-            var otherInterests = await user.fetchInterestOthers(userR.userName);
-            var profileImg = await user.getProfileImg(userR.userName);
-            var common = _.intersectionWith(myInterests[0], otherInterests[0], _.isEqual);
-            userR.commonTagsCount = common.length;
-            userR.profileImg = profileImg[0][0].imgPath;
-          }
-          resolve(rightUsers)
-        })
-      }
-      rightUsers = await sortByTags(rightUsers);
-      rightUsers =  _.orderBy(rightUsers,['commonTagsCount'],['desc']);
-      console.log(rightUsers);
+      // var sortByTags = (rightUsers) => {
+      //   return new Promise(async (resolve,reject) => {
+      //     if (!rightUsers)
+      //       reject("No parameter");
+      //     for(const userR of rightUsers)
+      //     {
+      //       var otherInterests = await user.fetchInterestOthers(userR.userName);
+      //       var profileImg = await user.getProfileImg(userR.userName);
+      //       var common = _.intersectionWith(myInterests[0], otherInterests[0], _.isEqual);
+      //       userR.commonTagsCount = common.length;
+      //       userR.profileImg = profileImg[0][0].imgPath;
+      //     }
+      //     resolve(rightUsers)
+      //   })
+      // }
+      // rightUsers = await sortByTags(rightUsers);
+      // rightUsers =  _.orderBy(rightUsers,['commonTagsCount'],['desc']);
+      // console.log(rightUsers);
       res.json(rightUsers);
     })
     .catch(err => console.log(err))
   }
 };
 
-exports.addProfileImgs = (req, res) => {
+exports.addProfileImgs = async(req, res) => {
   const image = req.file;
   const userId = req.session.userId;
   const imgIndex = req.query.imgIndex;
-  var errors = [];
 
-  if (!image) {
-    console.log(image);
-    res.json({
-      msg: 'image must be JPG, JPEG, PNG'
-    });
-  } else {
-    // file.size <
-    console.log(image);
-    if (image.size < 4194304) {
+  if (!image) 
+    res.json({msg: 'image must be JPG, JPEG, PNG'});
+  else {
+    if (image.size < 50)
+      fs.unlink(image.path, (err) => {res.json({msg: "not valide image"});});
+    else if (image.size < 4194304) {
       //check if is there an image in imgIndex
-      user.checkImgIndex(userId, imgIndex)
-        .then(([data]) => {
-          // if found delete old image path
-          if (data.length == 1) {
-            // delete file
-            fs.unlink(data[0].imgPath, (err) => {
-              if (err) throw err;
-              console.log('File deleted!');
-              // delete old path in db
-              user.deleteImgIndex(userId, imgIndex)
-                .then(() => {
-                  // add new image
-                  user.addImage(userId, image.path, imgIndex)
-                    .then(() => res.send("done"));
-                })
-                .catch((err) => console.log(err))
-            });
-          } else {
-            // add image
-            user.addImage(userId, image.path, imgIndex)
-              .then(() => res.send("done"));
-          }
-
+      console.log(imgIndex, userId);
+      var data = (await user.checkImgIndex(imgIndex,userId))[0];
+      console.log(data);
+      // if found delete old image path
+      if (data.length == 1) {
+        // delete file
+        fs.unlink(data[0].imgPath, async(err) => {
+          if (err) throw err;
+          // delete old path in db
+          await user.deleteImgIndex(userId, imgIndex);
+          await user.addImage(userId, image.path, imgIndex);
+          res.send("done");
         });
-    } else {
+      } else {
+        // add image
+        await user.addImage(userId, image.path, imgIndex);
+        res.send("done");
+      }
+    }
+    else {
       //delete image uploaded
-      fs.unlink(image.path, (err) => {
-        res.json({
-          msg: "image must not be > 4mb"
-        });
-      });
+      fs.unlink(image.path, (err) => {res.json({msg: "image must not be > 4mb"});});
     }
   }
 }
@@ -178,6 +165,7 @@ exports.addProfileImgs = (req, res) => {
 exports.getProfileData = async (req, res) => {
   let userName = req.session.userName;
   let userId = req.session.userId;
+  console.log(userId);
   let userData = (await user.fetchUserData(userName))[0];
   let interest = (await user.fetchInterest(userId))[0];
   let images = (await user.fetchImages(userId))[0];

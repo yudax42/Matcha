@@ -55,7 +55,7 @@ var fetchCustomData = () => {
             $(".users").append("<b>No result found</b>");
         users.forEach(user => {
             var content = `
-            <div class="col-sm-5 mx-4 mb-4">
+            <div class="col-xl-3  col-lg-4 col-md-4 col-sm-6 float-left userCard mb-4">
                 <div class="card text-center">
                     <img class="card-img-top" src="${user.profileImg}" alt="Card image cap">
                     <div class="card-body">

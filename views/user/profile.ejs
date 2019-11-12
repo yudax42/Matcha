@@ -11,7 +11,10 @@
     </div>
   </div>
   <h3 class="text-center mb-3" id="profileName"></h3>
-  <p class="text-center">⭐⭐⭐⭐⭐</p>
+  <div class="fameRating text-center">
+    <ul class="fameUl">
+    </ul>
+  </div>
   <div class="row">
     <div class="formContainer col-lg-6 col-md-12 col-sm-12 ">
       <div id="errors">
@@ -69,6 +72,31 @@
         </div>
       </div>
 
+      <!-- Trigger History -->
+      <button type="button" class="btn btn-light btn-pill" data-toggle="modal" data-target="#history">⌛</button>
+
+      <!-- Modal liked-->
+      <div class="modal fade" id="history" tabindex="-1" role="dialog" aria-labelledby="historyLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="likedLabel">⌛ Your visite History</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <ul class="list-group">
+                <li class="list-group-item">Mike Powell</li>
+                <li class="list-group-item">Martin Banks</li>
+                <li class="list-group-item">Pauline Matthews</li>
+                <li class="list-group-item">Leslie Peters</li>
+                <li class="list-group-item">Carole James</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <h5 class="text-muted my-3">Change Your Personal info</h5>
       <!-- Username -->
