@@ -69,3 +69,11 @@
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
   }
+  .errors
+  {
+    position: fixed;
+    width: 366px;
+    border-radius: 5;
+    bottom: 58px;
+    right: 14px;
+  }

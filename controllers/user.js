@@ -18,7 +18,7 @@ exports.getSearchData = async (req, res) => {
   var age = req.session.age;
   var searchData = {
     fameRating : req.session.fameRating,
-    maxDistance : 500,
+    maxDistance : 9500,
     age : age,
     max : age + 5,
     min : ((age - 18) > 5 ? age - 5 : 18),
@@ -33,36 +33,61 @@ exports.getMatchData = async(req, res) => {
   const userId = req.session.userId;
   const gender = req.session.gender;
   const age = req.session.age;
-  var myCor = {lat:req.session.latitude,lon:req.session.longitude}
-  
+  var myCor = { lat: req.session.latitude, lon: req.session.longitude }
+  let errors = [];
+  const interests = ["science", "tech", "food", "swimming", "football", "anime", "e-games", "makeUp", "series", "movies", "cinema", "art", "music", "self improvement", "reading"];
   //search data
   var { fameRating, distance, ageRangeMin, ageRangeMax, genderPref, interest } = req.query;
   var myInterests = interest || await user.fetchInterest(userId);
   var maxFameRating = fameRating || req.session.fameRating;
-  var defaultDistance =  8000;
+  var defaultDistance =  distance || 9500;
   var max = parseInt(ageRangeMax) || age + 5;
   var min = parseInt(ageRangeMin) || ((age - 18) > 5 ? age-5 : 18);
   var sexPref = genderPref || req.session.sexPref;
+  var search;
 
   if (fameRating || distance || ageRangeMin || ageRangeMax || genderPref || interest)
-    search = 1;
+  {
+    search = 1;    
+    if (fameRating < 0 || fameRating > req.session.fameRating)
+      errors.push({ error: "fame Rating gap not correct" });
+    if (distance > 9500 || distance < 0)
+      errors.push({ error: "Distance not correct" });
+    if (ageRangeMin < ((age - 18) > 5 ? age - 5 : 18) || ageRangeMin > age + 5 || ageRangeMax > age + 5 || ageRangeMax < ((age - 18) > 5 ? age - 5 : 18))
+      errors.push({error: "age gap not correct"});
+    if (genderPref != "male" && genderPref != "female" && genderPref != "both")
+      errors.push({ error: "Gender not correct" });
+    if (!interest)
+      errors.push({ error: "Please choose at least one interest" })
+    else if (interest.length < 6) {
+      var i = 0;
+      while (i < interest.length) {
+        if (interests.includes(interest[i].toLowerCase()))
+          i++;
+        else {
+          errors.push({ error: "Please select interset from the list above" });
+          break;
+        }
+      }
+    }
+    if (errors.length > 0)
+      return res.json({ errors:errors });
+  }
   else
     search = 0;
-  
+
   var getRightusers = async (data) => {
-    if (search = 0) {
-      // remove users above 80 km
-      rightUsers = _.map(data, (user) => {
-        var userPoint = { lat: (user.geoLat || user.ipLat), lon: (user.geoLong || user.ipLong) };
-        if ((Distance.between(myCor, userPoint).radians) * 6371 < defaultDistance)
-          return user;
-      })
-      rightUsers = _.without(rightUsers, undefined); // remove undefined elements
-    }
-    else
-      rightUsers = data;
+    rightUsers = _.map(data, (user) => {
+      var userPoint = { lat: (user.geoLat || user.ipLat), lon: (user.geoLong || user.ipLong) };
+      console.log(userPoint);
+      console.log((Distance.between(myCor, userPoint).radians) * 6371);
+      if ((Distance.between(myCor, userPoint).radians) * 6371 < defaultDistance)
+        return user;
+    })
+    rightUsers = _.without(rightUsers, undefined); // remove undefined elements
+
     //sort by location
-    rightUsers = _.orderBy(data,(data)=> {
+    rightUsers = _.orderBy(rightUsers,(data)=> {
         var userPoint = {lat:(user.geoLat || user.ipLat),lon:(user.geoLong || user.ipLong)};
         return (Distance.between(myCor, userPoint).radians);
         // m radians = distance in km / 6371 
@@ -87,11 +112,13 @@ exports.getMatchData = async(req, res) => {
   rightUsers = await appendCountTag(rightUsers);
   return (rightUsers);
   }
-  console.log(sexPref, min, max, maxFameRating, userName);
+ 
   var users;
   if (sexPref == "male" || sexPref == "female")
   {
     console.log('ana 1');
+    console.log(sexPref, min, max, maxFameRating, userName);
+    
     users = (await user.filterUsersGender(sexPref, min, max, maxFameRating, userName))[0];
   }
   else if (sexPref == 'both')
@@ -102,6 +129,7 @@ exports.getMatchData = async(req, res) => {
     
 
   var rightUsers = await getRightusers(users);
+
   res.json(rightUsers);
 };
 
@@ -253,14 +281,16 @@ exports.postProfileData = async(req, res) => {
     res.json(errors);
   } else {
     if (secPrefTotal.length == 2)
-      secPrefTotal = ["both"];
+      secPrefTotal = "both";
+    else
+      secPrefTotal = secPrefTotal[0];
     // Update
     var i = 0;
     // Delete all old interest to add new ones
     await user.deleteAllInterest(userId);
     // hash the new password || old password
     var hash = await bcrypt.hash(password, 12);
-    await user.updateProfileData(userName, firstName, lastName, email, hash, gender, secPrefTotal[0], dateOfBirth, age, bio, sessionUser);
+    await user.updateProfileData(userName, firstName, lastName, email, hash, gender, secPrefTotal, dateOfBirth, age, bio, sessionUser);
     await user.saveGeoLocation(userName, parseFloat(longitude).toFixed(4), parseFloat(latitude).toFixed(4));
     // save new values to session
     req.session.userName = userName;

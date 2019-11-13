@@ -49,7 +49,7 @@ window.onload = async function fetchUsers() {
         connect: true,
         tooltips: [true],
         range: {
-            'min': 18,
+            'min': 0,
             'max': searchData.data.maxDistance
         }
     });
@@ -64,7 +64,7 @@ window.onload = async function fetchUsers() {
         }
     });
     // sexual preferences
-    $('#' + searchData.data.sexPref[0]).prop('checked', true);
+    $('#' + searchData.data.sexPref).prop('checked', true);
     // interest
     var listInterest = searchData.data.myInterests;
     listInterest.forEach((interest) => {
@@ -86,7 +86,7 @@ var fetchCustomData = () => {
     var ageRangeMin = Math.ceil($("#ageR1").val());
     var ageRangeMax = Math.ceil($("#ageR2").val());
     var genderPref = $('input[name=gender]:checked').val();
-    var interest = $("#tagsInput").tagsinput('items');
+    var interest = $("#listInterest").tagsinput('items');
     axios({
         method: 'get',
         url: '/user/homeData',
@@ -100,29 +100,54 @@ var fetchCustomData = () => {
         }
       })
       .then((response) => {
-        console.log(response);
-        var users = response.data;
-        $(".suggestedUsers").html('');
-        if(users.length == 0)
-            $(".suggestedUsers").append("<b>No result found</b>");
-        users.forEach(user => {
-            var content = `
-            <div class="col-xl-3  col-lg-4 col-md-4 col-sm-6 float-left userCard mt-4">
-                <div class="card text-center">
-                    <img class="card-img-top" src="${user.profileImg}" alt="Card image cap">
-                    <div class="card-body">
-                        <h4 class="card-title">${user.userName} <span class="badge badge-light">${user.age}</span></h4>
-                        <span class="mb-2">${user.fameRating}</span><br>
-                        <span class="badge mr-3 badge-squared badge-outline-info">${user.gender}</span>
-                        <p class="card-text">${user.bio}</p>
-                        <a href="#" class="btn btn-outline-success btn-pill">❤️</a>
-                        <a href="#" class="btn btn-outline-danger btn-pill">❌</a>
+        if (response.data.errors)
+        {
+            $(".errors").html('');
+            var errors = response.data.errors;
+            console.log(errors);
+            errors.forEach(error => {
+                var content = `
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    ${error.error}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                `;
+                $(".errors").append(content);
+                // setTimeout(function() {
+                //     $(".errors").hide('blind', {}, 500)
+                // }, 3000);
+            })
+        }
+        else
+        {
+            var users = response.data;
+            $(".suggestedUsers").html('');
+            if(users.length == 0)
+                $(".suggestedUsers").append("<b>No result found</b>");
+            users.forEach(user => {
+                var content = `
+                <div class="col-xl-3  col-lg-4 col-md-4 col-sm-6 float-left userCard mt-4">
+                    <div class="card text-center">
+                        <img class="card-img-top" src="${user.profileImg}" alt="Card image cap">
+                        <div class="card-body">
+                            <h4 class="card-title">${user.userName} <span class="badge badge-light">${user.age}</span></h4>
+                            <span class="mb-2">${user.fameRating}</span><br>
+                            <span class="badge mr-3 badge-squared badge-outline-info">${user.gender}</span>
+                            <p class="card-text">${user.bio}</p>
+                            <a href="#" class="btn btn-outline-success btn-pill">❤️</a>
+                            <a href="#" class="btn btn-outline-danger btn-pill">❌</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            `;
-            $(".suggestedUsers").append(content);
-        });
+                `;
+                $(".suggestedUsers").append(content);
+            });  
+        }
+        
+          
+
       })
       .catch((error) => {
   
