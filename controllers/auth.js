@@ -136,6 +136,7 @@ exports.postLogin = async(req, res) => {
         req.session.latitude = response.latitude;
         req.session.sexPref = user[0].sexPref;
         req.session.gender = user[0].gender;
+        req.session.fameRating = user[0].fameRating;
         return req.session.save(err => {
           return res.redirect("/user/profile");
         });

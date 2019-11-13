@@ -99,9 +99,9 @@ module.exports = class User {
   {
     return db.execute('select users.userName,users.gender,users.age,users.bio,users.fameRating,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.gender = ? AND users.age <= ? AND users.age >= ? AND users.userName != ? AND users.fameRating < ?  ORDER BY age ASC',[sexPref,max,min,userName,maxFameRating]);
   }
-  static filterUsers(min,max,userName)
+  static filterUsers(min,max,userName,maxFameRating)
   {
-    return db.execute('select users.userName,users.gender,users.age,users.bio,users.fameRating,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.age <= ? AND users.age >= ? AND users.userName != ? ORDER BY age ASC',[max,min,userName]);
+    return db.execute('select users.userName,users.gender,users.age,users.bio,users.fameRating,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.age <= ? AND users.age >= ? AND users.userName != ? and users.fameRating < ? ORDER BY age ASC',[max,min,userName,maxFameRating]);
   }
   static updateProfileData(userName, firstName, lastName, email, password, gender, secPredTotal, dateOfBirth, age, bio, sessionUser) {
     console.log(dateOfBirth);

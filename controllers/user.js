@@ -13,8 +13,22 @@ exports.getMatch = (req, res) => {
   res.render('user/home', {errorMsg: req.flash('error')});
 };
 
+exports.getSearchData = async (req, res) => {
+  var myInterests = (await user.fetchInterest(req.session.userId))[0];
+  var age = req.session.age;
+  var searchData = {
+    fameRating : req.session.fameRating,
+    maxDistance : 500,
+    age : age,
+    max : age + 5,
+    min : ((age - 18) > 5 ? age - 5 : 18),
+    sexPref : req.session.sexPref,
+    myInterests : myInterests
+  }
+  res.json(searchData);
+}
 
-exports.getMatchData = (req, res) => {
+exports.getMatchData = async(req, res) => {
   const userName = req.session.userName;
   const userId = req.session.userId;
   const gender = req.session.gender;
@@ -22,106 +36,73 @@ exports.getMatchData = (req, res) => {
   var myCor = {lat:req.session.latitude,lon:req.session.longitude}
   
   //search data
-  var {fameRating,distance,ageRangeMin,ageRangeMax,genderPref,interest} = req.query;
-  var maxFameRating = fameRating || 5;
+  var { fameRating, distance, ageRangeMin, ageRangeMax, genderPref, interest } = req.query;
+  var myInterests = interest || await user.fetchInterest(userId);
+  var maxFameRating = fameRating || req.session.fameRating;
   var defaultDistance =  8000;
-  var max = parseInt(ageRangeMax) || age + 3;
-  var min = parseInt(ageRangeMin) || ((age - 18) > 3 ? age-3 : 18);
-  var sexPref = [genderPref] || req.session.sexPref;
+  var max = parseInt(ageRangeMax) || age + 5;
+  var min = parseInt(ageRangeMin) || ((age - 18) > 5 ? age-5 : 18);
+  var sexPref = genderPref || req.session.sexPref;
+
+  if (fameRating || distance || ageRangeMin || ageRangeMax || genderPref || interest)
+    search = 1;
+  else
+    search = 0;
   
-  if(sexPref[0] == "male" || sexPref[0] == "female")
-  {
-    user.filterUsersGender(sexPref[0],min,max,maxFameRating,userName)
-    .then(async ([data]) => {
+  var getRightusers = async (data) => {
+    if (search = 0) {
       // remove users above 80 km
-      rightUsers = _.map(data,(user) => {
-        var userPoint = {lat:(user.geoLat || user.ipLat),lon:(user.geoLong || user.ipLong)};
-        if((Distance.between(myCor, userPoint).radians)*6371 < defaultDistance)
+      rightUsers = _.map(data, (user) => {
+        var userPoint = { lat: (user.geoLat || user.ipLat), lon: (user.geoLong || user.ipLong) };
+        if ((Distance.between(myCor, userPoint).radians) * 6371 < defaultDistance)
           return user;
       })
-      rightUsers = _.without(rightUsers,undefined); // remove undefined elements
-
-      //sort by location
-      rightUsers = _.orderBy(rightUsers,(data)=> {
-          var userPoint = {lat:(user.geoLat || user.ipLat),lon:(user.geoLong || user.ipLong)};
-          return (Distance.between(myCor, userPoint).radians);
-          // m radians = distance in km / 6371 
-      },['asc']);
-      //sort by fame rating
-      rightUsers = _.orderBy(rightUsers,['fameRating'],['desc']);
-      //sort by tags
-      var myInterests = interest || await user.fetchInterest(userId);
-      // add common tags count
-      var sortByTags = (rightUsers) => {
-        return new Promise(async (resolve,reject) => {
-          if (!rightUsers)
-            reject("No parameter");
-          for(const userR of rightUsers)
-          {
-            var otherInterests = await user.fetchInterestOthers(userR.userName);
-            var profileImg = await user.getProfileImg(userR.userName);
-            var common = _.intersectionWith(myInterests[0], otherInterests[0], _.isEqual);
-            userR.commonTagsCount = common.length;
-            userR.profileImg = profileImg[0][0].imgPath;
-          }
-          resolve(rightUsers)
-        })
-      }
-      rightUsers = await sortByTags(rightUsers);
-      rightUsers =  _.orderBy(rightUsers,['commonTagsCount'],['desc']);
-      console.log(rightUsers);
-      res.json(rightUsers);
-
-    })
-    .catch(err => console.log(err))
-  }
-  else if(sexPref == 'both' || sexPref[0] == 'both')
-  {
-    console.log("I'm here 2");
-    var locArray = [];
-    user.filterUsers(min,max,userName)
-    .then(async ([data]) => {
-      // remove users above 80 km
-      rightUsers = _.map(data,(user) => {
+      rightUsers = _.without(rightUsers, undefined); // remove undefined elements
+    }
+    else
+      rightUsers = data;
+    //sort by location
+    rightUsers = _.orderBy(data,(data)=> {
         var userPoint = {lat:(user.geoLat || user.ipLat),lon:(user.geoLong || user.ipLong)};
-        if((Distance.between(myCor, userPoint).radians)*6371 < defaultDistance)
-          return user;
+        return (Distance.between(myCor, userPoint).radians);
+        // m radians = distance in km / 6371 
+    },['asc']);
+      
+    // add common tags count
+    var appendCountTag = (rightUsers) => {
+      return new Promise(async (resolve,reject) => {
+        if (!rightUsers)
+          reject("No parameter");
+        for(const userR of rightUsers)
+        {
+          var otherInterests = await user.fetchInterestOthers(userR.userName);
+          var profileImg = await user.getProfileImg(userR.userName);
+          var common = _.intersectionWith(myInterests[0], otherInterests[0], _.isEqual);
+          userR.commonTagsCount = common.length;
+          userR.profileImg = profileImg[0][0].imgPath;
+        }
+        resolve(rightUsers)
       })
-      rightUsers = _.without(rightUsers,undefined); // remove undefined elements
-
-      //sort by location
-      rightUsers = _.orderBy(rightUsers,(data)=> {
-          var userPoint = {lat:(user.geoLat || user.ipLat),lon:(user.geoLong || user.ipLong)};
-          return (Distance.between(myCor, userPoint).radians);
-          // m radians = distance in km / 6371
-      },['asc']);
-      //sort by fame rating
-      rightUsers = _.orderBy(rightUsers,['fameRating'],['desc']);
-      //sort by tags
-      var myInterests = await user.fetchInterest(userId);
-      // add common tags count
-      // var sortByTags = (rightUsers) => {
-      //   return new Promise(async (resolve,reject) => {
-      //     if (!rightUsers)
-      //       reject("No parameter");
-      //     for(const userR of rightUsers)
-      //     {
-      //       var otherInterests = await user.fetchInterestOthers(userR.userName);
-      //       var profileImg = await user.getProfileImg(userR.userName);
-      //       var common = _.intersectionWith(myInterests[0], otherInterests[0], _.isEqual);
-      //       userR.commonTagsCount = common.length;
-      //       userR.profileImg = profileImg[0][0].imgPath;
-      //     }
-      //     resolve(rightUsers)
-      //   })
-      // }
-      // rightUsers = await sortByTags(rightUsers);
-      // rightUsers =  _.orderBy(rightUsers,['commonTagsCount'],['desc']);
-      // console.log(rightUsers);
-      res.json(rightUsers);
-    })
-    .catch(err => console.log(err))
+    }
+  rightUsers = await appendCountTag(rightUsers);
+  return (rightUsers);
   }
+  console.log(sexPref, min, max, maxFameRating, userName);
+  var users;
+  if (sexPref == "male" || sexPref == "female")
+  {
+    console.log('ana 1');
+    users = (await user.filterUsersGender(sexPref, min, max, maxFameRating, userName))[0];
+  }
+  else if (sexPref == 'both')
+  {
+    console.log('ana 2');
+    users = (await user.filterUsers(min, max,userName,maxFameRating))[0];
+  }
+    
+
+  var rightUsers = await getRightusers(users);
+  res.json(rightUsers);
 };
 
 exports.addProfileImgs = async(req, res) => {
@@ -272,7 +253,7 @@ exports.postProfileData = async(req, res) => {
     res.json(errors);
   } else {
     if (secPrefTotal.length == 2)
-      secPrefTotal[0] = "both";
+      secPrefTotal = ["both"];
     // Update
     var i = 0;
     // Delete all old interest to add new ones
