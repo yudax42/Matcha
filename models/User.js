@@ -97,15 +97,33 @@ module.exports = class User {
   }
   static filterUsersGender(sexPref,min,max,maxFameRating,userName)
   {
-    return db.execute('select users.userName,users.gender,users.age,users.bio,users.fameRating,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.gender = ? AND users.age <= ? AND users.age >= ? AND users.userName != ? AND users.fameRating < ?  ORDER BY age ASC',[sexPref,max,min,userName,maxFameRating]);
+    return db.execute('select users.id,users.userName,users.gender,users.age,users.bio,users.fameRating,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.gender = ? AND users.age <= ? AND users.age >= ? AND users.userName != ? AND users.fameRating < ?  ORDER BY age ASC',[sexPref,max,min,userName,maxFameRating]);
   }
   static filterUsers(min,max,userName,maxFameRating)
   {
-    return db.execute('select users.userName,users.gender,users.age,users.bio,users.fameRating,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.age <= ? AND users.age >= ? AND users.userName != ? and users.fameRating < ? ORDER BY age ASC',[max,min,userName,maxFameRating]);
+    return db.execute('select users.id,users.userName,users.gender,users.age,users.bio,users.fameRating,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.age <= ? AND users.age >= ? AND users.userName != ? and users.fameRating < ? ORDER BY age ASC',[max,min,userName,maxFameRating]);
   }
   static updateProfileData(userName, firstName, lastName, email, password, gender, secPredTotal, dateOfBirth, age, bio, sessionUser) {
     console.log(dateOfBirth);
     return db.execute('UPDATE users SET userName = ?, firstName = ?, lastName = ?, email = ?, password = ?, gender = ?, sexPref = ?,birthDate = STR_TO_DATE(REPLACE(?,"/","-"), "%m-%d-%Y"),age = ?,bio = ? WHERE userName = ?;',
       [userName, firstName, lastName, email, password, gender, secPredTotal, dateOfBirth, age, bio, sessionUser]);
+  }
+
+  static addaction(action, myId, userId)
+  {
+    return db.execute(`INSERT INTO actions(userIdF,userIdT,${action}) values(?,?,1)`, [myId,userId]);
+  }
+  static blockedUsers(myId)
+  {
+    return db.execute(`SELECT userIdT FROM actions where userIdF = ? and block = 1`, [myId]);
+  }
+  static updateaction(action, myId, userId,state)
+  {
+    return db.execute(`UPDATE actions SET ${action} = ? where userIdF = ? and userIdT = ?`,[state,myId,userId]);
+  }
+  static checkUserAction(myId,userIdT)
+  {
+    console.log(myId, userIdT);
+    return db.execute(`SELECT * FROM actions where userIdF = ? and userIdT = ?`, [myId,userIdT]);
   }
 }

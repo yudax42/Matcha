@@ -46,9 +46,9 @@ CREATE TABLE userLocation(
 
 CREATE TABLE actions(
 	id		INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,
-	userIdF	INT UNIQUE,
-	userIdT INT UNIQUE,
-	block	BOOLEAN,
-	love	BOOLEAN,
-	report	BOOLEAN	
+	userIdF	INT ,
+	userIdT INT ,
+	block	BOOLEAN DEFAULT 0,
+	love	BOOLEAN DEFAULT 0,
+	report	BOOLEAN DEFAULT 0	
 )

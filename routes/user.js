@@ -11,5 +11,6 @@ router.get('/public/:user', isAuth, userController.getPublicProfile);
 router.get('/profileData', isAuth, userController.getProfileData);
 router.post('/profileData', isAuth, userController.postProfileData);
 router.post('/addProfileImg', isAuth, userController.addProfileImgs);
+router.post('/actions', isAuth, userController.actions);
 
 module.exports = router;

@@ -28,9 +28,11 @@
                     <li class="tag"><%= tag.topic %></li>    
                 <%})%>
             </ul>
-            <button class="btn btn-danger">like</button>
-            <button class="btn btn-warning">report fake account</button>
-            <button class="btn btn-warning">Block</button>
+            <inpu type="hidden" name="id" value="<%= data.id %>">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="btn btn-danger" onclick="actions('love','<%= data.id %>')">like</button>
+            <button class="btn btn-warning" onclick="actions('report','<%= data.id %>')">report fake account</button>
+            <button class="btn btn-warning" onclick="actions('block','<%= data.id %>')">Block</button>
         </div>
     </div>
     <div class="clearfix"></div>

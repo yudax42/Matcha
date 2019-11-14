@@ -9,6 +9,35 @@ var Distance = require('geo-distance');
 exports.getProfile = (req, res) => {
   res.render('user/profile', {errorMsg: req.flash('error')});
 };
+
+exports.actions = async(req, res) => {
+  const myId = req.session.userId;
+  const action = req.query.action;
+  const userIdT = req.query.userId;
+
+  if (action != 'love' && action != 'report' && action != 'block')
+    return res.json({ error: "action not correct" });
+  else if (userIdT < 0)
+    return res.json({ error: "a sb7an lah" });
+  else if (myId == userIdT)
+    return res.json({ error: "kherna maydih ghirna" });
+  else
+  {
+    var checkUser = (await user.checkUserAction(myId,userIdT))[0];
+    if (checkUser.length > 0)
+    {
+      // check account state 
+      var state = checkUser[0][action];
+      // change to the new state
+      await user.updateaction(action, myId, userIdT, !state);
+    }
+    else
+      await user.addaction(action, myId, userIdT);
+    res.send('action Done'); 
+  }
+}
+
+
 exports.getPublicProfile = async(req, res) => {
   const userToFind = req.params.user;
   //firstName, last Name , fameRating, bio, tags, images
@@ -26,6 +55,7 @@ exports.getPublicProfile = async(req, res) => {
     // if (foundedUser.accStat != 'active')
     //   return res.redirect('/user/home');
     const data = {
+      id: foundedUser.id,
       userName: foundedUser.userName,
       firstName: foundedUser.firstName,
       lastName: foundedUser.lastName,
@@ -116,6 +146,17 @@ exports.getMatchData = async(req, res) => {
     search = 0;
 
   var getRightusers = async (data) => {
+    var rightUsers;
+    // remove blocked users
+    var blockedUsers = (await user.blockedUsers(req.session.userId))[0];
+    blockedUsers = blockedUsers.map((obj) => {
+      return obj.userIdT;
+    });
+    data = data.filter(function(user) {
+      return !blockedUsers.includes(user.id); 
+    })
+
+    // remove elements with distance 
     rightUsers = _.map(data, (user) => {
       var userPoint = { lat: (user.geoLat || user.ipLat), lon: (user.geoLong || user.ipLong) };
       if ((Distance.between(myCor, userPoint).radians) * 6371 < defaultDistance)
