@@ -11,7 +11,7 @@ var showUsers = (users) => {
     {
         users.forEach(user => {
             var content = `
-            <div class="col-xl-3  col-lg-4 col-md-4 col-sm-6 float-left userCard mt-4">
+            <div class="col-xl-3  animated zoomInUp col-lg-4 col-md-4 col-sm-6 float-left userCard mt-4">
                 <div class="card text-center">
                     <img class="card-img-top" src="${user.profileImg}" alt="Card image cap">
                     <div class="card-body">
@@ -19,8 +19,7 @@ var showUsers = (users) => {
                         <span class="mb-2">${user.fameRating}</span><br>
                         <span class="badge mr-3 badge-squared badge-outline-info">${user.gender}</span>
                         <p class="card-text">${user.bio}</p>
-                        <a href="#" class="btn btn-outline-success btn-pill">❤️</a>
-                        <a href="#" class="btn btn-outline-danger btn-pill">❌</a>
+                        <a href="/user/public/${user.userName}" class="btn btn-outline-success btn-pill">View Profile</a>
                     </div>
                 </div>
             </div>
@@ -76,8 +75,6 @@ window.onload = async function fetchUsers() {
     var users = response.data;
     listUsers = [...response.data];
     locSortedUsers = [...response.data];
-    console.log('hna 3tinaha value', locSortedUsers);
-    // show users;
     showUsers(users);
 }
 var fetchCustomData = () => {
@@ -107,7 +104,7 @@ var fetchCustomData = () => {
             console.log(errors);
             errors.forEach(error => {
                 var content = `
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <div class="alert alert-danger animated fadeInUp alert-dismissible fade show" role="alert">
                     ${error.error}
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -115,35 +112,17 @@ var fetchCustomData = () => {
                 </div>
                 `;
                 $(".errors").append(content);
-                // setTimeout(function() {
-                //     $(".errors").hide('blind', {}, 500)
-                // }, 3000);
+                setTimeout(function() {
+                    $(".errors").html('');
+                }, 2000);
             })
         }
         else
         {
             var users = response.data;
-            $(".suggestedUsers").html('');
-            if(users.length == 0)
-                $(".suggestedUsers").append("<b>No result found</b>");
-            users.forEach(user => {
-                var content = `
-                <div class="col-xl-3  col-lg-4 col-md-4 col-sm-6 float-left userCard mt-4">
-                    <div class="card text-center">
-                        <img class="card-img-top" src="${user.profileImg}" alt="Card image cap">
-                        <div class="card-body">
-                            <h4 class="card-title">${user.userName} <span class="badge badge-light">${user.age}</span></h4>
-                            <span class="mb-2">${user.fameRating}</span><br>
-                            <span class="badge mr-3 badge-squared badge-outline-info">${user.gender}</span>
-                            <p class="card-text">${user.bio}</p>
-                            <a href="#" class="btn btn-outline-success btn-pill">❤️</a>
-                            <a href="#" class="btn btn-outline-danger btn-pill">❌</a>
-                        </div>
-                    </div>
-                </div>
-                `;
-                $(".suggestedUsers").append(content);
-            });  
+            listUsers = [...response.data];
+            locSortedUsers = [...response.data];
+            showUsers(users);
         }
         
           

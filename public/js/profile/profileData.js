@@ -19,19 +19,19 @@ window.onload = function fetchData() {
       imgList.forEach((img) => {
         switch (img.imgIndex) {
           case "profile":
-            $('#avatarPreview').css('background-image', 'url(/' + img.imgPath + ')');
+            $('#avatarPreview').css('background-image', 'url(' + img.imgPath + ')');
             break;
           case "img1":
-            $('#img1').css('background-image', 'url(/' + img.imgPath + ')');
+            $('#img1').css('background-image', 'url(' + img.imgPath + ')');
             break;
           case "img2":
-            $('#img2').css('background-image', 'url(/' + img.imgPath + ')');
+            $('#img2').css('background-image', 'url(' + img.imgPath + ')');
             break;
           case "img3":
-            $('#img3').css('background-image', 'url(/' + img.imgPath + ')');
+            $('#img3').css('background-image', 'url(' + img.imgPath + ')');
             break;
           case "img4":
-            $('#img4').css('background-image', 'url(/' + img.imgPath + ')');
+            $('#img4').css('background-image', 'url(' + img.imgPath + ')');
             break;
         }
       });

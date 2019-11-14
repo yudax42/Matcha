@@ -9,6 +9,38 @@ var Distance = require('geo-distance');
 exports.getProfile = (req, res) => {
   res.render('user/profile', {errorMsg: req.flash('error')});
 };
+exports.getPublicProfile = async(req, res) => {
+  const userToFind = req.params.user;
+  //firstName, last Name , fameRating, bio, tags, images
+
+  // check it's valid 
+  if (!form.valideUserName(userToFind))
+    return res.redirect('/user/home');
+  
+  // check if user exists 
+  var foundedUser = (await user.findUser(userToFind))[0][0];
+  if (foundedUser.length == 0)
+    return res.redirect('/user/home');
+  else
+  {
+    // if (foundedUser.accStat != 'active')
+    //   return res.redirect('/user/home');
+    const data = {
+      userName: foundedUser.userName,
+      firstName: foundedUser.firstName,
+      lastName: foundedUser.lastName,
+      fameRating: foundedUser.fameRating,
+      bio: foundedUser.bio,
+    };
+    // fetch images
+    const userImages = (await user.fetchImages(foundedUser.id))[0];
+    data.images = userImages;
+    // fetch tags
+    const tags = (await user.fetchInterest(foundedUser.id))[0];
+    data.tags = tags;
+    res.render('user/publicProfile', {errorMsg: req.flash('error'),data: data});
+  }
+};
 exports.getMatch = (req, res) => {
   res.render('user/home', {errorMsg: req.flash('error')});
 };
@@ -35,7 +67,7 @@ exports.getMatchData = async(req, res) => {
   const age = req.session.age;
   var myCor = { lat: req.session.latitude, lon: req.session.longitude }
   let errors = [];
-  const interests = ["science", "tech", "food", "swimming", "football", "anime", "e-games", "makeUp", "series", "movies", "cinema", "art", "music", "self improvement", "reading"];
+  const interests = ["science", "tech", "food", "swimming", "football", "anime", "e-games", "make up", "series", "movies", "cinema", "art", "music", "self improvement", "reading"];
   //search data
   var { fameRating, distance, ageRangeMin, ageRangeMax, genderPref, interest } = req.query;
   var myInterests = interest || await user.fetchInterest(userId);
@@ -65,11 +97,18 @@ exports.getMatchData = async(req, res) => {
         if (interests.includes(interest[i].toLowerCase()))
           i++;
         else {
+          console.log(interest[i]," vs ",interest[i].toLowerCase()," ",interests.includes(interest[i].toLowerCase()))
           errors.push({ error: "Please select interset from the list above" });
           break;
         }
       }
     }
+    else
+    {
+      console.log(interest.length);
+      errors.push({ error: "You have the max of 5 tags." });
+    }
+      
     if (errors.length > 0)
       return res.json({ errors:errors });
   }
@@ -79,8 +118,6 @@ exports.getMatchData = async(req, res) => {
   var getRightusers = async (data) => {
     rightUsers = _.map(data, (user) => {
       var userPoint = { lat: (user.geoLat || user.ipLat), lon: (user.geoLong || user.ipLong) };
-      console.log(userPoint);
-      console.log((Distance.between(myCor, userPoint).radians) * 6371);
       if ((Distance.between(myCor, userPoint).radians) * 6371 < defaultDistance)
         return user;
     })
@@ -116,14 +153,10 @@ exports.getMatchData = async(req, res) => {
   var users;
   if (sexPref == "male" || sexPref == "female")
   {
-    console.log('ana 1');
-    console.log(sexPref, min, max, maxFameRating, userName);
-    
     users = (await user.filterUsersGender(sexPref, min, max, maxFameRating, userName))[0];
   }
   else if (sexPref == 'both')
   {
-    console.log('ana 2');
     users = (await user.filterUsers(min, max,userName,maxFameRating))[0];
   }
     
@@ -160,7 +193,7 @@ exports.addProfileImgs = async(req, res) => {
         });
       } else {
         // add image
-        await user.addImage(userId, image.path, imgIndex);
+        await user.addImage(userId, "/"+image.path, imgIndex);
         res.send("done");
       }
     }
@@ -213,7 +246,7 @@ exports.postProfileData = async(req, res) => {
     latitude
   } = req.query;
   const errors = [];
-  const interests = ["science", "tech", "food", "swimming", "football", "anime", "e-games", "makeUp", "series", "movies", "cinema", "art", "music", "self improvement", "reading"];
+  const interests = ["science", "tech", "food", "swimming", "football", "anime", "e-games", "make up", "series", "movies", "cinema", "art", "music", "self improvement", "reading"];
 
   
   var response = (await user.findUser(userName))[0];

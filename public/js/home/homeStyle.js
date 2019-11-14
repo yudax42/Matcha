@@ -1,5 +1,5 @@
 function openNav() {
-    document.getElementById("mySidenav").style.height = "901px";
+    document.getElementById("mySidenav").style.height = "966px";
     document.getElementById("mySidenav").style.opacity = "1";
     // document.getElementById("main").style.marginTop = "901px";
     $(".openTopBar").attr("onclick", "closeNav()");
