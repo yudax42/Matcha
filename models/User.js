@@ -18,6 +18,9 @@ module.exports = class User {
   static findUser(userName) {
     return db.execute('SELECT * FROM users WHERE userName = ?', [userName]);
   }
+  static findUserId(id) {
+    return db.execute('SELECT * FROM users WHERE id = ?', [id]);
+  }
   static findAccountWithEmail(userName,email)
   {
     return db.execute('SELECT * FROM users WHERE userName = ? AND email = ?', [userName,email]);
@@ -31,6 +34,10 @@ module.exports = class User {
   static getProfileImg(userName)
   {
     return db.execute('SELECT imgPath FROM profilePictures WHERE user_id in (select id from users where userName = ?) AND imgIndex="profile"', [userName]);
+  }
+  static getProfileImgWithId(id)
+  {
+    return db.execute('SELECT imgPath FROM profilePictures WHERE user_id in (select id from users where id = ?) AND imgIndex="profile"', [id]);
   }
   static fetchImages(userId) {
     return db.execute('SELECT imgPath,imgIndex FROM profilePictures WHERE user_id = ?', [userId]);
