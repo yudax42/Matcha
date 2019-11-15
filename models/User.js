@@ -101,7 +101,7 @@ module.exports = class User {
   }
   static filterUsers(min,max,userName,maxFameRating)
   {
-    return db.execute('select users.id,users.userName,users.gender,users.age,users.bio,users.fameRating,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.age <= ? AND users.age >= ? AND users.userName != ? and users.fameRating < ? ORDER BY age ASC',[max,min,userName,maxFameRating]);
+    return db.execute('select users.id,users.userName,users.gender,users.age,users.bio,users.fameRating,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.age <= ? AND users.age >= ? AND users.userName != ? and users.fameRating <= ? ORDER BY age ASC',[max,min,userName,maxFameRating]);
   }
   static updateProfileData(userName, firstName, lastName, email, password, gender, secPredTotal, dateOfBirth, age, bio, sessionUser) {
     console.log(dateOfBirth);
@@ -119,11 +119,11 @@ module.exports = class User {
   }
   static updateaction(action, myId, userId,state)
   {
-    return db.execute(`UPDATE actions SET ${action} = ? where userIdF = ? and userIdT = ?`,[state,myId,userId]);
+    return db.execute(`UPDATE actions SET ${action} = ? where userIdT = ? and userIdF = ?`,[state,userId,myId]);
   }
   static checkUserAction(myId,userIdT)
   {
-    console.log(myId, userIdT);
-    return db.execute(`SELECT * FROM actions where userIdF = ? and userIdT = ?`, [myId,userIdT]);
+    console.log(myId,userIdT);
+    return db.execute(`SELECT * FROM actions where userIdT = ? and userIdF = ?`, [userIdT,myId]);
   }
 }

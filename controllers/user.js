@@ -23,6 +23,7 @@ exports.actions = async(req, res) => {
     return res.json({ error: "kherna maydih ghirna" });
   else
   {
+    
     var checkUser = (await user.checkUserAction(myId,userIdT))[0];
     if (checkUser.length > 0)
     {
@@ -33,7 +34,8 @@ exports.actions = async(req, res) => {
     }
     else
       await user.addaction(action, myId, userIdT);
-    res.send('action Done'); 
+    const buttonsState = (await user.checkUserAction(myId,userIdT))[0][0];
+    res.send({buttonsState : buttonsState}); 
   }
 }
 
@@ -68,6 +70,11 @@ exports.getPublicProfile = async(req, res) => {
     // fetch tags
     const tags = (await user.fetchInterest(foundedUser.id))[0];
     data.tags = tags;
+    // fetch button state 
+    const buttonsState = (await user.checkUserAction(req.session.userId,foundedUser.id))[0];
+    if(buttonsState.length == 0)
+      buttonsState[0] = {block:0,love:0,report:0};
+    data.buttonsState = buttonsState[0];
     res.render('user/publicProfile', {errorMsg: req.flash('error'),data: data});
   }
 };
@@ -147,6 +154,7 @@ exports.getMatchData = async(req, res) => {
 
   var getRightusers = async (data) => {
     var rightUsers;
+    console.log(data);
     // remove blocked users
     var blockedUsers = (await user.blockedUsers(req.session.userId))[0];
     blockedUsers = blockedUsers.map((obj) => {
@@ -155,7 +163,7 @@ exports.getMatchData = async(req, res) => {
     data = data.filter(function(user) {
       return !blockedUsers.includes(user.id); 
     })
-
+    
     // remove elements with distance 
     rightUsers = _.map(data, (user) => {
       var userPoint = { lat: (user.geoLat || user.ipLat), lon: (user.geoLong || user.ipLong) };
@@ -166,7 +174,7 @@ exports.getMatchData = async(req, res) => {
 
     //sort by location
     rightUsers = _.orderBy(rightUsers,(data)=> {
-        var userPoint = {lat:(user.geoLat || user.ipLat),lon:(user.geoLong || user.ipLong)};
+        var userPoint = {lat:(data.geoLat || data.ipLat),lon:(data.geoLong || data.ipLong)};
         return (Distance.between(myCor, userPoint).radians);
         // m radians = distance in km / 6371 
     },['asc']);

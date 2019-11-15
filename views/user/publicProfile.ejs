@@ -30,9 +30,9 @@
             </ul>
             <inpu type="hidden" name="id" value="<%= data.id %>">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button class="btn btn-danger" onclick="actions('love','<%= data.id %>')">like</button>
-            <button class="btn btn-warning" onclick="actions('report','<%= data.id %>')">report fake account</button>
-            <button class="btn btn-warning" onclick="actions('block','<%= data.id %>')">Block</button>
+            <button class="btn btn-danger" id="love" onclick="actions('love','<%= data.id %>')"><% if(data.buttonsState.love == 1){  %> Unlike <% }else{ %> like <%}%></button>
+            <button class="btn btn-warning" id="report" onclick="actions('report','<%= data.id %>')"><% if(data.buttonsState.report == 1 ){ %> report fake account  <% }else{ %> Reported<%}%></button>
+            <button class="btn btn-warning" id="block" onclick="actions('block','<%= data.id %>')"><% if(data.buttonsState.block == 1) { %> UnBlock <% }else{ %> Block <%}%></button>
         </div>
     </div>
     <div class="clearfix"></div>
