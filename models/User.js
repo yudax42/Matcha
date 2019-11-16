@@ -144,12 +144,16 @@ module.exports = class User {
   {
     return db.execute(`SELECT * FROM matches WHERE (userIdF = ? OR userIdT = ?) AND (userIdF = ? OR userIdT = ?)`,[myId,myId,userIdT,userIdT])
   }
-  static updateMatchesState(myId,userIdT,state)
-  {
-    return db.execute(`UPDATE matches SET state = ? WHERE (userIdF = ? OR userIdT = ?) AND (userIdF = ? OR userIdT = ?) `,[state,myId,myId,userIdT,userIdT]);
-  }
   static deleteMatches(myId,userIdT)
   {
     return db.execute(`DELETE FROM  matches WHERE (userIdF = ? OR userIdT = ?) AND (userIdF = ? OR userIdT = ?) `,[myId,myId,userIdT,userIdT]);
+  }
+  static fetchMatchedLeft(myId)
+  {
+    return db.execute(`SELECT users.userName,users.id  FROM matches INNER JOIN users where matches.userIdT = users.id and userIdF = ? `,[myId]);
+  }
+  static fetchMatchedRight(myId)
+  {
+    return db.execute(`SELECT users.userName,users.id  FROM matches INNER JOIN users where matches.userIdF = users.id and userIdT = ? `,[myId]);
   }
 }

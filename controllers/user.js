@@ -47,21 +47,19 @@ exports.actions = async(req, res) => {
       else
       {
         checkifDo = 0;
-      } 
-        
-        // check if x person liked me before and the new updated state is true
-        console.log(checkifDo,!state,checkMatchedUsers.length);
-        if(checkifDo == 1 && !state == true && checkMatchedUsers.length == 0)
-        {
-          // if yes add it to matches table because where both like each other
-          await user.addToMatches(myId, userIdT);
-        }//if we matched before but one of them unlike the other will be deleted from matches table
-        else if(!state == false && checkMatchedUsers.length > 0)
-        {
-          // if he unliked me 
-          await user.deleteMatches(myId,userIdT);
-        }
-
+      }  
+      // check if x person liked me before and the new updated state is true
+      console.log(checkifDo,!state,checkMatchedUsers.length);
+      if(checkifDo == 1 && !state == true && checkMatchedUsers.length == 0)
+      {
+        // if yes add it to matches table because where both like each other
+        await user.addToMatches(myId, userIdT);
+      }//if we matched before but one of them unlike the other will be deleted from matches table
+      else if(!state == false && checkMatchedUsers.length > 0)
+      {
+        // if he unliked me 
+        await user.deleteMatches(myId,userIdT);
+      }
     }
     const buttonsState = (await user.checkUserAction(myId,userIdT))[0][0];
     res.send({buttonsState : buttonsState}); 
@@ -425,9 +423,17 @@ exports.chats = (req,res) => {
 
 exports.getMatchedUsers = async(req,res) =>
 {
+  var users = [];
+  const fetchMatchedUser = (await user.fetchMatchedLeft(req.session.userId))[0];
+  const fetchMatchedUser2 = (await user.fetchMatchedRight(req.session.userId))[0];
 
-  const checkMatched = (await user.fetchAction(req.session.id))[0];
-  console.log(checkMatched);
-  res.json({msg:'ok'});
+  fetchMatchedUser.map(user => {
+    users.push(user);
+  })
+  fetchMatchedUser2.map(user => {
+    users.push(user);
+  })
+  console.log(users);
+  res.json({users:users});
 }
 
