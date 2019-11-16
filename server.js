@@ -8,6 +8,7 @@ const csrf = require("csurf");
 const flash = require("connect-flash");
 const MySQLStore = require("express-mysql-session")(session);
 const multer = require("multer");
+const socket = require("socket.io");
 
 // Controllers Requirement
 const errorController = require("./controllers/error");
@@ -88,3 +89,26 @@ app.use(errorController.error404);
 
 // Server Settings
 var server = app.listen(3000);
+
+// Socket io
+var io = socket(server);
+
+var sockets = {}
+
+io.on('connection', socket => {
+  let id = session.userId;
+  sockets[id] = socket;
+  socket.on('message', msg => {
+    // msg = {
+    //   ownerId:'',
+    //   receiverId:'',
+    //   msg:'message'
+    // }
+    socket.emit('message', msg);
+    if (sockets[msg.receiverId])
+      sockets[msg.receiverId].send(msg)
+  })
+  console.log('user connected');
+  // console.log(socket);
+ console.log(socket.id);
+})

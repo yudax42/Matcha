@@ -424,6 +424,7 @@ exports.chats = (req,res) => {
 exports.getMatchedUsers = async(req,res) =>
 {
   var users = [];
+  users.push({sessionId: req.session.userId});
   const fetchMatchedUser = (await user.fetchMatchedLeft(req.session.userId))[0];
   const fetchMatchedUser2 = (await user.fetchMatchedRight(req.session.userId))[0];
 
@@ -433,6 +434,7 @@ exports.getMatchedUsers = async(req,res) =>
   fetchMatchedUser2.map(user => {
     users.push(user);
   })
+  
   console.log(users);
   res.json({users:users});
 }
