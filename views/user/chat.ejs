@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="/css/chat/chat.css">
+<script src="/js/chat/chatData.js"></script>
+<div class="row holder">
+    <div class="col-4 bg-light px-0" id="listUsers">
+        <ul id="users">
+            <li id="user">dslkfjasd</li>
+            <li id="user">dslkfjasd</li>
+            <li id="user">dslkfjasd</li>
+            <li id="user">dslkfjasd</li>
+        </ul>
+    </div>
+    <div class="col-8 bg-warning p-0 chatContainer" id="chat">
+        <div class="w-100 bg-dark py-5 px-3"> 
+            <h3 class="text-white">Let's Chat</h3>
+        </div>
+        <div class="chatBody h-80">
+                fadsfsa
+        </div>
+        <div class="chatFooter bg-dark w-100 p-5">
+            <textarea id="message" class="form-control"></textarea>
+            <button id="send" class="btn float-right mt-1" type="submit">send</button>
+        </div>
+    </div>
+    <input type="hidden" name="_csrf" id="csrf" value="<%= csrfToken %>">
+</div>
+<script src="/js/chat/chatData.js"></script>

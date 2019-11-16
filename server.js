@@ -87,4 +87,4 @@ app.use("/user", userRouter);
 app.use(errorController.error404);
 
 // Server Settings
-app.listen(3000);
+var server = app.listen(3000);

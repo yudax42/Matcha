@@ -130,7 +130,26 @@ module.exports = class User {
   }
   static checkUserAction(myId,userIdT)
   {
-    console.log(myId,userIdT);
     return db.execute(`SELECT * FROM actions where userIdT = ? and userIdF = ?`, [userIdT,myId]);
+  }
+  static fetchAction(userId)
+  {
+    return db.execute(`SELECT * FROM actions where userIdF = ? OR userIdT`,[userId]);
+  }
+  static addToMatches(userIdF, userIdT)
+  {
+    return db.execute(`INSERT INTO matches(userIdF,userIdT) VALUES(?,?)`,[userIdF,userIdT]);
+  }
+  static checkifMatched(myId,userIdT)
+  {
+    return db.execute(`SELECT * FROM matches WHERE (userIdF = ? OR userIdT = ?) AND (userIdF = ? OR userIdT = ?)`,[myId,myId,userIdT,userIdT])
+  }
+  static updateMatchesState(myId,userIdT,state)
+  {
+    return db.execute(`UPDATE matches SET state = ? WHERE (userIdF = ? OR userIdT = ?) AND (userIdF = ? OR userIdT = ?) `,[state,myId,myId,userIdT,userIdT]);
+  }
+  static deleteMatches(myId,userIdT)
+  {
+    return db.execute(`DELETE FROM  matches WHERE (userIdF = ? OR userIdT = ?) AND (userIdF = ? OR userIdT = ?) `,[myId,myId,userIdT,userIdT]);
   }
 }

@@ -13,5 +13,7 @@ router.get('/profileData', isAuth, userController.getProfileData);
 router.post('/profileData', isAuth, userController.postProfileData);
 router.post('/addProfileImg', isAuth, userController.addProfileImgs);
 router.post('/actions', isAuth,isProfileDone, userController.actions);
+router.get('/chat',isAuth, userController.chats);
+router.get('/chatUsers',isAuth, userController.getMatchedUsers);
 
 module.exports = router;

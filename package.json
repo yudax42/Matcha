@@ -25,7 +25,8 @@
     "ngrok": "^3.2.5",
     "nodemailer": "^6.3.1",
     "nodemailer-sendgrid-transport": "^0.2.0",
-    "public-ip": "^3.2.0"
+    "public-ip": "^3.2.0",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {},
   "scripts": {

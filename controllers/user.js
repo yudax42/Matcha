@@ -13,7 +13,7 @@ exports.getProfile = (req, res) => {
 exports.actions = async(req, res) => {
   const myId = req.session.userId;
   const action = req.query.action;
-  const userIdT = req.query.userId;
+  const userIdT = parseInt(req.query.userId);
 
   if (action != 'love' && action != 'report' && action != 'block')
     return res.json({ error: "action not correct" });
@@ -27,13 +27,34 @@ exports.actions = async(req, res) => {
     var checkUser = (await user.checkUserAction(myId,userIdT))[0];
     if (checkUser.length > 0)
     {
-      // check account state 
+      // check action state 
       var state = checkUser[0][action];
       // change to the new state
       await user.updateaction(action, myId, userIdT, !state);
     }
     else
       await user.addaction(action, myId, userIdT);
+    if(action == 'love')
+    {
+      var checkOtherUseriflikesMe = (await user.checkUserAction(userIdT,myId))[0];
+      var checkMatchedUsers  = (await user.checkifMatched(myId,userIdT))[0];
+
+      if (checkUser.length > 0)
+      {
+        var checkifDo = checkOtherUseriflikesMe[0]['love'];
+        // check if x person liked me before and the new updated state is true
+        if(checkifDo == 1 && !state == true && checkMatchedUsers.length == 0)
+        {
+          // if yes add it to matches table because where both like each other
+          await user.addToMatches(myId, userIdT);
+        }//if we matched before but one of them unlike the other will be deleted from matches table
+        else if(!state == false && checkMatchedUsers.length > 0)
+        {
+          // if he unliked me 
+          await user.deleteMatches(myId,userIdT);
+        }
+      }
+    }
     const buttonsState = (await user.checkUserAction(myId,userIdT))[0][0];
     res.send({buttonsState : buttonsState}); 
   }
@@ -388,5 +409,17 @@ exports.postProfileData = async(req, res) => {
     }
     res.json([{msg: "done"}]);
   }
-
 }
+
+exports.chats = (req,res) => {
+  res.render('user/chat');
+}
+
+exports.getMatchedUsers = async(req,res) =>
+{
+
+  const checkMatched = (await user.fetchAction(req.session.id))[0];
+  console.log(checkMatched);
+  res.json({msg:'ok'});
+}
+

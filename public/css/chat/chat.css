@@ -1,0 +1,33 @@
+body
+{
+    height: 100%;
+}
+.holder
+{
+    height: 89vh;
+    overflow: auto;
+}
+.chatContainer
+{
+    position: relative;
+}
+.chatFooter
+{
+    position: absolute;
+    bottom: 0;
+}
+#message
+{
+    resize: none
+}
+#listUsers ul {list-style: none;padding-left: 6px;}
+#listUsers ul li{
+    width: 100%;
+    padding: 10px;
+    border-bottom: 1px solid #e2e2e2;
+    background: #e9ecef;
+}
+#listUsers ul li:hover
+{
+    cursor: pointer;
+}
