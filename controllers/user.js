@@ -33,16 +33,24 @@ exports.actions = async(req, res) => {
       await user.updateaction(action, myId, userIdT, !state);
     }
     else
+    {
+      var  state = false;
       await user.addaction(action, myId, userIdT);
+    }
     if(action == 'love')
     {
       var checkOtherUseriflikesMe = (await user.checkUserAction(userIdT,myId))[0];
       var checkMatchedUsers  = (await user.checkifMatched(myId,userIdT))[0];
-
-      if (checkUser.length > 0)
+      var checkifDo ;
+      if(checkOtherUseriflikesMe.length > 0)
+        checkifDo = checkOtherUseriflikesMe[0]['love']
+      else
       {
-        var checkifDo = checkOtherUseriflikesMe[0]['love'];
+        checkifDo = 0;
+      } 
+        
         // check if x person liked me before and the new updated state is true
+        console.log(checkifDo,!state,checkMatchedUsers.length);
         if(checkifDo == 1 && !state == true && checkMatchedUsers.length == 0)
         {
           // if yes add it to matches table because where both like each other
@@ -53,7 +61,7 @@ exports.actions = async(req, res) => {
           // if he unliked me 
           await user.deleteMatches(myId,userIdT);
         }
-      }
+
     }
     const buttonsState = (await user.checkUserAction(myId,userIdT))[0][0];
     res.send({buttonsState : buttonsState}); 
