@@ -64,5 +64,5 @@ CREATE TABLE messages(
 	userIdF INT,
 	userIdT INT,
 	message varchar(400),
-	msgDate DATE NOT NULL
+	msgDate datetime NOT NULL
 )
