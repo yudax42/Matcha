@@ -58,3 +58,11 @@ CREATE TABLE matches(
 	userIdF	INT ,
 	userIdT INT ,
 )
+
+CREATE TABLE messages(
+	id	INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,
+	userIdF INT,
+	userIdT INT,
+	message varchar(400),
+	msgDate DATE NOT NULL
+)
