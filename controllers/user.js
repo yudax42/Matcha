@@ -1,3 +1,6 @@
+/*
+    wa 3ndak tensa not active account raq commentitiha f route dial getPublic profile 
+*/
 var user = require('../models/User');
 const form = require('../models/Form');
 const moment = require('moment');
@@ -5,6 +8,7 @@ const bcrypt = require('bcryptjs');
 var _ = require('lodash');
 var fs = require('fs');
 var Distance = require('geo-distance');
+
 
 exports.getProfile = (req, res) => {
   res.render('user/profile', {errorMsg: req.flash('error')});
@@ -14,6 +18,8 @@ exports.actions = async(req, res) => {
   const myId = req.session.userId;
   const action = req.query.action;
   const userIdT = parseInt(req.query.userId);
+  var sockets = req.sockets;
+
 
   if (action != 'love' && action != 'report' && action != 'block')
     return res.json({ error: "action not correct" });
@@ -27,14 +33,29 @@ exports.actions = async(req, res) => {
     var checkUser = (await user.checkUserAction(myId,userIdT))[0];
     if (checkUser.length > 0)
     {
+      console.log('here');
+      
       // check action state 
       var state = checkUser[0][action];
       // change to the new state
       await user.updateaction(action, myId, userIdT, !state);
+      if (sockets[userIdT] && (action == "love"))
+      {
+        let stateMsg;
+        if(state == 1)
+          stateMsg = "Unliked ";
+        else
+          stateMsg = "Liked ";
+        await user.addNewNotif(req.session.userId,userIdT,`${req.session.userName} ${stateMsg} you`);
+        sockets[userIdT].emit('notification',{not: `${req.session.userName} ${stateMsg} you`});
+      }
+      
     }
     else
     {
       var  state = false;
+      
+      
       await user.addaction(action, myId, userIdT);
     }
     if(action == 'love')
@@ -45,15 +66,15 @@ exports.actions = async(req, res) => {
       if(checkOtherUseriflikesMe.length > 0)
         checkifDo = checkOtherUseriflikesMe[0]['love']
       else
-      {
         checkifDo = 0;
-      }  
       // check if x person liked me before and the new updated state is true
-      console.log(checkifDo,!state,checkMatchedUsers.length);
       if(checkifDo == 1 && !state == true && checkMatchedUsers.length == 0)
       {
         // if yes add it to matches table because where both like each other
         await user.addToMatches(myId, userIdT);
+        await user.addNewNotif(req.session.userId,userIdT,`you are matched with ${req.session.userName}`);
+        if(sockets[userIdT])
+          sockets[userIdT].emit('notification',{not: `you are matched with ${req.session.userName}`});
       }//if we matched before but one of them unlike the other will be deleted from matches table
       else if(!state == false && checkMatchedUsers.length > 0)
       {
@@ -69,6 +90,7 @@ exports.actions = async(req, res) => {
 
 exports.getPublicProfile = async(req, res) => {
   const userToFind = req.params.user;
+  var sockets = req.sockets;
   //firstName, last Name , fameRating, bio, tags, images
 
   // check it's valid 
@@ -102,6 +124,12 @@ exports.getPublicProfile = async(req, res) => {
     if(buttonsState.length == 0)
       buttonsState[0] = {block:0,love:0,report:0};
     data.buttonsState = buttonsState[0];
+    if(sockets[foundedUser.id])
+    {
+      await user.addNewNotif(req.session.userId,foundedUser.id,`${req.session.userName} visited you profile`);
+      sockets[foundedUser.id].emit('notification',{not: `${req.session.userName} visited you profile`});
+    }
+    await user.addToVisiteHistory(req.session.userId,foundedUser.id);
     res.render('user/publicProfile', {errorMsg: req.flash('error'),data: data});
   }
 };
@@ -161,7 +189,6 @@ exports.getMatchData = async(req, res) => {
         if (interests.includes(interest[i].toLowerCase()))
           i++;
         else {
-          console.log(interest[i]," vs ",interest[i].toLowerCase()," ",interests.includes(interest[i].toLowerCase()))
           errors.push({ error: "Please select interset from the list above" });
           break;
         }
@@ -169,7 +196,6 @@ exports.getMatchData = async(req, res) => {
     }
     else
     {
-      console.log(interest.length);
       errors.push({ error: "You have the max of 5 tags." });
     }
       
@@ -181,7 +207,7 @@ exports.getMatchData = async(req, res) => {
 
   var getRightusers = async (data) => {
     var rightUsers;
-    console.log(data);
+
     // remove blocked users
     var blockedUsers = (await user.blockedUsers(req.session.userId))[0];
     blockedUsers = blockedUsers.map((obj) => {
@@ -254,9 +280,7 @@ exports.addProfileImgs = async(req, res) => {
       fs.unlink(image.path, (err) => {res.json({msg: "not valide image"});});
     else if (image.size < 4194304) {
       //check if is there an image in imgIndex
-      console.log(imgIndex, userId);
       var data = (await user.checkImgIndex(imgIndex,userId))[0];
-      console.log(data);
       // if found delete old image path
       if (data.length == 1) {
         // delete file
@@ -283,11 +307,13 @@ exports.addProfileImgs = async(req, res) => {
 exports.getProfileData = async (req, res) => {
   let userName = req.session.userName;
   let userId = req.session.userId;
-  console.log(userId);
   let userData = (await user.fetchUserData(userName))[0];
   let interest = (await user.fetchInterest(userId))[0];
   let images = (await user.fetchImages(userId))[0];
   let Geoloc = (await user.fetchGeoLoc(userName))[0];
+  let visiteHistory = (await user.getMyvisiteHistory(userId))[0];
+  let whoLookeAtMyProfile = (await user.getWhoLookedAtMyProfile(userId))[0];
+  let whoLikedMyProfile = (await user.getWhoLikedMyProfile(userId))[0];
   let i = 0;
   let dbInterestArr = [];
 
@@ -300,7 +326,10 @@ exports.getProfileData = async (req, res) => {
     formData: userData[0],
     listInterest: dbInterestArr,
     imgData: images,
-    geoInfo: Geoloc[0]
+    geoInfo: Geoloc[0],
+    visiteHistory: visiteHistory,
+    whoLookeAtMyProfile:whoLookeAtMyProfile,
+    whoLikedMyProfile: whoLikedMyProfile
   });
 }
 
@@ -327,7 +356,6 @@ exports.postProfileData = async(req, res) => {
   
   var response = (await user.findUser(userName))[0];
   // Check username , firstname , lastname
-  // console.log(firstName,form.valideName(firstName));
   if (!form.valideUserName(userName) || !form.valideName(firstName) || !form.valideName(lastName))
     errors.push({msg: "Not valid input"});
   // Check if the userName is already in database
@@ -355,7 +383,6 @@ exports.postProfileData = async(req, res) => {
   var dateCheck = moment(new Date(dateOfBirth), 'MM/DD/YYYY', true).isValid();
   if (dateCheck == true) {
     var age = moment().diff(new Date(dateOfBirth), 'years');
-    // console.log(age);
     if (age < 17 || age > 100)
       errors.push({msg: "Restricted Age!"});
   } else
@@ -424,7 +451,7 @@ exports.chats = (req,res) => {
 exports.getMatchedUsers = async(req,res) =>
 {
   var users = [];
-  users.push({sessionId: req.session.userId});
+  users.push({sessionId: req.session.userId,sessionUserName: req.session.userName});
   const fetchMatchedUser = (await user.fetchMatchedLeft(req.session.userId))[0];
   const fetchMatchedUser2 = (await user.fetchMatchedRight(req.session.userId))[0];
 
@@ -434,8 +461,34 @@ exports.getMatchedUsers = async(req,res) =>
   fetchMatchedUser2.map(user => {
     users.push(user);
   })
-  
-  console.log(users);
+
   res.json({users:users});
 }
 
+exports.getMessages = async(req,res) =>
+{
+  
+  var messages = [];
+  var userIdF = req.query.sender;
+  var userIdT = req.query.receiver;
+
+  
+  var part1 = (await user.fetchMessages(userIdF,userIdT))[0];
+  var part2 = (await user.fetchMessages(userIdT,userIdF))[0];
+  part1.map(msg => {
+    messages.push(msg);
+  });
+  part2.map(msg => {
+    messages.push(msg);
+  })
+
+  var sorted = _.sortBy(messages,'msgDate');
+
+  res.json({messages : sorted});
+}
+
+exports.getNotifications = async(req,res) =>
+{
+  var notifications = (await user.getNotifications(req.session.userId))[0];
+  res.json({notifications: notifications});
+}

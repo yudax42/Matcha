@@ -9,7 +9,9 @@ const flash = require("connect-flash");
 const MySQLStore = require("express-mysql-session")(session);
 const multer = require("multer");
 const socket = require("socket.io");
+const User = require("./models/User");
 
+var connectedUserId;
 // Controllers Requirement
 const errorController = require("./controllers/error");
 const authRouter = require("./routes/auth");
@@ -23,6 +25,18 @@ const sessionStore = new MySQLStore({
   user: "root",
   password: "1234",
   database: "matcha"
+});
+
+// Server Settings
+var server = app.listen(3000);
+
+// Socket io
+var io = socket(server);
+var sockets = {};
+
+app.use((req,res, next) => {
+	req.sockets = sockets;
+	next();
 });
 
 //Configuration for multer
@@ -74,6 +88,7 @@ app.use(csrfProtection);
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
   res.locals.csrfToken = req.csrfToken();
+  connectedUserId = req.session.userId;
   next();
 });
 app.use(express.static(path.join(__dirname, "public")));
@@ -87,28 +102,25 @@ app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use(errorController.error404);
 
-// Server Settings
-var server = app.listen(3000);
 
-// Socket io
-var io = socket(server);
 
-var sockets = {}
+
+
 
 io.on('connection', socket => {
-  let id = session.userId;
-  sockets[id] = socket;
-  socket.on('message', msg => {
-    // msg = {
-    //   ownerId:'',
-    //   receiverId:'',
-    //   msg:'message'
-    // }
-    socket.emit('message', msg);
-    if (sockets[msg.receiverId])
-      sockets[msg.receiverId].send(msg)
-  })
-  console.log('user connected');
-  // console.log(socket);
- console.log(socket.id);
+
+  sockets[connectedUserId] = socket;
+ 
+  socket.on('message', async(msg) => {
+    if(/^\w+$/.test(msg.msg))
+    {
+      await User.addMessage(msg.ownerId,msg.receiverId,msg.msg);
+      if (sockets[msg.receiverId])
+      {
+        sockets[msg.receiverId].emit('notification',{not: `${msg.ownerUserName} sent you a message.`});
+        sockets[msg.receiverId].send(msg);
+      }
+    }  
+  });
+  
 })

@@ -1,24 +1,28 @@
-body
-{
+html,body {
     height: 100%;
 }
-.holder
+.fill
 {
-    height: 89vh;
-    overflow: auto;
+    min-height: 100%;
+    height: 100%;
+    background: red;
 }
 .chatContainer
 {
-    position: relative;
+    background: #6dd06dde;
+    height: 100%;
 }
-.chatFooter
+.pos
 {
-    position: absolute;
-    bottom: 0;
+    height: 917px;
+    margin-top: 7%;
 }
 #message
 {
     resize: none
+}
+#listUsers{
+    height: 100%;
 }
 #listUsers ul {list-style: none;padding-left: 6px;}
 #listUsers ul li{
@@ -30,4 +34,16 @@ body
 #listUsers ul li:hover
 {
     cursor: pointer;
+}
+#messages{
+    overflow: auto;
+    background: #cccccc;
+    height: 77%;
+}
+#messages #user
+{
+    padding: 10px;
+    background: #eee;
+    width: 60%;
+    margin: 13px;
 }

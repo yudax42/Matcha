@@ -63,6 +63,20 @@ CREATE TABLE messages(
 	id	INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,
 	userIdF INT,
 	userIdT INT,
-	message varchar(400),
+	message varchar(1000),
 	msgDate datetime NOT NULL
+)
+
+CREATE TABLE notifications(
+	id	INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,
+	userIdF INT,
+	userIdT INT,
+	notifications varchar(100),
+	notifDate datetime NOT NULL
+)
+CREATE TABLE visitHistory(
+	id	INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,
+	userId INT,
+	visited INT,
+	visitDate datetime NOT NULL
 )

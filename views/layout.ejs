@@ -22,6 +22,7 @@
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+  <script src="/js/socket.js"></script>
 </head>
 
 <body>
@@ -41,6 +42,13 @@
           <li class="ml-2 nav-item"><a href="/user/home">Home</a></li>
           <li class="ml-2 nav-item"><a href="/user/chat">Chat</a></li>
           <li class="ml-2 nav-item"><a href="/user/profile">User Profile</a></li>
+          <li class="nav-item ml-2 dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="material-icons notifications">notification_important</i>Notifications
+            </a>
+            <div class="dropdown-menu notifList" aria-labelledby="navbarDropdown">
+            </div>
+          </li>
           <li class="ml-2 nav-item"><a href="/auth/logout">Logout</a></li>
           <% } %>
 

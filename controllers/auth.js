@@ -162,7 +162,6 @@ exports.resetPass = async (req, res) => {
   if (errors.length == 0) {
     // Check email in DATABASE
     var data = (await User.findAccountWithEmail(userName, email))[0];
-    console.log(data);
     if (data.length == 1) {
       // generate token
       crypto.randomBytes(32, async(err, buffer) => {

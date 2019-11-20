@@ -156,4 +156,38 @@ module.exports = class User {
   {
     return db.execute(`SELECT users.userName,users.id  FROM matches INNER JOIN users where matches.userIdF = users.id and userIdT = ? `,[myId]);
   }
+  static addMessage(userIdF, userIdT, message)
+  {
+    return db.execute(`INSERT INTO messages(userIdF,userIdT,message,msgDate) values(?,?,?,now())`,[userIdF,userIdT,message]);
+  }
+  static fetchMessages(userIdF,userIdT)
+  {
+    return db.execute(`select * from messages where userIdF = ? and userIdT = ?`,[userIdF,userIdT]);
+  }
+  // notifications
+  static addNewNotif(from,to,notification)
+  {
+    return db.execute(`INSERT INTO notifications(userIdF,userIdT,notifications,notifDate) VALUES (?,?,?,now())`,[from,to,notification]);
+  }
+  static getNotifications(userId)
+  {
+    return db.execute(`SELECT notifications from notifications where userIdT = ?`,[userId]);
+  }
+  // visite History 
+  static addToVisiteHistory(userId,userIdT)
+  {
+    return db.execute(`INSERT INTO visitHistory(userId,visited,visitDate) VALUES(?,?,now())`,[userId,userIdT]);
+  }
+  static getMyvisiteHistory(userId)
+  {
+    return db.execute(`SELECT users.userName, visitHistory.visitDate FROM visitHistory INNER JOIN users  where visitHistory.visited = users.id and userId = ?`,[userId]);
+  }
+  static getWhoLookedAtMyProfile(userId)
+  {
+    return db.execute(`SELECT users.userName, visitHistory.visitDate FROM visitHistory INNER JOIN users  where visitHistory.userId = users.id and visitHistory.userId != ?`,[userId]);
+  }
+  static getWhoLikedMyProfile(userId)
+  {
+    return db.execute(`SELECT users.userName FROM actions INNER JOIN users WHERE users.id = actions.userIdF and actions.userIdT = ? and love = 1`,[userId]);
+  }
 }

@@ -12,6 +12,10 @@ window.onload = function fetchData() {
       var imgList = response.data.imgData;
       var geoInfo = response.data.geoInfo;
       var fameRating = data.fameRating;
+      var visiteHistory = response.data.visiteHistory;
+
+      var whoLikedMyProfile = response.data.whoLikedMyProfile;
+      var whoLookedMyProfile = response.data.whoLookeAtMyProfile;
       listInterest.forEach((interest) => {
         $("#listInterest").tagsinput("add", interest);
       });
@@ -48,7 +52,7 @@ window.onload = function fetchData() {
         for (i = 0; i < fameRating; i++)
           $('.fameUl').append("<li>⭐</li>");
       }
-      console.log(fameRating + "🕵️");
+
       if (data.sexPref == "both") {
         $('#male').prop('checked', true);
         $('#female').prop('checked', true);
@@ -58,11 +62,34 @@ window.onload = function fetchData() {
       var oldFormate = data.birthDate.split('T')[0];
       var newArrFormat = oldFormate.split("-");
       $("#ageInput").val(newArrFormat[1] + "/" + newArrFormat[2] + "/" + newArrFormat[0]);
-      console.log(geoInfo);
       $("#latitude").html(geoInfo.geoLat);
       $("#longitude").html(geoInfo.geoLong);
       $("#bio").val(data.bio);
+      // who looked at my profile
+      if(whoLookedMyProfile.length > 0)
+      {
+        whoLookedMyProfile.forEach(person => {
+          $(".lookedAtMyProfile").append(`<li class="list-group-item">${person.userName} looked at your profile</li>`)
+        });
+      }
 
+      // who like my profile
+      if(whoLikedMyProfile.length > 0)
+      {
+        whoLikedMyProfile.forEach(liked => {
+          $(".likedMyProfile").append(`<li class="list-group-item">${liked.userName} Liked you</li>`)
+        });
+      }
+
+
+      // my visite history
+      
+      if(visiteHistory.length > 0)
+      {
+        visiteHistory.forEach(visit => {
+          $(".visiteHistory").append(`<li class="list-group-item">You visited ${visit.userName} in ${visit.visitDate}</li>`)
+        });
+      }
 
     })
     .catch(function(error) {
