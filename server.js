@@ -23,7 +23,7 @@ const csrfProtection = csrf();
 const sessionStore = new MySQLStore({
   host: "172.17.0.2",
   user: "root",
-  password: "1234",
+  password: "matcha",
   database: "matcha"
 });
 

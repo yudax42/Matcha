@@ -24,7 +24,7 @@ CREATE TABLE interest(
 	user_id		INT,
 	topic		varchar(30),
 	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
-)
+);
 
 CREATE TABLE profilePictures(
 	id			INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,
@@ -32,7 +32,7 @@ CREATE TABLE profilePictures(
 	imgPath		varchar(250),
 	imgIndex	varchar(22),
 	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
-)
+);
 
 CREATE TABLE userLocation(
 	id				INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,
@@ -42,7 +42,7 @@ CREATE TABLE userLocation(
 	ipLong		FLOAT,
 	ipLat 		FLOAT,
 	FOREIGN KEY (userName) REFERENCES users(userName) ON DELETE CASCADE ON UPDATE CASCADE
-)
+);
 
 CREATE TABLE actions(
 	id		INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,
@@ -51,13 +51,13 @@ CREATE TABLE actions(
 	block	BOOLEAN DEFAULT 0,
 	love	BOOLEAN DEFAULT 0,
 	report	BOOLEAN DEFAULT 0	
-)
+);
 
 CREATE TABLE matches(
 	id		INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,
 	userIdF	INT ,
-	userIdT INT ,
-)
+	userIdT INT 
+);
 
 CREATE TABLE messages(
 	id	INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,
@@ -65,7 +65,7 @@ CREATE TABLE messages(
 	userIdT INT,
 	message varchar(1000),
 	msgDate datetime NOT NULL
-)
+);
 
 CREATE TABLE notifications(
 	id	INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,
@@ -73,10 +73,10 @@ CREATE TABLE notifications(
 	userIdT INT,
 	notifications varchar(100),
 	notifDate datetime NOT NULL
-)
+);
 CREATE TABLE visitHistory(
 	id	INT AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,
 	userId INT,
 	visited INT,
 	visitDate datetime NOT NULL
-)
+);
