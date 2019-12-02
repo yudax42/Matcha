@@ -1,5 +1,5 @@
 // axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('[name="_csrf"]').value;
-
+var socket = io.connect("http://localhost:3000");
 
 // sender Info
 var senderId;

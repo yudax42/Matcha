@@ -21,7 +21,7 @@ const userRouter = require("./routes/user");
 const app = express();
 const csrfProtection = csrf();
 const sessionStore = new MySQLStore({
-  host: "172.17.0.2",
+  host: "172.17.0.3",
   user: "root",
   password: "matcha",
   database: "matcha"
