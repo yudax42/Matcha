@@ -15,7 +15,9 @@ CREATE TABLE IF NOT EXISTS users(
 	accStat 	ENUM('active', 'not active'),
 	emailToken varchar(200),
 	resetPassToken varchar(200),
-	fameRating TINYINT
+	fameRating TINYINT,
+	is_online BOOLEAN default 0,
+	last_logine datetime
 );
 
 

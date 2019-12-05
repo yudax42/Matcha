@@ -83,6 +83,7 @@ exports.actions = async(req, res) => {
       }
     }
     const buttonsState = (await user.checkUserAction(myId,userIdT))[0][0];
+    
     res.send({buttonsState : buttonsState}); 
   }
 }
@@ -93,6 +94,11 @@ exports.getPublicProfile = async(req, res) => {
   var sockets = req.sockets;
   //firstName, last Name , fameRating, bio, tags, images
 
+  // get the blocked users 
+  var blockedUsers = (await user.blockedUsersName(req.session.userId))[0];
+  var found = _.find(blockedUsers, function(o) { return o.userName == userToFind; });
+  console.log(blockedUsers);
+  console.log(found);
   // check it's valid 
   if (!form.valideUserName(userToFind))
     return res.redirect('/user/home');
@@ -101,10 +107,12 @@ exports.getPublicProfile = async(req, res) => {
   var foundedUser = (await user.findUser(userToFind))[0][0];
   if (foundedUser.length == 0)
     return res.redirect('/user/home');
+  else if(found != undefined)
+    return res.redirect('/user/home');
   else
   {
-    // if (foundedUser.accStat != 'active')
-    //   return res.redirect('/user/home');
+    if (foundedUser.accStat != 'active')
+      return res.redirect('/user/home');
     const data = {
       id: foundedUser.id,
       userName: foundedUser.userName,
@@ -112,6 +120,8 @@ exports.getPublicProfile = async(req, res) => {
       lastName: foundedUser.lastName,
       fameRating: foundedUser.fameRating,
       bio: foundedUser.bio,
+      age: foundedUser.age,
+      sexPref : foundedUser.sexPref,
     };
     // fetch images
     const userImages = (await user.fetchImages(foundedUser.id))[0];
@@ -119,6 +129,12 @@ exports.getPublicProfile = async(req, res) => {
     // fetch tags
     const tags = (await user.fetchInterest(foundedUser.id))[0];
     data.tags = tags;
+    // fetch status
+    console.log("==",foundedUser.id);
+    const userState = (await user.getUserState(foundedUser.id))[0][0];
+    data.userState = {online :userState.is_online,last_login: userState.last_login == null ? "never logged" : moment(userState.last_login).fromNow()};
+    // data.userState.last_login = moment(userState.last_login).fromNow();
+    // console.log("hi",userState.is_online);
     // fetch button state 
     const buttonsState = (await user.checkUserAction(req.session.userId,foundedUser.id))[0];
     if(buttonsState.length == 0)
@@ -169,7 +185,6 @@ exports.getMatchData = async(req, res) => {
   var min = parseInt(ageRangeMin) || ((age - 18) > 5 ? age-5 : 18);
   var sexPref = genderPref || req.session.sexPref;
   var search;
-
   if (fameRating || distance || ageRangeMin || ageRangeMax || genderPref || interest)
   {
     search = 1;    
@@ -260,6 +275,7 @@ exports.getMatchData = async(req, res) => {
   else if (sexPref == 'both')
   {
     users = (await user.filterUsers(min, max,userName,maxFameRating))[0];
+    console.log(users);
   }
     
 
@@ -307,6 +323,7 @@ exports.addProfileImgs = async(req, res) => {
 exports.getProfileData = async (req, res) => {
   let userName = req.session.userName;
   let userId = req.session.userId;
+  console.log(userId);
   let userData = (await user.fetchUserData(userName))[0];
   let interest = (await user.fetchInterest(userId))[0];
   let images = (await user.fetchImages(userId))[0];

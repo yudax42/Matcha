@@ -1,7 +1,6 @@
 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('[name="_csrf"]').value;
 var listUsers;
 var locSortedUsers;
-console.log('before anything', locSortedUsers);
 
 var showUsers = (users) => {
     $(".suggestedUsers").html('');
@@ -15,10 +14,7 @@ var showUsers = (users) => {
                 <div class="card text-center">
                     <img class="card-img-top" src="${user.profileImg}" alt="Card image cap">
                     <div class="card-body">
-                        <h4 class="card-title">${user.userName} <span class="badge badge-light">${user.age}</span></h4>
-                        <span class="mb-2">${user.fameRating}</span><br>
-                        <span class="badge mr-3 badge-squared badge-outline-info">${user.gender}</span>
-                        <p class="card-text">${user.bio}</p>
+                        <h4 class="card-title">${user.userName}</h4>
                         <a href="/user/public/${user.userName}" class="btn btn-outline-success btn-pill">View Profile</a>
                     </div>
                 </div>

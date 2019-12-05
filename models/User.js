@@ -104,7 +104,7 @@ module.exports = class User {
   }
   static filterUsersGender(sexPref,min,max,maxFameRating,userName)
   {
-    return db.execute('select users.id,users.userName,users.gender,users.age,users.bio,users.fameRating,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.gender = ? AND users.age <= ? AND users.age >= ? AND users.userName != ? AND users.fameRating < ?  ORDER BY age ASC',[sexPref,max,min,userName,maxFameRating]);
+    return db.execute('select users.id,users.userName,users.gender,users.age,users.bio,users.fameRating,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.gender = ? AND users.age <= ? AND users.age >= ? AND users.userName != ? AND users.fameRating <= ?  ORDER BY age ASC',[sexPref,max,min,userName,maxFameRating]);
   }
   static filterUsers(min,max,userName,maxFameRating)
   {
@@ -123,6 +123,10 @@ module.exports = class User {
   static blockedUsers(myId)
   {
     return db.execute(`SELECT userIdT FROM actions where userIdF = ? and block = 1`, [myId]);
+  }
+  static blockedUsersName(myId)
+  {
+    return db.execute(`select users.userName from actions inner join users where actions.userIdT = users.id and actions.userIdF = ? and actions.block = 1`,[myId]);
   }
   static updateaction(action, myId, userId,state)
   {
@@ -184,10 +188,24 @@ module.exports = class User {
   }
   static getWhoLookedAtMyProfile(userId)
   {
-    return db.execute(`SELECT users.userName, visitHistory.visitDate FROM visitHistory INNER JOIN users  where visitHistory.userId = users.id and visitHistory.userId != ?`,[userId]);
+    return db.execute(`SELECT users.userName, visitHistory.visitDate FROM visitHistory INNER JOIN users  where visitHistory.userId = users.id and visitHistory.userId != ? and visitHistory.visited = ?`,[userId,userId]);
   }
   static getWhoLikedMyProfile(userId)
   {
     return db.execute(`SELECT users.userName FROM actions INNER JOIN users WHERE users.id = actions.userIdF and actions.userIdT = ? and love = 1`,[userId]);
+  }
+  static updateUserStatus(state,userId)
+  {
+    return db.execute(`UPDATE users SET is_online = ? where id = ?`,[state,userId]);
+  }
+  static addLastLogin(userId)
+  {
+
+    return db.execute(`UPDATE users SET last_login = now() where id = ?`,[userId]);
+  }
+  static getUserState(userId)
+  {
+
+    return db.execute(`SELECT is_online,last_login FROM users where id = ?`,[userId]);
   }
 }

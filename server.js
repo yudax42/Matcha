@@ -21,7 +21,7 @@ const userRouter = require("./routes/user");
 const app = express();
 const csrfProtection = csrf();
 const sessionStore = new MySQLStore({
-  host: "172.17.0.3",
+  host: "172.17.0.2",
   user: "root",
   password: "matcha",
   database: "matcha"
@@ -107,10 +107,10 @@ app.use(errorController.error404);
 
 
 
-io.on('connection', socket => {
-
+io.on('connection', async socket => {
+  var keepUser = connectedUserId;
   sockets[connectedUserId] = socket;
- 
+  await User.updateUserStatus(1,connectedUserId);
   socket.on('message', async(msg) => {
     if(/^\w+$/.test(msg.msg))
     {
@@ -122,5 +122,8 @@ io.on('connection', socket => {
       }
     }  
   });
-  
+  socket.on('disconnect',async() => {
+    await User.updateUserStatus(0,keepUser);
+    await User.addLastLogin(keepUser);
+  });
 })
