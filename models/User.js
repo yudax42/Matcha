@@ -79,6 +79,7 @@ module.exports = class User {
   static addImage(userId, path, imgIndex) {
     return db.execute('INSERT INTO profilePictures(user_id,imgPath,imgIndex) VALUES(?,?,?)', [userId, path, imgIndex]);
   }
+
   // GeoLocation
   static firstTimeSaveIpLocation(userName,long,lat)
   {
@@ -136,9 +137,10 @@ module.exports = class User {
   {
     return db.execute(`SELECT * FROM actions where userIdT = ? and userIdF = ?`, [userIdT,myId]);
   }
-  static fetchAction(userId)
+  static fetchLikesCount(userId)
   {
-    return db.execute(`SELECT * FROM actions where userIdF = ? OR userIdT`,[userId]);
+    console.log("hi",userId);
+    return db.execute(`SELECT count(love) as total  FROM actions where love = 1 and userIdT = ?`,[userId]);
   }
   static addToMatches(userIdF, userIdT)
   {
@@ -205,7 +207,10 @@ module.exports = class User {
   }
   static getUserState(userId)
   {
-
     return db.execute(`SELECT is_online,last_login FROM users where id = ?`,[userId]);
+  }
+  static updateFameRating(value,userId)
+  {
+    return db.execute(`UPDATE users SET fameRating = ? where id = ?`,[value,userId]);
   }
 }

@@ -47,3 +47,6 @@ html,body {
     width: 60%;
     margin: 13px;
 }
+.footer {
+    position: inherit;
+}

@@ -30,7 +30,7 @@
   transition: all .2s ease-in-out;
   font-weight: bold;
   font-size: 21px;
-  color: #d23fab;
+  color: #f1863e;
 }
 
 .avatar-edit input:hover+label:hover {

@@ -32,9 +32,7 @@ exports.actions = async(req, res) => {
     
     var checkUser = (await user.checkUserAction(myId,userIdT))[0];
     if (checkUser.length > 0)
-    {
-      console.log('here');
-      
+    {      
       // check action state 
       var state = checkUser[0][action];
       // change to the new state
@@ -81,6 +79,15 @@ exports.actions = async(req, res) => {
         // if he unliked me 
         await user.deleteMatches(myId,userIdT);
       }
+
+      // fameRating
+      var countLikes = (await user.fetchLikesCount(userIdT))[0][0];
+      console.log(countLikes);
+      if(countLikes.total >= 0 && countLikes.total <= 50)
+      {
+        await user.updateFameRating(Math.floor(countLikes.total/10),userIdT);
+      }
+
     }
     const buttonsState = (await user.checkUserAction(myId,userIdT))[0][0];
     

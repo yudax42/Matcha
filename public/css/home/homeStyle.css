@@ -2,6 +2,9 @@
   {
       position: relative;
   }
+  h1,h2,h3,h4,h5,h6{
+    color: rgba(0,0,0,.5);
+  }
   .sidenav {
     height: 0;
     width: 100%;
@@ -10,7 +13,7 @@
     z-index: 1;
     top: 0px;
     left: 0;
-    background-color: #f7b9b9;
+    background-color: #F1863E;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
@@ -33,19 +36,20 @@
     font-size: 30px;
     cursor: pointer;
     position: absolute;
-    top: -75px;
-    right: 1%;
+    top: -76px;
+    right: 3%;
     z-index: 3;
-    border-radius: 30%;
-    background: #e7ecef;
+    border-radius: 50%;
+    background: #EA4A3B;
+    color: #fff;
     padding: 6px;
-    width: 69px;
+    width: 52px;
     height: 51px;
     text-align: center;
     opacity: 1;
     transition: 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
-}
   }
+
   .openTopBar:hover
   {
       transition: 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
