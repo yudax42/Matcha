@@ -156,11 +156,11 @@ module.exports = class User {
   }
   static fetchMatchedLeft(myId)
   {
-    return db.execute(`SELECT users.userName,users.id  FROM matches INNER JOIN users where matches.userIdT = users.id and userIdF = ? `,[myId]);
+    return db.execute(`SELECT users.userName,users.is_online,users.id  FROM matches INNER JOIN users where matches.userIdT = users.id and userIdF = ? `,[myId]);
   }
   static fetchMatchedRight(myId)
   {
-    return db.execute(`SELECT users.userName,users.id  FROM matches INNER JOIN users where matches.userIdF = users.id and userIdT = ? `,[myId]);
+    return db.execute(`SELECT users.userName,users.is_online,users.id  FROM matches INNER JOIN users where matches.userIdF = users.id and userIdT = ? `,[myId]);
   }
   static addMessage(userIdF, userIdT, message)
   {

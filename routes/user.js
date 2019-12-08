@@ -17,5 +17,5 @@ router.get('/chat',isAuth,isProfileDone, userController.chats);
 router.get('/chatUsers',isAuth,isProfileDone, userController.getMatchedUsers);
 router.get('/getMessages',isAuth,isProfileDone ,userController.getMessages);
 router.get('/getNotifications',isAuth, userController.getNotifications);
-
+router.get('/userImg/:userName',isAuth, userController.serveUserImg);
 module.exports = router;

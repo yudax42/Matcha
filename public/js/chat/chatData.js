@@ -77,3 +77,8 @@ socket.on('message', msg => {
 })
 
 $("#send").click(send);
+$(document).ready(function () {
+    if (!$.browser.webkit) {
+        $('.wrapper').html('<p>Sorry! Non webkit users. :(</p>');
+    }
+});

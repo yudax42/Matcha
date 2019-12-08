@@ -3,6 +3,7 @@
 */
 var user = require('../models/User');
 const form = require('../models/Form');
+const path = require('../util/path');
 const moment = require('moment');
 const bcrypt = require('bcryptjs');
 var _ = require('lodash');
@@ -26,7 +27,7 @@ exports.actions = async(req, res) => {
   else if (userIdT < 0)
     return res.json({ error: "a sb7an lah" });
   else if (myId == userIdT)
-    return res.json({ error: "kherna maydih ghirna" });
+    return res.json({ error: "arrasi arrasi" });
   else
   {
     
@@ -470,6 +471,17 @@ exports.postProfileData = async(req, res) => {
 
 exports.chats = (req,res) => {
   res.render('user/chat');
+}
+
+exports.serveUserImg = async(req,res) =>{ 
+  var userName = req.params.userName;
+  if(form.valideUserName(userName))
+  {
+    const imgPath = (await user.getProfileImg(userName))[0][0];
+    res.json({path:imgPath.imgPath});
+  }
+  else
+    res.status(404).json({error:"resource not found"});
 }
 
 exports.getMatchedUsers = async(req,res) =>
