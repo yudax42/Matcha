@@ -502,9 +502,13 @@ exports.getMessages = async(req,res) =>
   var part1 = (await user.fetchMessages(userIdF,userIdT))[0];
   var part2 = (await user.fetchMessages(userIdT,userIdF))[0];
   part1.map(msg => {
+    console.log("before : " + msg.msgDate);
+    msg.msgDate = moment(msg.msgDate).add(1, 'hours').fromNow();
+    console.log("after : " + msg.msgDate);
     messages.push(msg);
   });
   part2.map(msg => {
+    msg.msgDate = moment(msg.msgDate).add(1, 'hours').fromNow();
     messages.push(msg);
   })
 

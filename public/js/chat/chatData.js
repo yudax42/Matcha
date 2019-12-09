@@ -86,7 +86,7 @@ var setChat = async(id,userName,path) => {
                 </div>
             `);
         }
-
+        
         
     });
     $("#messages").scrollTop($('#messages')[0].scrollHeight);
@@ -110,15 +110,19 @@ var send = () => {
     var msgEnc = (msg.msg).replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
         return '&#'+i.charCodeAt(0)+';';
      });
-    $("#messages").append(`
-        <div class="msg-r">
-            <div class="message">
-            <span class="user"><b>${senderUserName}</b></span>
-            <span class="msgContent">${msgEnc}</span>
+     if(/^[A-Za-z,-;.'"\s]+$/.test(msg.msg))
+     {
+        $("#messages").append(`
+            <div class="msg-r">
+                <div class="message">
+                <span class="user"><b>${senderUserName}</b></span>
+                <span class="msgContent">${msgEnc}</span>
+                </div>
+                <div class="fix"></div>
             </div>
-            <div class="fix"></div>
-        </div>
-    `);
+        `);
+     }
+
     
     $("#messages").scrollTop($('#messages')[0].scrollHeight);
     $("#message").val('');
@@ -126,7 +130,7 @@ var send = () => {
 
 socket.on('message', msg => {
 
-    if(msg.ownerId == activeUserId)
+    if(msg.ownerId == activeUserId && /^[A-Za-z,-;.'"\s]+$/.test(msg.msg))
     {
         $("#messages").append(`
         <div class="msg-l">
