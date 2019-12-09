@@ -8,13 +8,16 @@ var senderUserName;
 // receiver Info
 var activeUserId;
 var activeUserName;
+var activeUserImg;
 
 
 
 window.onload = async()=>{
+    $("#message").val('');
+    $(".chatInputs").remove()
     var matchedUsers = (await axios.get('/user/chatUsers'));
     var users = matchedUsers.data.users;
-    console.log(matchedUsers);
+    console.log(users);
     users.forEach(user => {
         if(user.sessionId)
         {
@@ -22,16 +25,27 @@ window.onload = async()=>{
             senderUserName = user.sessionUserName;
         }
         else
-            $("#users").append(`<li id="user" onclick = setChat(${user.id},'${user.userName}')>${user.userName}</li>`)
+        {
+            var online_state;
+            if(user.is_online)
+                online_state = "active";
+            else
+                online_state = "notActive";
+
+            $("#user").append(`<li onclick = setChat(${user.id},'${user.userName}','${user.imgPath}') class="list-group-item"><img class="rounded-circle"  src="${user.imgPath}">${user.userName}<span class="${online_state}"></span></li>`)
+        }
+            
+            
     });
-    setChat(users[1].id,users[1].userName);
+    // setChat(users[1].id,users[1].userName);
 }
 var receiver;
 
 
-var setChat = async(id,userName) => {
+var setChat = async(id,userName,path) => {
     activeUserId = id;
     activeUserName = userName;
+    activeUserImg = path;
     // get the list of messages 
     var messages = (await axios({
         method:'get', 
@@ -42,22 +56,50 @@ var setChat = async(id,userName) => {
         }
     }));
     $('#messages').empty();
-
+    $(".chatInputs").remove()
     var msgsArr = messages.data.messages;
+    console.log(msgsArr);
     msgsArr.forEach(message => {
-
+        var date = (message.msgDate).substr(11,5);
         if(message.userIdF == senderId)
-            $("#messages").append(`<div id="user" class="float-right"><b>${senderUserName} </b><span>${message.message}</span> <span class="badge badge-secondary">${message.msgDate}</span> </div>`);
+        {
+            $("#messages").append(`
+                <div class="msg-r">
+                    <div class="message">
+                    <span class="user"><b>${senderUserName}</b>, ${date}</span>
+                    <span class="msgContent">${message.message}</span>
+                    </div>
+                    <div class="fix"></div>
+                </div>
+            `);
+        }
         else
-            $("#messages").append(`<div id="user" class="float-left"><b>${activeUserName} </b><span>${message.message}</span> <span class="badge badge-secondary">${message.msgDate}</span> </div>`);
+        {
+            $("#messages").append(`
+                <div class="msg-l">
+                    <img class="rounded-circle" src="${activeUserImg}">
+                    <div class="message">
+                        <span class="user">${activeUserName}, ${date}</span>
+                        <span class="msgContent">${message.message}</span>
+                    </div>
+                    <div class="fix"></div>
+                </div>
+            `);
+        }
+
         
     });
-    
+    $("#messages").scrollTop($('#messages')[0].scrollHeight);
+    $(".chat").append(`
+    <div class="chatInputs">
+    <textarea id="message" class="ml-5 mt-4 rounded form-control"></textarea>
+    <button id="send" onclick="send()" class="btn sendMsg"><i class="material-icons">send</i></button>
+  </div>
+    `);        
 };
 
 
 var send = () => {
-
     var msg = {
         ownerUserName:senderUserName,
         ownerId: senderId,
@@ -65,20 +107,37 @@ var send = () => {
         msg: $("#message").val()
     }
     socket.emit('message',msg);
-    $("#messages").append(`<div id="user" class="float-right"><b>${senderUserName} </b><span>${msg.msg}</span></div>`);
+    var msgEnc = (msg.msg).replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
+        return '&#'+i.charCodeAt(0)+';';
+     });
+    $("#messages").append(`
+        <div class="msg-r">
+            <div class="message">
+            <span class="user"><b>${senderUserName}</b></span>
+            <span class="msgContent">${msgEnc}</span>
+            </div>
+            <div class="fix"></div>
+        </div>
+    `);
+    
+    $("#messages").scrollTop($('#messages')[0].scrollHeight);
     $("#message").val('');
 };
 
 socket.on('message', msg => {
 
     if(msg.ownerId == activeUserId)
-        $("#messages").append(`<div id="user" class="float-left"><b>${activeUserName} </b><span>${msg.msg}</span></div>`);
-   
+    {
+        $("#messages").append(`
+        <div class="msg-l">
+            <img class="rounded-circle" src="${activeUserImg}">
+            <div class="message">
+                <span class="user">${activeUserName}</span>
+                <span class="msgContent">${msg.msg}</span>
+            </div>
+            <div class="fix"></div>
+        </div>
+    `);
+    $("#messages").scrollTop($('#messages')[0].scrollHeight);
+    }   
 })
-
-$("#send").click(send);
-$(document).ready(function () {
-    if (!$.browser.webkit) {
-        $('.wrapper').html('<p>Sorry! Non webkit users. :(</p>');
-    }
-});

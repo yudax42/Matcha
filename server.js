@@ -112,8 +112,10 @@ io.on('connection', async socket => {
   sockets[connectedUserId] = socket;
   await User.updateUserStatus(1,connectedUserId);
   socket.on('message', async(msg) => {
+   
     if(/^\w+$/.test(msg.msg))
     {
+      console.log("message ?? ");
       await User.addMessage(msg.ownerId,msg.receiverId,msg.msg);
       if (sockets[msg.receiverId])
       {

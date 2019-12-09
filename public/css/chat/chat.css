@@ -82,6 +82,7 @@
 .users ul li img{
   position:relative;
   width:40px;
+  height:40px;
   margin-right:8px
 }
 .chat
@@ -106,6 +107,7 @@
 .chat .desc .msg-l img
 {
   width:40px;
+  height:40px;
   display:block;
   float:left
 }
@@ -163,7 +165,7 @@
 }
 .chatInputs textarea {
   width: 80%;
-  height: 49px;
+  height: 62px;
   resize: none;
   overflow: auto;
 }
@@ -171,9 +173,9 @@
 {
   background: #F1863E;
   position: absolute;
-  top: 25px;
-  height:45px;
-  right: 40px;
+  top: 23px;
+  height: 62px;
+  right: 23px;
   border-radius: 10px;
   color: #fff;
 }

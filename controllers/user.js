@@ -473,16 +473,6 @@ exports.chats = (req,res) => {
   res.render('user/chat');
 }
 
-exports.serveUserImg = async(req,res) =>{ 
-  var userName = req.params.userName;
-  if(form.valideUserName(userName))
-  {
-    const imgPath = (await user.getProfileImg(userName))[0][0];
-    res.json({path:imgPath.imgPath});
-  }
-  else
-    res.status(404).json({error:"resource not found"});
-}
 
 exports.getMatchedUsers = async(req,res) =>
 {

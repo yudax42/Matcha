@@ -52,7 +52,6 @@ module.exports = class User {
     return db.execute('UPDATE users SET password = ? WHERE userName = ? AND resetPassToken = ?', [hash, userName,token]);
   }
   static checkTokenEmail(token) {
-    console.log(token);
     return db.execute('SELECT * FROM users WHERE emailToken = ?', [token]);
   }
   static checkToken(userName,token) {
@@ -112,7 +111,6 @@ module.exports = class User {
     return db.execute('select users.id,users.userName,users.gender,users.age,users.bio,users.fameRating,userLocation.geoLong,userLocation.geoLat,userLocation.ipLong,userLocation.ipLat FROM users INNER JOIN userLocation ON users.userName = userLocation.userName AND users.age <= ? AND users.age >= ? AND users.userName != ? and users.fameRating <= ? ORDER BY age ASC',[max,min,userName,maxFameRating]);
   }
   static updateProfileData(userName, firstName, lastName, email, password, gender, secPredTotal, dateOfBirth, age, bio, sessionUser) {
-    console.log(dateOfBirth);
     return db.execute('UPDATE users SET userName = ?, firstName = ?, lastName = ?, email = ?, password = ?, gender = ?, sexPref = ?,birthDate = STR_TO_DATE(REPLACE(?,"/","-"), "%m-%d-%Y"),age = ?,bio = ? WHERE userName = ?;',
       [userName, firstName, lastName, email, password, gender, secPredTotal, dateOfBirth, age, bio, sessionUser]);
   }
@@ -156,11 +154,11 @@ module.exports = class User {
   }
   static fetchMatchedLeft(myId)
   {
-    return db.execute(`SELECT users.userName,users.is_online,users.id  FROM matches INNER JOIN users where matches.userIdT = users.id and userIdF = ? `,[myId]);
+    return db.execute(`SELECT profilePictures.imgPath,users.userName,users.is_online,users.id  FROM matches INNER JOIN users on matches.userIdT = users.id and userIdF = ? inner join profilePictures on profilePictures.user_id = users.id and imgIndex = "profile"`,[myId]);
   }
   static fetchMatchedRight(myId)
   {
-    return db.execute(`SELECT users.userName,users.is_online,users.id  FROM matches INNER JOIN users where matches.userIdF = users.id and userIdT = ? `,[myId]);
+    return db.execute(`SELECT profilePictures.imgPath,users.userName,users.is_online,users.id  FROM matches INNER JOIN users on matches.userIdF = users.id and userIdT = ? inner join profilePictures on profilePictures.user_id = users.id and imgIndex = "profile"`,[myId]);
   }
   static addMessage(userIdF, userIdT, message)
   {
