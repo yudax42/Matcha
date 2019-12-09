@@ -6,7 +6,6 @@ window.onload = function fetchData() {
   // Get user Data
   axios.get('/user/profileData')
     .then(function (response) {
-      console.log(response);
       var data = response.data.formData;
       var listInterest = response.data.listInterest;
       var imgList = response.data.imgData;
@@ -181,7 +180,6 @@ const addImg = (id, imgIndex) => {
       processData: false,
     })
     .then((response) => {
-      console.log(response.data);
       if (response.data == "done") {
         $('#errors').append("<div id='err' class='alert alert-success fade show' role='alert'>Data updated succefully</div>");
         setTimeout(function() {

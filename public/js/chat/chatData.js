@@ -1,5 +1,5 @@
 // axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('[name="_csrf"]').value;
-var socket = io.connect("http://localhost:3000");
+var socket = io.connect("http://10.11.9.1:3000");
 
 // sender Info
 var senderId;
@@ -17,7 +17,6 @@ window.onload = async()=>{
     $(".chatInputs").remove()
     var matchedUsers = (await axios.get('/user/chatUsers'));
     var users = matchedUsers.data.users;
-    console.log(users);
     users.forEach(user => {
         if(user.sessionId)
         {
@@ -58,15 +57,13 @@ var setChat = async(id,userName,path) => {
     $('#messages').empty();
     $(".chatInputs").remove()
     var msgsArr = messages.data.messages;
-    console.log(msgsArr);
     msgsArr.forEach(message => {
-        var date = (message.msgDate).substr(11,5);
         if(message.userIdF == senderId)
         {
             $("#messages").append(`
                 <div class="msg-r">
                     <div class="message">
-                    <span class="user"><b>${senderUserName}</b>, ${date}</span>
+                    <span class="user"><b>${senderUserName}</b>, ${message.msgDate}</span>
                     <span class="msgContent">${message.message}</span>
                     </div>
                     <div class="fix"></div>
@@ -79,7 +76,7 @@ var setChat = async(id,userName,path) => {
                 <div class="msg-l">
                     <img class="rounded-circle" src="${activeUserImg}">
                     <div class="message">
-                        <span class="user">${activeUserName}, ${date}</span>
+                        <span class="user">${activeUserName}, ${message.msgDate}</span>
                         <span class="msgContent">${message.message}</span>
                     </div>
                     <div class="fix"></div>

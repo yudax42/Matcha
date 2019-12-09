@@ -1,6 +1,6 @@
 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('[name="_csrf"]').value;
 
-var socket = io.connect("http://localhost:3000");
+// var socket = io.connect("http://localhost:3000");
 
 
 
@@ -30,6 +30,6 @@ const actions = async (action, id) => {
     }
     catch (err)
     {
-        console.log(err);
+        // console.log(err);
     }
 }

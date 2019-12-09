@@ -22,6 +22,8 @@ exports.getLogin = (req, res) => {
 
 // validate signup form and add the user
 exports.postSignup = async (req, res) => {
+  if(typeof req.body.username === 'undefined' || typeof req.body.firstName === 'undefined' || typeof req.body.lastName === 'undefined' || typeof req.body.email === 'undefined')
+    return res.json({msg:"Please send the neccesary infos"});
   const username = (req.body.username).trim();
   const firstName = (req.body.firstName).trim();
   const lastName = (req.body.lastName).trim();
@@ -105,6 +107,9 @@ exports.activateAccount = async (req, res) => {
 
 // validate login form and give access to user
 exports.postLogin = async(req, res) => {
+  if(typeof req.body.username == 'undefined' || typeof req.body.password == 'undefined')
+    return res.json({msg:"Please send the neccesary infos"});
+  console.log(req.body.username);
   const userName = (req.body.username).trim();
   const password = req.body.password;
   let errors = [];
@@ -219,7 +224,6 @@ exports.postResetPass = async(req, res) => {
 
 exports.postLogout = (req, res) => {
   req.session.destroy(err => {
-    if (err) console.log(err);
     res.redirect("/");
   });
 };

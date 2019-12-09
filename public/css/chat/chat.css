@@ -88,9 +88,9 @@
 .chat
 {
   background: #fbfbfb;
-  height:calc(100vh - 113px);
-  padding:10;
-  border-radius:15px
+  height: calc(100vh - 113px);
+  padding: 1px;
+  border-radius: 15px;
 }
 .chat .desc
 {

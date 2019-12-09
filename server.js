@@ -110,11 +110,11 @@ app.use(errorController.error404);
 io.on('connection', async socket => {
   var keepUser = connectedUserId;
   sockets[connectedUserId] = socket;
-  await User.updateUserStatus(1,connectedUserId);
+  if(connectedUserId != undefined)
+    await User.updateUserStatus(1,connectedUserId);
   socket.on('message', async(msg) => {
-    if(/^[A-Za-z,-;.'"\s]+$/.test(msg.msg))
+    if(/^[A-Za-z,-;.'"\s]+$/.test(msg.msg) && typeof msg.msg != "undefined")
     {
-      console.log("message ?? ");
       await User.addMessage(msg.ownerId,msg.receiverId,msg.msg);
       if (sockets[msg.receiverId])
       {

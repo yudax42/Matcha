@@ -15,7 +15,7 @@ exports.valideName = (name) => {
     return (1);
 }
 exports.validePassword = (password) => {
-  if (password.match(/[a-z]/g) && password.match(/[A-Z]/g) && password.match(/[0-9]/g) && password.match(/[^a-zA-Z\d]/g) && password.length >= 8)
+  if (password.match(/[a-z]/g) && password.match(/[A-Z]/g) && password.match(/[0-9]/g) && password.match(/[^a-zA-Z\d]/g) && password.length >= 8 && password.length <= 100)
     return (1);
 }
 

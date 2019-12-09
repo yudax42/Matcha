@@ -145,7 +145,6 @@ module.exports = class User {
   }
   static fetchLikesCount(userId)
   {
-    console.log("hi",userId);
     return db.execute(`SELECT count(love) as total  FROM actions where love = 1 and userIdT = ?`,[userId]);
   }
   static addToMatches(userIdF, userIdT)

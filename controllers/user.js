@@ -83,7 +83,6 @@ exports.actions = async(req, res) => {
 
       // fameRating
       var countLikes = (await user.fetchLikesCount(userIdT))[0][0];
-      console.log(countLikes);
       if(countLikes.total >= 0 && countLikes.total <= 50)
       {
         await user.updateFameRating(Math.floor(countLikes.total/10),userIdT);
@@ -105,8 +104,6 @@ exports.getPublicProfile = async(req, res) => {
   // get the blocked users 
   var blockedUsers = (await user.blockedUsersName(req.session.userId))[0];
   var found = _.find(blockedUsers, function(o) { return o.userName == userToFind; });
-  console.log(blockedUsers);
-  console.log(found);
   // check it's valid 
   if (!form.valideUserName(userToFind))
     return res.redirect('/user/home');
@@ -138,7 +135,6 @@ exports.getPublicProfile = async(req, res) => {
     const tags = (await user.fetchInterest(foundedUser.id))[0];
     data.tags = tags;
     // fetch status
-    console.log("==",foundedUser.id);
     const userState = (await user.getUserState(foundedUser.id))[0][0];
     data.userState = {online :userState.is_online,last_login: userState.last_login == null ? "never logged" : moment(userState.last_login).fromNow()};
     // data.userState.last_login = moment(userState.last_login).fromNow();
@@ -283,7 +279,6 @@ exports.getMatchData = async(req, res) => {
   else if (sexPref == 'both')
   {
     users = (await user.filterUsers(min, max,userName,maxFameRating))[0];
-    console.log(users);
   }
     
 
@@ -331,7 +326,6 @@ exports.addProfileImgs = async(req, res) => {
 exports.getProfileData = async (req, res) => {
   let userName = req.session.userName;
   let userId = req.session.userId;
-  console.log(userId);
   let userData = (await user.fetchUserData(userName))[0];
   let interest = (await user.fetchInterest(userId))[0];
   let images = (await user.fetchImages(userId))[0];
@@ -359,6 +353,11 @@ exports.getProfileData = async (req, res) => {
 }
 
 exports.postProfileData = async(req, res) => {
+  if(typeof req.query.userName == 'undefined' || typeof req.query.firstName == 'undefined' || typeof req.query.lastName == 'undefined' || typeof req.query.email == 'undefined' || typeof req.query.bio == 'undefined' || typeof req.query.password == 'undefined' || typeof req.query.gender == "undefined" || typeof req.query.secPrefTotal == 'undefined'
+  || typeof req.query.dateOfBirth == 'undefined' || typeof req.query.interest == 'undefined' || typeof req.query.longitude == 'undefined' || typeof req.query.bio == "undefined")
+  {
+    res.json([{msg: "Please send all fields."}]);
+  }
   const sessionUser = req.session.userName;
   const userId = req.session.userId;
   const userName = (req.query.userName).trim();
@@ -519,9 +518,7 @@ exports.getMessages = async(req,res) =>
   var part1 = (await user.fetchMessages(userIdF,userIdT))[0];
   var part2 = (await user.fetchMessages(userIdT,userIdF))[0];
   part1.map(msg => {
-    console.log("before : " + msg.msgDate);
     msg.msgDate = moment(msg.msgDate).add(1, 'hours').fromNow();
-    console.log("after : " + msg.msgDate);
     messages.push(msg);
   });
   part2.map(msg => {

@@ -63,7 +63,6 @@ window.onload = async function fetchUsers() {
     // interest
     var listInterest = searchData.data.myInterests;
     listInterest.forEach((interest) => {
-        console.log(interest);
         $("#listInterest").tagsinput("add", interest.topic);
     });
     // get users
@@ -97,7 +96,6 @@ var fetchCustomData = () => {
         {
             $(".errors").html('');
             var errors = response.data.errors;
-            console.log(errors);
             errors.forEach(error => {
                 var content = `
                 <div class="alert alert-danger animated fadeInUp alert-dismissible fade show" role="alert">
@@ -128,11 +126,9 @@ var fetchCustomData = () => {
   
       })
 
-    console.log(fameRating,distance,ageRangeMin,ageRangeMax,genderPref,interest);
 };
 
 var sortBy = (by) => {
-    console.log(by);
     if (by == 'loc')
         showUsers(locSortedUsers);
     else
