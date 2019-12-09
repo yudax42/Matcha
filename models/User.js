@@ -123,6 +123,14 @@ module.exports = class User {
   {
     return db.execute(`SELECT userIdT FROM actions where userIdF = ? and block = 1`, [myId]);
   }
+  static blockedUsersChatT(myId)
+  {
+    return db.execute(`SELECT userIdT FROM actions where userIdF = ?  and block = 1`, [myId]);
+  }
+  static blockedUsersChatF(myId)
+  {
+    return db.execute(`SELECT userIdF FROM actions where userIdT = ?  and block = 1`, [myId]);
+  }
   static blockedUsersName(myId)
   {
     return db.execute(`select users.userName from actions inner join users where actions.userIdT = users.id and actions.userIdF = ? and actions.block = 1`,[myId]);

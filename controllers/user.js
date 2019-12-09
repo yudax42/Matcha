@@ -476,6 +476,7 @@ exports.chats = (req,res) => {
 
 exports.getMatchedUsers = async(req,res) =>
 {
+
   var users = [];
   users.push({sessionId: req.session.userId,sessionUserName: req.session.userName});
   const fetchMatchedUser = (await user.fetchMatchedLeft(req.session.userId))[0];
@@ -486,6 +487,22 @@ exports.getMatchedUsers = async(req,res) =>
   })
   fetchMatchedUser2.map(user => {
     users.push(user);
+  })
+  // remove users that i block
+  var blockedUsers = (await user.blockedUsersChatF(req.session.userId))[0];
+  blockedUsers = blockedUsers.map((obj) => {
+    return obj.userIdF;
+  });
+  users = users.filter(function(user) {
+    return !blockedUsers.includes(user.id); 
+  })
+  // remove users that blocked me
+  var blockedUsers2 = (await user.blockedUsersChatT(req.session.userId))[0];
+  blockedUsers2 = blockedUsers2.map((obj) => {
+    return obj.userIdT;
+  });
+  users = users.filter(function(user) {
+    return !blockedUsers2.includes(user.id); 
   })
 
   res.json({users:users});
