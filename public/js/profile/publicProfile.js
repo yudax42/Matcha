@@ -30,6 +30,5 @@ const actions = async (action, id) => {
     }
     catch (err)
     {
-        // console.log(err);
     }
 }

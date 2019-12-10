@@ -92,7 +92,6 @@ window.onload = function fetchData() {
 
     })
     .catch(function(error) {
-      // console.log("there was and error please try again later");
     });
 };
 
@@ -166,7 +165,6 @@ const send = () => {
 
 // Add Profile IMG
 const addImg = (id, imgIndex) => {
-  console.log('hello');
   var formData = new FormData();
   formData.append('image', $("#" + id)[0].files[0]);
   axios({

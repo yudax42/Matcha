@@ -109,7 +109,6 @@ exports.activateAccount = async (req, res) => {
 exports.postLogin = async(req, res) => {
   if(typeof req.body.username == 'undefined' || typeof req.body.password == 'undefined')
     return res.json({msg:"Please send the neccesary infos"});
-  console.log(req.body.username);
   const userName = (req.body.username).trim();
   const password = req.body.password;
   let errors = [];

@@ -138,7 +138,6 @@ exports.getPublicProfile = async(req, res) => {
     const userState = (await user.getUserState(foundedUser.id))[0][0];
     data.userState = {online :userState.is_online,last_login: userState.last_login == null ? "never logged" : moment(userState.last_login).fromNow()};
     // data.userState.last_login = moment(userState.last_login).fromNow();
-    // console.log("hi",userState.is_online);
     // fetch button state 
     const buttonsState = (await user.checkUserAction(req.session.userId,foundedUser.id))[0];
     if(buttonsState.length == 0)
