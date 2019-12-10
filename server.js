@@ -10,6 +10,7 @@ const MySQLStore = require("express-mysql-session")(session);
 const multer = require("multer");
 const socket = require("socket.io");
 const User = require("./models/User");
+const isNotAuth = require("./middleware/is_not_auth");
 
 var connectedUserId;
 // Controllers Requirement
@@ -95,8 +96,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use(expressLayouts);
 app.use(flash());
-app.get("/", (req, res) => {
-  res.render("user/root");
+app.get("/",isNotAuth , (req, res) => {
+  res.render("user/root",{isAuthenticated:0});
 });
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
@@ -110,8 +111,12 @@ app.use(errorController.error404);
 io.on('connection', async socket => {
   var keepUser = connectedUserId;
   sockets[connectedUserId] = socket;
-  if(connectedUserId != undefined)
+  if(typeof connectedUserId !== 'undefined')
+  {
     await User.updateUserStatus(1,connectedUserId);
+  }
+    
+    
   socket.on('message', async(msg) => {
     if(/^[A-Za-z,-;.'"\s]+$/.test(msg.msg) && typeof msg.msg != "undefined")
     {
