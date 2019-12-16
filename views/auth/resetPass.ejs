@@ -1,0 +1,25 @@
+<div class="container fix">
+  <h1 class="text-center m-4">Reset Password</h1>
+  <div class=" main-form form-group col-12 col-sm-12 col-md-9 col-lg-6 m-auto">
+    <form action="/auth/reset" method="POST">
+      <% include ../includes/formErrors.ejs %>
+      <% include ../includes/formSuccess.ejs %>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1"><i class="material-icons">account_circle</i></span>
+        </div>
+        <input type="text" name="username" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+      </div>
+      <!-- new password -->
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1"><i class="material-icons">lock</i></span>
+        </div>
+        <input type="password" name="newPassword" class="form-control" placeholder="new Password" aria-label="Password" aria-describedby="basic-addon1">
+      </div>
+      <input type="hidden" name="token" value="<%= token %>">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button type="submit" class="btn btn-primary w-100">reset Password</button>
+    </form>
+  </div>
+</div>

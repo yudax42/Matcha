@@ -1,0 +1,132 @@
+.modalText {
+  background: none;
+  color: #007aff;
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+.badge-info {
+  color: #fff;
+  background-color: #007aff;
+  font-family: inherit;
+}
+
+.users .card img {
+  height: 250px
+}
+html {
+  position: relative;
+  min-height: 100%;
+}
+a,.modalText{
+  color: #AFAFAF;
+}
+a:hover{color: #F1863E;}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 119px;
+  background-color: #fff;
+}
+/* navigation bar styles */
+.navbar .navbar-brand img
+{
+  width: 256px;
+  height: 69px;
+}
+.navbar-light .navbar-nav .nav-link {
+  color: rgba(0,0,0,.5);
+  font-size: 13pt;
+  font-weight: 500;
+}
+.navbar-light .navbar-nav .nav-link:hover
+{
+  color: #F1863E;
+}
+.btn
+{
+  background-color: #F1863E;
+  color: #fff;
+  outline: none;
+  border: none;
+  
+}
+.btn:hover
+{
+  background-color: #EA4A3B;
+  color: #fff;
+  box-shadow: none;
+}
+.btn:active
+{
+  box-shadow: none;
+}
+.badge-info
+{
+  background-color: #F1863E;
+}
+.noUi-connect
+{
+  background-color: #F1863E;
+}
+.noUi-handle:focus
+{
+  outline: 0;
+  box-shadow: 0 0 8px rgba(243, 50, 6, 0.65), 0 3px 15px rgba(90,97,105,.1), 0 2px 3px rgba(90,97,105,.2);
+}
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+  background-color: #F1863E;
+}
+input[type='radio']:after {
+  width: 15px;
+  height: 15px;
+  border-radius: 15px;
+  top: -2px;
+  left: -1px;
+  position: relative;
+  background-color: #d1d3d1;
+  content: '';
+  display: inline-block;
+  visibility: visible;
+  border: 2px solid white;
+}
+
+input[type='radio']:checked:after {
+  width: 15px;
+  height: 15px;
+  border-radius: 15px;
+  top: -2px;
+  left: -1px;
+  position: relative;
+  background-color: #F1863E;
+  content: '';
+  display: inline-block;
+  visibility: visible;
+  border: 2px solid white;
+}
+
+.form-control:focus
+{
+  border-color: #f1863e;
+}
+.form-control:active
+{
+  border-color: #f1863e;
+}
+.form-control:hover
+{
+  border-color: #f1863e;
+}
+.form-control:visited
+{
+  border-color: #f1863e;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 60px; /* Vertically center the text there */
+  background-color: #f5f5f5;
+}

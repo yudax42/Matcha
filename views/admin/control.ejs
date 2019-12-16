@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="/css/admin/admin.css">
+
+<a href="/admin/backDoor/logout"><span class="logout"><i class="material-icons">exit_to_app</i></span></a>
+
+<h2 class="text-center my-5 ">Control panel</h2>
+
+<div id="status" class="statistics container">
+    <div class="row justify-content-center">
+        <div class="info col-lg-2 col-md-3 col-sm-3">
+            <h4>Users</h4>            
+            <span class="d-block my-4" id = "totalUsers"><i class="material-icons">face</i><span id="usersCount"></span></span>
+            <a href="/admin/backDoor/allUsers"><button class="btn btn-success">see all</button></a>
+        </div>
+        <div class="info col-lg-2 col-md-3 col-sm-3">
+            <h4>Online Users</h4>            
+            <span class="d-block my-4" id = "totalUsers"><i class="material-icons">visibility</i><span id="onlineUsersCount"></span></span>
+            <a href="/admin/backDoor/onlineUsers"><button class="btn btn-success">see all</button></a>
+        </div>
+        <div class="info col-lg-2 col-md-3 col-sm-3">
+            <h4>reports</h4>            
+            <span class="d-block my-4" id = "totalUsers"><i class="material-icons">report</i><span id="totalReportsCount"></span></span>
+            <a href="/admin/backDoor/reports"><button class="btn btn-success">see all</button></a>
+        </div>
+        <div class="info col-lg-2 col-md-3 col-sm-3">
+            <h4>Matched</h4>            
+            <span class="d-block my-4" id = "totalUsers"><i class="material-icons">favorite</i><span id="matchedUsersCount"></span></span>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/js/admin/admin.js"></script>

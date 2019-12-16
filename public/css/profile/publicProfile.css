@@ -1,0 +1,33 @@
+.tags
+{
+    list-style: none;
+    padding: 0;
+}
+.tags li
+{
+    display: inline-block;
+    padding: 5px;
+    border: 1px solid #3333;
+    border-radius: 8px;
+    margin-right: 14px;
+    margin-bottom: 7px;
+}
+.profileImg
+{
+    position: relative;
+}
+.status
+{
+    position: absolute;
+    top: 31px;
+    right: 35px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+img
+{
+    width: 88%;
+    height: 100%;
+    object-fit: cover;
+}

@@ -1,0 +1,217 @@
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<div class="container profile">
+  <div class="avatar-upload">
+    <div class="avatar-edit">
+      <input type='file' onchange="addImg('imageUpload','profile')" id="imageUpload" accept=".png, .jpg, .jpeg" />
+      <label for="imageUpload"><i class="material-icons">create</i></label>
+    </div>
+    <div class="avatar-preview">
+      <div id="avatarPreview" style="background-image: url('')">
+      </div>
+    </div>
+  </div>
+  <h3 class="text-center mb-3" id="profileName"></h3>
+  <div class="fameRating text-center">
+    <ul class="fameUl">
+    </ul>
+  </div>
+  <div class="row">
+    <div class="formContainer col-lg-6 col-md-12 col-sm-12 ">
+      
+      <div id="errors">
+          <% include ../includes/formErrors.ejs%>
+      </div>
+      <!-- visite and like modals -->
+      <h5 class="text-muted my-3">Who liked and looked my profile?</h5>
+      <!-- Trigger looked -->
+      <button type="button" class="btn btn-light btn-pill bg-light" data-toggle="modal" data-target="#looked">👀</button>
+      <!-- Modal looked -->
+      <div class="modal fade" id="looked" tabindex="-1" role="dialog" aria-labelledby="lookedLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="lookedLabel">👀 Who looked at your profile</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <ul class="list-group lookedAtMyProfile">
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Trigger liked -->
+      <button type="button" class="btn btn-light bg-light btn-pill" data-toggle="modal" data-target="#liked">💖</button>
+
+      <!-- Modal liked-->
+      <div class="modal fade" id="liked" tabindex="-1" role="dialog" aria-labelledby="likedLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="likedLabel">💖 Who liked your profile</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <ul class="list-group likedMyProfile">
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trigger History -->
+      <button type="button" class="btn btn-light btn-pill bg-light" data-toggle="modal" data-target="#history">⌛</button>
+
+      <!-- Modal liked-->
+      <div class="modal fade" id="history" tabindex="-1" role="dialog" aria-labelledby="historyLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="likedLabel">⌛ Your visite History</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <ul class="list-group visiteHistory">
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="text-muted my-3">Change Your Personal info</h5>
+      <!-- Username -->
+      <div class="input-group my-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1"><i class="material-icons">account_circle</i></span>
+        </div>
+        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" id="username">
+      </div>
+      <!-- firstName -->
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1"><i class="material-icons">account_circle</i></span>
+        </div>
+        <input type="text" class="form-control" placeholder="First name" aria-label="firstName" aria-describedby="basic-addon1" id="firstName">
+      </div>
+      <!-- lastName -->
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1"><i class="material-icons">account_circle</i></span>
+        </div>
+        <input type="text" class="form-control" placeholder="Last name" aria-label="lastName" aria-describedby="basic-addon1" id="lastName">
+      </div>
+      <!-- email -->
+      <div class="input-group mb-3 ">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1"><i class="material-icons">email</i></span>
+        </div>
+        <input type="email" class="form-control" placeholder="Email" aria-label="email" aria-describedby="basic-addon1" id="email">
+      </div>
+      <!-- password -->
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1"><i class="material-icons">lock</i></span>
+        </div>
+        <input type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1" id="password">
+      </div>
+      <!-- Gender -->
+      <select class="custom-select w-100" required="" id="gender">
+        <option value="none">Select Your Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+      <!-- Sexual Preferences -->
+      <h6 class="text-muted my-3">Sexual Preferences</h6>
+      <div class="custom-control custom-checkbox d-block my-2">
+        <input type="checkbox" class="custom-control-input" name="secPref" id="male"><label class="custom-control-label" for="male">Male</label>
+      </div>
+      <div class="custom-control custom-checkbox d-block my-2">
+        <input type="checkbox" class="custom-control-input" name="secPref" id="female"><label class="custom-control-label" for="female">Female</label>
+      </div>
+      <!-- Your age -->
+      <h6 class="text-muted my-3">Date of Birth</h6>
+      <input type="text" class="form-control w-50" placeholder="MM/DD/YY" id="ageInput">
+      <!-- Location -->
+      <h6 class="text-muted my-3">Your Location</h6>
+      <button type="button" id="location" class="btn btn-pill btn-warning"><i class="material-icons">autorenew</i>Update Location</button>
+      <p class="my-2 locationInfo">latitude: <span  id="latitude"></span></p>
+      <p class="my-2 locationInfo">longitude: <span  id="longitude"></span></p>
+      <!-- Biography -->
+      <h6 class="text-muted my-3">Biography</h6>
+      <div class="mb-3">
+        <textarea id="bio" class="form-control" id="validationTextarea" placeholder="Tell us about yourself." required></textarea>
+      </div>
+      <!-- list of interests -->
+      <h6 class="text-muted my-3">What are you interested in?</h6>
+      <p>science,tech, food, swimming, football, anime, e-games, make up, series, movies, cinema, art, music, self improvement, reading</p>
+      <div class="u-tagsinput">
+        <input id="listInterest" type="text" value="" data-role="tagsinput">
+      </div>
+      <!-- csrf Token -->
+      <input type="hidden" name="_csrf" id="csrf" value="<%= csrfToken %>">
+
+      <!-- Submit button -->
+      <button class="btn mt-3 float-right btn-success btn-pill" onclick="send()">
+        <i class="material-icons">save</i>
+        Save
+      </button>
+      <div style="clear:both;"></div>
+    </div>
+    <div class="col-lg-6 col-md-12 col-sm-12">
+      <h5 class="text-muted my-3">Your Images</h5>
+      <div class="row">
+
+        <div class="avatar-upload">
+          <div class="avatar-edit">
+            <input type='file' onchange="addImg('inputImg1','img1')" id="inputImg1" accept=".png, .jpg, .jpeg" />
+            <label for="inputImg1"><i class="material-icons">create</i></label>
+          </div>
+          <div class="avatar-preview rounded-0">
+            <div id="img1" class="rounded-0" style="background-image: url('')"></div>
+          </div>
+        </div>
+
+        <div class="avatar-upload">
+          <div class="avatar-edit">
+            <input type='file' onchange="addImg('inputImg2','img2')" id="inputImg2" accept=".png, .jpg, .jpeg" />
+            <label for="inputImg2"><i class="material-icons">create</i></label>
+          </div>
+          <div class="avatar-preview rounded-0">
+            <div id="img2" class="rounded-0" style="background-image: url('')"></div>
+          </div>
+        </div>
+
+        <div class="avatar-upload">
+          <div class="avatar-edit">
+            <input type='file' onchange="addImg('inputImg3','img3')" id="inputImg3" accept=".png, .jpg, .jpeg" />
+            <label for="inputImg3"><i class="material-icons">create</i></label>
+          </div>
+          <div class="avatar-preview rounded-0">
+            <div id="img3" class="rounded-0" style="background-image: url('')"></div>
+          </div>
+        </div>
+
+        <div class="avatar-upload">
+          <div class="avatar-edit">
+            <input type='file' onchange="addImg('inputImg4','img4')" id="inputImg4" accept=".png, .jpg, .jpeg" />
+            <label for="inputImg4"><i class="material-icons">create</i></label>
+          </div>
+          <div class="avatar-preview rounded-0">
+            <div id="img4" class="rounded-0" style="background-image: url('')"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="/js/profile/profileData.js"></script>
+<script type="text/javascript" src="/js/profile/profileStyle.js"></script>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="/css/admin/admin.css">
+<a href="/admin/backDoor/logout"><span class="logout"><i class="material-icons">exit_to_app</i></span></a>
+<div class="container">
+    <div class="col-lg-6 col-md-10 col-sm-12 col-xl-6 mx-auto text-center">
+        <h2 class="text-center mb-5">Send Email 📧</h2>
+        <img class="rounded" src="https://media0.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif?cid=790b761107021a5fa8c576eed510dca547944d448bae52fb&rid=giphy.gif" alt="BackDoor">
+        <% include ../includes/formErrors.ejs %>
+        <form action="/admin/backDoor/sendEmail" method="POST">
+            <input type="hidden" value="<%= userName %>" name="userName">
+            <input type="text" name="subject" class="my-5 form-control" placeholder="Enter The subject">
+            <textarea name="message" id="message" class="form-control emailMsg mb-4" placeholder="Enter the Message"></textarea>
+
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <input type="submit" class="btn w-100 btn-primary">
+        </form>
+
+    </div>
+    
+</div>

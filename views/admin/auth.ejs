@@ -1,0 +1,15 @@
+<link rel="stylesheet" href="/css/admin/admin.css">
+<div class="container">
+    <div class="col-lg-5 col-md-10 col-sm-12 col-xl-5 mx-auto text-center">
+        <h2 class="text-center mb-5">Back Door 🚪</h2>
+        <img class="rounded" src="https://media.giphy.com/media/3ohs86XFU9cuWmrjos/giphy.gif" alt="BackDoor">
+        <% include ../includes/formErrors.ejs %>
+        <form action="/admin/backDoor/enter" method="POST">
+            <input type="password" name="adminKey" class="my-5 form-control" placeholder="Enter your Key">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <input type="submit" class="btn btn-primary">
+        </form>
+
+    </div>
+    
+</div>
